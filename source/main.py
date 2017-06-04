@@ -1,5 +1,6 @@
 from device_graph import *
 from interference_graph import *
+from i_csma import *
 print "Initializing"
 
 print "Lattice Graph 5x5 distance 5"
@@ -33,4 +34,5 @@ interfGraph = InterferenceGraph(ring, 7.0)
 for i in interfGraph.edges:
 	print i.id, i.nodes[0].id, i.nodes[1].id
 
+print "I-CSMA"
 print "Finished"
