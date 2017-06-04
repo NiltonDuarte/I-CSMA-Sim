@@ -35,4 +35,5 @@ for i in interfGraph.edges:
 	print i.id, i.nodes[0].id, i.nodes[1].id
 
 print "I-CSMA"
+icsma = I_CSMA(interfGraph, 1, 20,3)
 print "Finished"
