@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-#directed interference hypergraph#directed interference hypergraph
+#directed interference hypergraph
 
 def createSets(list):
 	list.sort()
