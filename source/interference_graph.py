@@ -18,7 +18,7 @@ class InterferenceGraph:
 			self.nodes.append(node)
 		outterIdx= 0
 		innerIdx= 0
-		edgeID= 1
+		edgeID= 0
 		for sourceLink in self.deviceGraph.links:
 			innerIdx= 0	
 			for link in self.deviceGraph.links[outterIdx+1:]:
@@ -39,7 +39,12 @@ class InterferenceGraph:
 		return dist
 
 
-
+	def getMaxDegree(self):
+		maxD = 0
+		for node in self.nodes:
+			maxD = len(node.edges) if len(node.edges) > maxD else maxD
+		return maxD
+		 
 	def getNeighbours(self, sourceNode):
 		ret = []
 		for edge in sourceNode.edges:

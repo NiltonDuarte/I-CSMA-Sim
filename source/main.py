@@ -14,9 +14,11 @@ for j in range(size):
  	print lattice.latticeGraph[i][j].position,
  print
 
-print "Ring Graph 4 nodes radius 5"
+
+
 radius = 5
-numNodes = 4
+numNodes = 8
+print "Ring Graph "+str(numNodes)+" nodes radius "+str(radius)
 ring = Ring(numNodes, radius)
 for i in range(numNodes):
 	print ring.ringGraph[i].id,
@@ -24,16 +26,60 @@ for i in range(numNodes):
 
 print "Interference Graph for Lattice 5x5 distance 5, interference distance 5.1"
 
-interfGraph = InterferenceGraph(lattice, 5.1)
-for i in interfGraph.edges:
-	print i.id
+interfGraphLattice = InterferenceGraph(lattice, 5.1)
+for i in interfGraphLattice.edges:
+	print i.id,
+print
 
 print "Interference Graph for Ring 8 nodes Radius 5, interference distance 0.1"
 
-interfGraph = InterferenceGraph(ring, 7.0)
-for i in interfGraph.edges:
+interfGraphRing = InterferenceGraph(ring, 7.0)
+for i in interfGraphRing.edges:
 	print i.id, i.nodes[0].id, i.nodes[1].id
 
-print "I-CSMA"
-icsma = I_CSMA(interfGraph, 1, 20,3)
+print "I-CSMA ring size 8"
+icsma = I_CSMA(interfGraphRing, 1, 20,20)
+testesIt = 200000
+it = testesIt
+node0 = icsma.interfGraph.nodes[0]
+while it < testesIt:
+	it += 1
+	if it%100000 == 0: print it
+	schedule = icsma.run(1)
+	#schedule.append(node0)
+	for node in schedule:
+		for neighbour in icsma.interfGraph.getNeighbours(node):
+			if neighbour in schedule:
+				print "ERRO"
+print "I-CSMA ring size 8 test FINISHED"
+
+print "I-CSMA lattice 5x5"
+icsma = I_CSMA(interfGraphLattice, 1, 20,20)
+testesIt = 200000
+it = 0
+node0 = icsma.interfGraph.nodes[6]
+frequency = [0]*25
+schedSizeFrequency = [0]*14
+maxSched = 0
+while it < testesIt:
+	it += 1
+	if it%100000 == 0: print it
+	schedule = icsma.run(1)
+	schedule.sort(key=lambda node: node.id)
+	maxSched = len(schedule) if len(schedule) > maxSched else maxSched
+	schedSizeFrequency[len(schedule)]+=1
+	#print "len",len(schedule), "nodes:",
+	for node in schedule:
+		frequency[node.id] +=1
+	#	print node.id,
+	#print
+	#schedule.append(node0)
+	for node in schedule:
+		for neighbour in icsma.interfGraph.getNeighbours(node):
+			if neighbour in schedule:
+				print "ERRO", node.id, neighbour.id
+print frequency
+print maxSched
+print schedSizeFrequency
+
 print "Finished"

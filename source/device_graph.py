@@ -37,7 +37,7 @@ class Ring:
 			#device position
 			pos=[round(math.cos(i*angularDistance)*radius,10), round(math.sin(i*angularDistance)*radius,10)]
 			#create device
-			device = Device(i, pos,Queue())
+			device = Device(i, pos, Queue())
 			self.ringGraph[i]=device
 			self.devices.append(device)
 		for i in range(numNodes):

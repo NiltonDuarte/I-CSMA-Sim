@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+from random import *
 
 class Device:
 	def __init__(self, idf, pos, queue):
@@ -24,8 +24,8 @@ class Link:
 class Queue:
 	def __init__(self):
 		pass
-	def getSize(self):
-		return 1
+	def getValue(self):
+		return paretovariate(1)
 
 
 class Node:
@@ -37,6 +37,7 @@ class Node:
 		self.backoff = 0
 		self.silenced = False
 		self.visited = False
+		self.queueSize = 0
 		
 	def addEdge(self, e):
 		self.edges.append(e)
@@ -54,8 +55,21 @@ class Node:
 		self.silenced = st
 		return self
 
-	def getQueue(self):
-		return Queue().getSize()
+	def resetVisit(self):
+		self.visited = False
+
+	def resetSilence(self):
+		self.silenced = False
+
+	def getQueueSize(self):
+		return self.queueSize
+
+	def fillQueue(self):
+		self.queueSize+= 0.5*Queue().getValue()
+
+	def dumpQueue(self):
+		if self.queueSize < 1: self.queueSize = 0 
+		else: self.queueSize -= 1
 
 
 class Edge:
