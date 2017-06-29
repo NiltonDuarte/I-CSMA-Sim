@@ -24,8 +24,18 @@ class Link:
 class Queue:
 	def __init__(self):
 		pass
-	def getValue(self):
-		return paretovariate(1)
+
+	def getValue(self,rho):
+		L=0.168
+		H=1000
+		U=random()
+		g=1.5
+		x=(-(U*(H**g)-U*(L**g)-H**g)/(H*L)**g)**(-1/g)
+		#x = 1/((1-random()*(1-(L/H)**g))/L**g)**(1/g)
+		mean=((L**g)/(1-(L/H)**g))*(g/(g-1))*((1/(L**(g-1)))-(1/H**(g-1)))
+		#print mean
+		return rho*x
+		#return paretovariate(1)
 
 
 class Node:
@@ -34,10 +44,12 @@ class Node:
 		self.edges=[]
 		#I-CSMA state {-1,Av} ou {-1,+1}(Ising)
 		self.state = -1
-		self.backoff = 0
+		self.backoff = None
 		self.silenced = False
 		self.visited = False
 		self.queueSize = 0
+		self.S = None
+		self.q = None
 		
 	def addEdge(self, e):
 		self.edges.append(e)
@@ -64,13 +76,21 @@ class Node:
 	def getQueueSize(self):
 		return self.queueSize
 
-	def fillQueue(self):
-		self.queueSize+= 0.5*Queue().getValue()
+	def fillQueue(self,rho):
+		self.queueSize+= Queue().getValue(rho)
 
 	def dumpQueue(self):
 		if self.queueSize < 1: self.queueSize = 0 
 		else: self.queueSize -= 1
 
+	def setS(self,value):
+		self.S = value
+
+	def set_q(self,value):
+		self.q = value
+
+	def get_q(self):
+		return self.q
 
 class Edge:
 	def __init__(self, idf, nodeA, nodeB):
