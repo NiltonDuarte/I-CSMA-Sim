@@ -5,13 +5,13 @@ from math import *
 from random import *
 
 class I_CSMA:
-	def __init__(self, interferenceGraph, beta, W1, W2):
+	def __init__(self, interferenceGraph, beta, W1, W2, rho):
 		self.b = beta
 		self.interfGraph = interferenceGraph
 		self.W1 = W1
 		self.W2 = W2
 		self.maxD = interferenceGraph.getMaxDegree()
-		self.initSystem()
+		self.rho = rho
 
 	def run(self, iterations):
 		it = 0
@@ -31,7 +31,10 @@ class I_CSMA:
 
 	def q(self, node):
 	 	#eq 5
-	 	return 0.5*(1-tanh((node.state+1)*self.b*self.S(node)/2))
+	 	#Av=self.queueFunction(node.getQueueSize())
+	 	ret = 0.5*(1-tanh((node.state+1)*self.b*self.S(node)/2))
+	 	#ret = 0.5*(1-tanh((Av+1)*self.b*self.S(node)/2))
+	 	return ret
 
 	def silenceNeighbours(self, node):
 		#avoid bouncing
@@ -46,25 +49,17 @@ class I_CSMA:
 		return 2*(self.maxD-1)+log(queue+1)
 
 	def updateState(self, node):
-		if random() < self.q(node):
+		if random() < node.get_q():
 			node.setState(self.queueFunction(node.getQueueSize()))
 		else:
 			node.setState(-1)
 
-	def initSystem(self):
-		#init system with random states
-		for node in self.interfGraph.nodes:
-			if randint(0,1):
-				node.setState(self.queueFunction(node.getQueueSize()))
-			else:
-				node.setState(-1)
-		#for node in self.interfGraph.nodes: print(node.state)
-		#print "system initiated"
-
-
 	def controlPhase1(self):
+		#calc S and q based on prev time slot
+		#map(lambda node: node.setS(self.S(node)), self.interfGraph.nodes)
+		map(lambda node: node.set_q(self.q(node)), self.interfGraph.nodes)
 		#fill queues
-		map(lambda node: node.fillQueue(), self.interfGraph.nodes)
+		map(lambda node: node.fillQueue(self.rho), self.interfGraph.nodes)
 		#reset visited control variable
 		map(lambda node: node.resetVisit(), self.interfGraph.nodes)
 		map(lambda node: node.resetSilence(), self.interfGraph.nodes)
@@ -92,8 +87,10 @@ class I_CSMA:
 	 	slotSchedule = []
 	 	#send RESERVE
 	 	for node in self.interfGraph.nodes:
-	 		if not node.silenced and node.state != -1:
+	 		if node.state != -1:
 	 			self.silenceNeighbours(node)
+	 		#if not node.silenced and node.state != -1:
+	 		#	self.silenceNeighbours(node)
 	 			#if ack collided, this node is silenced now
 	 			if not node.silenced:
 	 				slotSchedule.append(node)
