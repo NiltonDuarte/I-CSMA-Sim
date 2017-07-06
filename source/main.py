@@ -1,6 +1,8 @@
 from device_graph import *
 from interference_graph import *
+from interference_SINR_graph import *
 from i_csma import *
+from network_structure import *
 import sys
 print "Initializing"
 
@@ -31,15 +33,17 @@ interfGraphLattice = InterferenceGraph(lattice, 5.1)
 #for i in interfGraphLattice.edges:
 #	print i.id,
 #print
-"""
+
 print "Interference Graph for Ring 8 nodes Radius 5, interference distance 0.1"
 
 interfGraphRing = InterferenceGraph(ring, 7.0)
 #for i in interfGraphRing.edges:
 #	print i.id, i.nodes[0].id, i.nodes[1].id
-
+"""
 print "I-CSMA ring size 8"
-icsma = I_CSMA(interfGraphRing, 1, 20,20, 0.5)
+icsma = I_CSMA(interfGraphRing, 1, 20,20, 0.5, 0.5)
+sched = iscma.run(100000)
+
 testesIt = 200000
 it = testesIt
 node0 = icsma.interfGraph.nodes[0]
@@ -96,20 +100,19 @@ print schedSizeFrequency
 print queue/16.0
 
 print "Finished"
-"""
 
-testesItTimes = 3
+
+testesItTimes = 2
 results = []
 beta = float(sys.argv[1])
-windowSize = 200
+windowSize = 500
 f = open('results'+sys.argv[1], 'w')
 #0.01, 0.1, 1
 #for beta in [0.01,0.03,0.1,0.3,1,3]:
-for rho in [0.2,0.5,0.7]:
+for rho in [0.5,0.7]:
 	for i in range(3):
 		interfGraphLattice = InterferenceGraph(lattice, 5.1)
-		windowSize = 50
-		icsma = I_CSMA(interfGraphLattice, beta, windowSize,windowSize, rho)
+		icsma = I_CSMA(interfGraphLattice, beta, windowSize,windowSize, rho, 0.5)
 		for j in range(testesItTimes):
 			schedule = icsma.run(100000)
 			queue=0
@@ -120,6 +123,16 @@ for rho in [0.2,0.5,0.7]:
 		f.write(str(results))
 		f.write('\n')
 		print results
+
+"""
+
+print "I-CSMA ring size 8"
+icsma = I_CSMA(interfGraphRing, 1, 20,20, 0.5, 0.5)
+alpha=2
+power=1
+sinrGraph = InterferenceSINRGraph(ring, alpha, power)
+sched = icsma.run(10000)
+print sinrGraph.isFeasible(30, 1, sched)
 
 
 

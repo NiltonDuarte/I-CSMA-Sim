@@ -19,27 +19,49 @@ class Link:
 	def __init__(self, idf, deviceA, deviceB):
 		self.id = idf
 		self.devices = [deviceA, deviceB]
-		
-
+	
 class Queue:
-	def __init__(self):
-		pass
+	pass	
 
-	def getValue(self,rho):
-		L=0.168
+class TrafficDistribution:
+	def __init__(self):
+		self.L=None
+
+	def getNewValue(self):
+		L=self.L
 		H=1000
 		U=random()
 		g=1.5
 		x=(-(U*(H**g)-U*(L**g)-H**g)/(H*L)**g)**(-1/g)
 		#x = 1/((1-random()*(1-(L/H)**g))/L**g)**(1/g)
-		mean=((L**g)/(1-(L/H)**g))*(g/(g-1))*((1/(L**(g-1)))-(1/H**(g-1)))
+		#mean=((L**g)/(1-(L/H)**g))*(g/(g-1))*((1/(L**(g-1)))-(1/H**(g-1)))
 		#print mean
-		return rho*x
+		return x
 		#return paretovariate(1)
-
+	
+	def calc_L(self, targetMean):
+		H=1000
+		g=1.5
+		meanDelta = 0.001
+		L_step = 0.02
+		L=0.16
+		direction=1
+		currMean=((L**g)/(1-(L/H)**g))*(g/(g-1))*((1/(L**(g-1)))-(1/H**(g-1)))
+		while abs(targetMean-currMean)>meanDelta:
+			if targetMean > currMean:
+				if direction==-1: L_step/=2
+				L+=L_step
+				direction = 1
+			else: 
+				if direction==1: L_step/=2
+				L-=L_step
+				direction = -1
+			currMean=((L**g)/(1-(L/H)**g))*(g/(g-1))*((1/(L**(g-1)))-(1/H**(g-1)))
+		self.L = L
+		return L
 
 class Node:
-	def __init__(self, idf):
+	def __init__(self, obj, idf):
 		self.id = idf
 		self.edges=[]
 		#I-CSMA state {-1,Av} ou {-1,+1}(Ising)
@@ -50,6 +72,7 @@ class Node:
 		self.queueSize = 0
 		self.S = None
 		self.q = None
+		self.sourceObj = obj
 		
 	def addEdge(self, e):
 		self.edges.append(e)
@@ -76,8 +99,8 @@ class Node:
 	def getQueueSize(self):
 		return self.queueSize
 
-	def fillQueue(self,rho):
-		self.queueSize+= Queue().getValue(rho)
+	def fillQueue(self,val):
+		self.queueSize+= val
 
 	def dumpQueue(self):
 		if self.queueSize < 1: self.queueSize = 0 
@@ -92,10 +115,21 @@ class Node:
 	def get_q(self):
 		return self.q
 
+
+
+
 class Edge:
-	def __init__(self, idf, nodeA, nodeB):
+	def __init__(self, idf, nodeA, nodeB, weight=None):
 		self.id = idf
 		self.nodes = [nodeA, nodeB]
+		self.weight = weight
+
+	def setWeight(self, value):
+		self.weight = value
+		return self
+
+	def getWeight(self):
+		return self.weight
 
 	def destiny(self,source):
 		if source == self.nodes[0]:

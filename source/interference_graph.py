@@ -14,7 +14,7 @@ class InterferenceGraph:
 
 	def createGraph(self):
 		for link in self.deviceGraph.links:
-			node = Node(link.id)
+			node = Node(link, link.id)
 			self.nodes.append(node)
 		outterIdx= 0
 		innerIdx= 0
