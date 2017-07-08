@@ -38,13 +38,15 @@ class I_CSMA:
 		S = 0
 		for neighbour in neighbours:
 			S += neighbour.state
+		#print node.id, S
 		return S
 
 	def q(self, node):
 	 	#eq 5
-	 	#Av=self.queueFunction(node.getQueueSize())
-	 	ret = 0.5*(1-tanh((node.state+1)*self.b*self.S(node)/2))
-	 	#ret = 0.5*(1-tanh((Av+1)*self.b*self.S(node)/2))
+	 	Av=self.queueFunction(node.getQueueSize())
+	 	#ret = 0.5*(1-tanh((node.state+1)*self.b*self.S(node)/2))
+	 	ret = 0.5*(1-tanh((Av+1)*self.b*self.S(node)/2))
+	 	#print ret
 	 	return ret
 
 	def silenceNeighbours(self, node):
@@ -63,7 +65,9 @@ class I_CSMA:
 
 	def updateState(self, node):
 		if random() < node.get_q():
-			node.setState(self.queueFunction(node.getQueueSize()))
+			Av = self.queueFunction(node.getQueueSize())
+			node.setState(Av)
+			#print node.id, Av
 		else:
 			node.setState(-1)
 

@@ -58,20 +58,20 @@ while it < testesIt:
 				print "ERRO"
 print "I-CSMA ring size 8 test FINISHED"
 """
-"""
+
 windowSize = 2000
-rho = 0.4
+rho = 0.5
 print "I-CSMA lattice 4x4 Windows = ", windowSize, " Rho = ",rho
-icsma = I_CSMA(interfGraphLattice, 1, windowSize,windowSize, rho)
-testesIt = 100000
+icsma = I_CSMA(interfGraphLattice, 0.1, windowSize,windowSize, rho, 0.5)
+testesIt = 50000
 it = 0
 node0 = icsma.interfGraph.nodes[6]
-frequency = [0]*25
-schedSizeFrequency = [0]*14
+frequency = [0]*16
+schedSizeFrequency = [0]*9
 maxSched = 0
 while it < testesIt:
 	it += 1
-	if it%100000 == 0: 
+	if it%1000 == 0: 
 		print it
 		queue=0
 		for node in icsma.interfGraph.nodes:
@@ -96,12 +96,16 @@ queue=0
 for node in icsma.interfGraph.nodes:
 	queue+=node.queueSize
 print frequency
+for i in range(4):
+	for j in range(4):
+		print frequency[4*i+j], "\t",
+	print
 print schedSizeFrequency
 print queue/16.0
 
 print "Finished"
 
-
+"""
 testesItTimes = 2
 results = []
 beta = float(sys.argv[1])
@@ -125,7 +129,7 @@ for rho in [0.5,0.7]:
 		print results
 
 """
-
+"""
 print "I-CSMA ring size 8"
 icsma = I_CSMA(interfGraphRing, 1, 20,20, 0.5, 0.5)
 alpha=2
@@ -133,6 +137,6 @@ power=1
 sinrGraph = InterferenceSINRGraph(ring, alpha, power)
 sched = icsma.run(10000)
 print sinrGraph.isFeasible(30, 1, sched)
-
+"""
 
 
