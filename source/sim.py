@@ -24,7 +24,7 @@ for r in rho:
 	interfGraphLattice = InterferenceGraph(lattice, 5.1)
 	icsma = I_CSMA(interfGraphLattice, beta, windowSize, windowSize, r, 0.5)
 	for i in range(30):
-		print "I-CSMA Window = ", windowSize, " Rho = ",rho, " beta = ", beta, " it = ", i
+		print "I-CSMA Window = ", windowSize, " Rho = ",r, " beta = ", beta, " it = ", i
 		schedule = icsma.run(testesIt)
 		queue=0
 		for node in icsma.interfGraph.nodes:
