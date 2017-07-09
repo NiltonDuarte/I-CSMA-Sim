@@ -22,7 +22,7 @@ f = open('results'+sys.argv[1], 'w')
 
 for r in rho:
 	interfGraphLattice = InterferenceGraph(lattice, 5.1)
-	icsma = I_CSMA(interfGraphLattice, beta, windowSize, windowSize, rho, 0.5)
+	icsma = I_CSMA(interfGraphLattice, beta, windowSize, windowSize, r, 0.5)
 	for i in range(30):
 		print "I-CSMA Window = ", windowSize, " Rho = ",rho, " beta = ", beta, " it = ", i
 		schedule = icsma.run(testesIt)
