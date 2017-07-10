@@ -32,3 +32,4 @@ for i in range(30):
 		results=[r , beta, round(queue/16.0,2)]
 		f.write(str(results))
 		f.write('\n')
+		f.flush()
