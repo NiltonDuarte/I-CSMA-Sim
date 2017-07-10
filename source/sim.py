@@ -27,9 +27,12 @@ for i in range(30):
 		print "I-CSMA Window = ", windowSize, " Rho = ",r, " beta = ", beta, " it = ", i
 		schedule = icsma.run(testesIt)
 		queue=0
+		queuesList = []
+		icsma.interfGraph.nodes.sort(key=lambda node: node.id)
 		for node in icsma.interfGraph.nodes:
+			queuesList.append(node.queueSize)
 			queue += node.queueSize
-		results=[r , beta, round(queue/16.0,2)]
+		results=[r , beta, round(queue/16.0,2), queuesList]
 		f.write(str(results))
 		f.write('\n')
 		f.flush()
