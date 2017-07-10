@@ -20,10 +20,10 @@ testesIt = 1000000
 rounds = 30
 f = open('results'+sys.argv[1], 'w')
 
-for r in rho:
-	interfGraphLattice = InterferenceGraph(lattice, 5.1)
-	icsma = I_CSMA(interfGraphLattice, beta, windowSize, windowSize, r, 0.5)
-	for i in range(30):
+for i in range(30):
+	for r in rho:
+		interfGraphLattice = InterferenceGraph(lattice, 5.1)
+		icsma = I_CSMA(interfGraphLattice, beta, windowSize, windowSize, r, 0.5)	
 		print "I-CSMA Window = ", windowSize, " Rho = ",r, " beta = ", beta, " it = ", i
 		schedule = icsma.run(testesIt)
 		queue=0
