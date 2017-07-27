@@ -28,7 +28,7 @@ sinrbeta=4.0
 noiseBG=9.88211768803e-05/12.
 print "Using rho = "+str(rho) + " and beta = "+str(beta)
 strRho = ",".join(str(int(10*x)) for x in rho)
-f = open('results_beta'+sys.argv[1]+'_r'+strRho+'.csv', 'w')
+f = open('results_sinr_beta'+sys.argv[1]+'_r'+strRho+'.csv', 'w')
 header = "Rho, Beta, QMean, q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, q11, q12, q13, q14, q15, q16\n"
 f.write(str(header))
 f.flush()
