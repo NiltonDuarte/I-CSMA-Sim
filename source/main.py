@@ -6,39 +6,47 @@ from network_structure import *
 import sys
 print "Initializing"
 
-print "Lattice Graph 5x5 distance 5"
 
-distance = 5
+
+distance = 70.
 size = 4
-lattice = Lattice(size,distance)
+pairDist = 40.
+print "Lattice Graph size "+str(size)+" distance "+ str(distance)
+lattice = Lattice(size,distance,pairDist)
 
 for j in range(size):
  for i in range(size):
- 	print lattice.latticeGraph[i][j].position,
+ 	print lattice.latticeGraph[i][j][0].position,
+ 	print lattice.latticeGraph[i][j][1].position,
  print
 
 
-
-radius = 5
+#distancia entre os nos de um link 50m
+radius = 10.0
 numNodes = 8
 print "Ring Graph "+str(numNodes)+" nodes radius "+str(radius)
-ring = Ring(numNodes, radius)
+ring = Ring(numNodes, radius, pairDist)
 for i in range(numNodes):
-	print ring.ringGraph[i].id,
-	print ring.ringGraph[i].position
+	print ring.ringGraph[i][0].id,
+	print ring.ringGraph[i][0].position
+	print ring.ringGraph[i][1].id,
+	print ring.ringGraph[i][1].position
 
-print "Interference Graph for Lattice 4x4 distance 5, interference distance 5.1"
 
-interfGraphLattice = InterferenceGraph(lattice, 5.1)
+interfDist = 80.0
+print "Interference Graph for Lattice size "+str(size)+" distance "+ str(distance)+", interference distance "+str(interfDist)
+
+interfGraphLattice = InterferenceGraph(lattice, interfDist)
 #for i in interfGraphLattice.edges:
 #	print i.id,
 #print
 
-print "Interference Graph for Ring 8 nodes Radius 5, interference distance 0.1"
+interfDist = 8.0
+print "Interference Graph for Ring 8 nodes Radius "+str(radius)+", interference distance "+str(interfDist)
 
-interfGraphRing = InterferenceGraph(ring, 7.0)
-#for i in interfGraphRing.edges:
-#	print i.id, i.nodes[0].id, i.nodes[1].id
+interfGraphRing = InterferenceGraph(ring, interfDist)
+for i in interfGraphRing.edges:
+	print i.id, i.nodes[0].id, i.nodes[1].id
 """
 print "I-CSMA ring size 8"
 icsma = I_CSMA(interfGraphRing, 1, 20,20, 0.5, 0.5)
@@ -58,7 +66,7 @@ while it < testesIt:
 				print "ERRO"
 print "I-CSMA ring size 8 test FINISHED"
 """
-
+"""
 windowSize = 2000
 rho = 0.5
 print "I-CSMA lattice 4x4 Windows = ", windowSize, " Rho = ",rho
@@ -104,7 +112,7 @@ print schedSizeFrequency
 print queue/16.0
 
 print "Finished"
-
+"""
 """
 testesItTimes = 2
 results = []
@@ -129,14 +137,69 @@ for rho in [0.5,0.7]:
 		print results
 
 """
-"""
-print "I-CSMA ring size 8"
-icsma = I_CSMA(interfGraphRing, 1, 20,20, 0.5, 0.5)
-alpha=2
-power=1
-sinrGraph = InterferenceSINRGraph(ring, alpha, power)
-sched = icsma.run(10000)
-print sinrGraph.isFeasible(30, 1, sched)
-"""
+#testar no i-csma se o escalonamento e factivel, e transferir apenas caso seja.
+#
+#
+def distance(posA, posB):
+	sqSum = (posA[0]-posB[0])**2+(posA[1]-posB[1])**2+(posA[2]-posB[2])**2
+	dist = sqSum**0.5
+	if dist == 0: return 1
+	return dist
 
+print "Calculo sinr Beta e BG Noise"
+alpha = 2.5
+noise = 9.88211768803e-05/12.
+print "sinr links"
+print lattice.devices[10].id
+aux = 1/distance(lattice.devices[0].position, lattice.devices[10].position)**alpha
+print lattice.devices[4].id
+aux += 1/distance(lattice.devices[0].position, lattice.devices[4].position)**alpha
+print lattice.devices[16].id
+aux += 1/distance(lattice.devices[0].position, lattice.devices[16].position)**alpha
+sinR = (1/distance(lattice.devices[0].position, lattice.devices[1].position)**alpha)/(aux+noise)
+print sinR
+print "device 0 e 0.2 dist"
+sinR = (1/distance(lattice.devices[0].position, lattice.devices[1].position)**alpha)/(1)
+print sinR
+print "device 0 e 1 dist"
+sinR = (1/distance(lattice.devices[0].position, lattice.devices[2].position)**alpha)/(1)
+print sinR
+for i in lattice.devices:
+	print str(i.id) + "\t",
+	sinR = (1/distance(lattice.devices[0].position, lattice.devices[1].position)**alpha)/(1/distance(lattice.devices[0].position, i.position)**alpha+noise)
+	print sinR
+for i in lattice.devices:
+	print str(i.id)+ "\t",
+	sinR = (1/distance(lattice.devices[0].position, i.position)**alpha)/(noise)
+	print sinR
+
+print "I-CSMA lattice size 4"
+#(self, interferenceGraph, beta, W1, W2, rho, trafficMean, interferenceSINRGraph=None)
+beta=0.03
+W1 = 20
+W2 = 8
+rho = 0.3
+mean = 0.5
+#alpha=2.5
+sinrbeta=4.0
+noiseBG=9.88211768803e-05/12.
+f = open('results_sinr_beta'+str(beta), 'w')
+interfDist = 80.
+for i in range(30):
+	interfGraphLattice = InterferenceGraph(lattice, interfDist)
+	sinrGraph = InterferenceSINRGraph(lattice, alpha, sinrbeta, noiseBG)
+	icsma = I_CSMA(interfGraphLattice, beta, W1, W2, rho, mean, sinrGraph)
+
+	sched = icsma.runWithSINR(1000000)
+	#sched = icsma.run(100000)
+	queue=0
+	queuesList = []
+	n = len(icsma.interfGraph.nodes)
+	for node in icsma.interfGraph.nodes:
+		queuesList.append(node.queueSize)
+		queue += node.queueSize
+	results=", ".join(str(x) for x in ([rho , beta, round(queue/n,2)] + queuesList))
+	f.write(str(results))
+	f.write('\n')
+	f.flush()
 

@@ -6,7 +6,7 @@ from random import *
 from network_structure import *
 
 class I_CSMA:
-	def __init__(self, interferenceGraph, beta, W1, W2, rho, trafficMean):
+	def __init__(self, interferenceGraph, beta, W1, W2, rho, trafficMean, interferenceSINRGraph=None):
 		self.b = beta
 		self.interfGraph = interferenceGraph
 		self.W1 = W1
@@ -15,14 +15,26 @@ class I_CSMA:
 		self.rho = rho
 		self.traffic = TrafficDistribution()
 		self.traffic.calc_L(rho*trafficMean)
+		self.interfSINRGraph = interferenceSINRGraph
+		self.useSINR = False
 
-	def run(self, iterations):
+	def _run(self, iterations):
 		it = 0
 		while it < iterations:
 			self.controlPhase1()
 			schedule = self.controlPhase2()
 			it += 1
 		return schedule
+
+	def run(self, iterations):
+		self.useSINR=False
+		return self._run(iterations)
+
+	def runWithSINR(self, iterations):
+		if self.interfSINRGraph == None:
+			return False
+		self.useSINR=True
+		return self._run(iterations)
 
 	def runHeuristic(self, iterations):
 		it = 0
@@ -70,6 +82,10 @@ class I_CSMA:
 			#print node.id, Av
 		else:
 			node.setState(-1)
+	def dumpQueue(self, sched):
+		if self.useSINR:
+			sched = self.interfSINRGraph.successfulTransmissions(sched)
+		map(lambda node: node.dumpQueue(), sched)
 
 	def controlPhase1(self):
 		#calc S and q based on prev time slot
@@ -112,7 +128,7 @@ class I_CSMA:
 	 			if not node.silenced:
 	 				slotSchedule.append(node)
 	 	#dump schedules queues
-		map(lambda node: node.dumpQueue(), slotSchedule)
+		self.dumpQueue(slotSchedule)
 	 	return slotSchedule
 
 	def heristicControlPhase1(self):
@@ -122,3 +138,5 @@ class I_CSMA:
 		map(lambda node: node.fillQueue(self.traffic.getNewValue()), self.interfGraph.nodes)	 	
 	 	for node in self.interfGraph.nodes:
 	 		self.updateState(node)
+
+
