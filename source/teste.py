@@ -46,7 +46,7 @@ for r in rho:
 	for b in beta:
 		node = "node"+hostname[aux%4]
 		aux+=1
-		f.write("qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname="+node+" python sim.py "+str(b)+" "+str(r))
+		f.write("qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname="+node+" python sim_PROTOCOLO.py "+str(b)+" "+str(r))
 		f.write('\n')
 		f.flush()
 f.close()		
