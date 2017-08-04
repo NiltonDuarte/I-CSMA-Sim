@@ -3,16 +3,18 @@ import csv
 doc = []
 beta=[0.01, 0.03, 0.1, 0.3, 1, 3]
 rho = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+rho_file_name = [1, 2, 3, 4, 5, 6 ,7, 8, 9]
 for b in beta:
-	with open('results_beta'+str(b)+'.csv', 'r') as csvFile:
-		#skip header
-		next(csvFile)
+	for rfn in rho_file_name:
+		with open('../results_sinr_icsma/results_sinr_beta'+str(b)+'_r'+str(rfn)+'.csv', 'r') as csvFile:
+			#skip header
+			next(csvFile)
 
-		reader = csv.reader(csvFile, delimiter=',')
-		for row in reader:
-			#convert string to float
-			floatList = map(float, row)
-			doc.append(floatList)
+			reader = csv.reader(csvFile, delimiter=',')
+			for row in reader:
+				#convert string to float
+				floatList = map(float, row)
+				doc.append(floatList)
 iters = len(doc)/len(beta)/len(rho)
 
 #print doc[0]
