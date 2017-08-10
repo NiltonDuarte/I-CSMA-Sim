@@ -17,12 +17,28 @@ class N_CSMA:
 		self.traffic.calc_L(rho*trafficMean)
 		self.interfSINRGraph = interferenceSINRGraph
 		self.useSINR = False
+		self.useHeuristic = False
+		self.OFF = -1
+		self.totalCollisionCount = 0
+		self.slotCollisionCount = 0
+		self.slotCollisionFrequency = [0]*(len(interferenceGraph.nodes)+1)
+		self.schedSizeFrequency = [0]*(len(interferenceGraph.nodes)+1)
+		self.onNodesCount = 0
+		self.onNodesFrequency = [0]*(len(interferenceGraph.nodes)+1)
 
 	def _run(self, iterations):
 		it = 0
 		while it < iterations:
-			self.controlPhase1()
+			self.slotCollisionCount=0
+			self.onNodesCount=0
+			if self.useHeuristic:
+				self.heristicControlPhase1()
+			else:
+				self.controlPhase1()
 			schedule = self.controlPhase2()
+			self.slotCollisionFrequency[int(self.slotCollisionCount)]+=1
+			self.onNodesFrequency[self.onNodesCount]+=1
+			self.totalCollisionCount+=self.slotCollisionCount
 			it += 1
 		return schedule
 
@@ -37,19 +53,15 @@ class N_CSMA:
 		return self._run(iterations)
 
 	def runHeuristic(self, iterations):
-		it = 0
-		while it < iterations:
-			self.heristicControlPhase1()
-			schedule = self.controlPhase2()
-			it += 1
-		return schedule
+		self.useHeuristic=True
+		return self._run(iterations)
 
 	def S(self, node):
 		#sum of the node neighbours state(spins). desc after eq 5
 		neighbours = self.interfGraph.getNeighbours(node)
-		S = 0
+		S = 0.0
 		for neighbour in neighbours:
-			S += 1/abs(neighbour.state)
+			S += neighbour.state
 		#print node.id, S
 		return S/len(neighbours)
 
@@ -57,8 +69,14 @@ class N_CSMA:
 	 	#eq 5
 	 	Av=self.queueFunction(node.getQueueSize())
 	 	#ret = 0.5*(1-tanh((node.state+1)*self.b*self.S(node)/2))
-	 	ret = (1-1/cosh((Av+1)*self.b*self.S(node)/2))
-	 	#print ret
+	 	x = self.b*(Av-self.S(node))
+
+	 	if x > 0:
+	 		ret = exp(-1/x)
+	 	else:
+	 		ret = 0
+	 	ret= 0.5*(1+tanh(x))
+	 	#ret=1
 	 	return ret
 
 	def silenceNeighbours(self, node):
@@ -68,12 +86,13 @@ class N_CSMA:
 		for neighbour in self.interfGraph.getNeighbours(node):
 					#collision
 		 			if neighbour.setSilenced(True).backoff == node.backoff:
+		 				self.slotCollisionCount+=0.5
 		 				node.setSilenced(True)
 		 				self.silenceNeighbours(neighbour)
 
 	#Av
 	def queueFunction(self, queue):
-		return 1+log(queue+1)
+		return log(queue+1)
 
 	def updateState(self, node):
 		if random() < node.get_q():
@@ -81,7 +100,7 @@ class N_CSMA:
 			node.setState(Av)
 			#print node.id, Av
 		else:
-			node.setState(-1)
+			node.setState(self.OFF)
 	def dumpQueue(self, sched):
 		if self.useSINR:
 			sched = self.interfSINRGraph.successfulTransmissions(sched)
@@ -120,15 +139,27 @@ class N_CSMA:
 	 	slotSchedule = []
 	 	#send RESERVE
 	 	for node in self.interfGraph.nodes:
-	 		#if node.state != -1:
-	 		#	self.silenceNeighbours(node)
-	 		if not node.silenced and node.state != -1:
+	 		if node.state != self.OFF:
+	 			self.onNodesCount+=1
+		 		if not node.silenced:
+		 			self.silenceNeighbours(node)
+		 			#if ack collided, this node is silenced now
+		 			if not node.silenced:
+		 				node.setSilenced(True)
+		 				slotSchedule.append(node)
+	 	map(lambda node: node.setBackoff(randint(0,self.W1)), self.interfGraph.nodes)
+	 	#sort
+	 	self.interfGraph.nodes.sort(key=lambda node: node.backoff)	 				
+	 	for node in self.interfGraph.nodes:
+	 		if not node.silenced and node.state == self.OFF:
 	 			self.silenceNeighbours(node)
-	 			#if ack collided or any neighbours reserved before, this node is silenced now
+	 			#if ack collided, this node is silenced now
 	 			if not node.silenced:
+	 				node.setSilenced(True)
 	 				slotSchedule.append(node)
 	 	#dump schedules queues
 		self.dumpQueue(slotSchedule)
+		self.schedSizeFrequency[len(slotSchedule)]+=1
 	 	return slotSchedule
 
 	def heristicControlPhase1(self):
