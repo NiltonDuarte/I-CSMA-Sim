@@ -16,8 +16,8 @@ print "X-CSMA lattice size 4"
 betaL=[0.01, 0.1, 1 , 10]
 beta=None
 alfa = 2.5
-W1 = 20
-W2 = 8
+W1 = 0
+W2 = 20
 rhoL = [0.5, 0.6, 0.7, 0.8, 0.9]
 rho = 0.7
 mean = 0.5
