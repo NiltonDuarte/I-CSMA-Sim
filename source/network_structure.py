@@ -69,6 +69,7 @@ class Node:
 		self.backoff = None
 		self.silenced = False
 		self.visited = False
+		self.collided = False
 		self.queueSize = 0
 		self.S = None
 		self.q = None
@@ -90,11 +91,23 @@ class Node:
 		self.silenced = st
 		return self
 
+	def setCollided(self, st):
+		self.collided=st
+		return self
+
 	def resetVisit(self):
 		self.visited = False
 
 	def resetSilence(self):
 		self.silenced = False
+
+	def resetCollided(self):
+		self.collided = False
+
+	def resetCtrlVars(self):
+		self.visited = False
+		self.silenced = False
+		self.collided = False
 
 	def getQueueSize(self):
 		return self.queueSize
@@ -114,6 +127,8 @@ class Node:
 
 	def get_q(self):
 		return self.q
+
+
 
 
 

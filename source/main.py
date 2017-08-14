@@ -175,58 +175,64 @@ if False:
 		sinR = (1/distance(lattice.devices[0].position, i.position)**alpha)/(noise)
 		print sinR
 
-print "N-CSMA lattice size 4"
+#COLETAR OS RESULTADOS SEPARADAMENTE A MUDANÇA DA FUNÇAO DE ATIVAÇAO E DO MECANIMOS DE DUAS FASES DE DISPUTA
+#TESTAR COM OUTRAS TOPOLOGIAS
+#INDICE DO REUSO - MEDIA NOS ESCALONADOS/MAX DE NOS ESCALONAVEIS
+print "X-CSMA lattice size 4"
 #(self, interferenceGraph, beta, W1, W2, rho, trafficMean, interferenceSINRGraph=None)
-betaL=[ 0.01, 0.03, 0.1, 0.3, 1, 3, 10, 30, 100]
+betaL=[ 10, 30]
 beta=20
 alfa = 2.5
-W1 = 6
-W2 = 22
+W1 = 2000000
+W2 = 8000000
 rhoL = [0.5, 0.6, 0.7, 0.8, 0.9]
-rho = 0.8
+rho = 0.7
 mean = 0.5
 #alpha=2.5
 sinrbeta=4.0
 noiseBG=9.88211768803e-05/12.
+numExps = 3
+numIt = 100000
 #f = open('results_sinr_beta'+str(beta), 'w')
 
 interfDist = 80.
 for beta in betaL:
-	if False:
-		interfGraphLattice = InterferenceGraph(lattice, interfDist)
-		#sinrGraph = InterferenceSINRGraph(lattice, alpha, sinrbeta, noiseBG)
-		icsma = I_CSMA(interfGraphLattice, beta, W1, W2, rho, mean)#, sinrGraph)
-		sched = icsma.run(100000)
-		queue=0
-		queuesList = []
-		n = len(icsma.interfGraph.nodes)
-		for node in icsma.interfGraph.nodes:
-			queuesList.append(node.queueSize)
-			queue += node.queueSize
-		results=", ".join(str(x) for x in ([rho , beta, round(queue/n,2)] + queuesList))
-		print "I-CSMA",results
-	if True:
-		interfGraphLattice = InterferenceGraph(lattice, interfDist)
-		#sinrGraph = InterferenceSINRGraph(lattice, alpha, sinrbeta, noiseBG)
-		ncsma = N_CSMA(interfGraphLattice, beta, W1, W2, rho, mean)#, sinrGraph)
-		for runs in range(100000):
-			sched = ncsma.runHeuristic(1)
-		queue=0
-		queuesList = []
-		n = len(ncsma.interfGraph.nodes)
-		ncsma.interfGraph.nodes.sort(key=lambda node: node.id)
-		for node in ncsma.interfGraph.nodes:
-			queuesList.append(round(node.queueSize,4))
-			queue += node.queueSize
-			if node.id % 4 == 3:
-				queuesList.append("\n")
-		results=", ".join(str(x) for x in ([rho , beta, round(queue/n,2), "\n"] + queuesList))
-		print "N-CSMA",results
-		print "Total Colisions",ncsma.totalCollisionCount
-		print "Sched Frequency",ncsma.schedSizeFrequency
-		print "Collision Frequency",ncsma.slotCollisionFrequency
-		print "On Nodes Frequency",ncsma.onNodesFrequency
-	#f.write(str(results))
-	#f.write('\n')
-	#f.flush()
+	for exps in range(numExps):
+		if False:
+			interfGraphLattice = InterferenceGraph(lattice, interfDist)
+			#sinrGraph = InterferenceSINRGraph(lattice, alpha, sinrbeta, noiseBG)
+			icsma = I_CSMA(interfGraphLattice, beta, W1, W2, rho, mean)#, sinrGraph)
+			sched = icsma.run(numIt)
+			queue=0
+			queuesList = []
+			n = len(icsma.interfGraph.nodes)
+			for node in icsma.interfGraph.nodes:
+				queuesList.append(node.queueSize)
+				queue += node.queueSize
+			results=", ".join(str(x) for x in ([rho , beta, round(queue/n,2)] + queuesList))
+			print "I-CSMA",results
+		if True:
+			interfGraphLattice = InterferenceGraph(lattice, interfDist)
+			#sinrGraph = InterferenceSINRGraph(lattice, alpha, sinrbeta, noiseBG)
+			ncsma = N_CSMA(interfGraphLattice, beta, W1, W2, rho, mean)#, sinrGraph)
+			for runs in range(numIt):
+				sched = ncsma.runHeuristic(1)
+			queue=0
+			queuesList = []
+			n = len(ncsma.interfGraph.nodes)
+			ncsma.interfGraph.nodes.sort(key=lambda node: node.id)
+			for node in ncsma.interfGraph.nodes:
+				queuesList.append(round(node.queueSize,4))
+				queue += node.queueSize
+				if node.id % 4 == 3:
+					queuesList.append("\n")
+			results=", ".join(str(x) for x in ([rho , beta, round(queue/n,2), "\n"] + queuesList))
+			print "N-CSMA",results
+			print "Total Colisions",ncsma.totalCollisionCount
+			print "Sched Frequency",ncsma.schedSizeFrequency
+			print "Collision Frequency",ncsma.slotCollisionFrequency
+			print "On Nodes Frequency",ncsma.onNodesFrequency
+		#f.write(str(results))
+		#f.write('\n')
+		#f.flush()
 

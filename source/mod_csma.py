@@ -5,7 +5,7 @@ from math import *
 from random import *
 from network_structure import *
 
-class N_CSMA:
+class MOD_CSMA:
 	def __init__(self, interferenceGraph, beta, W1, W2, rho, trafficMean, interferenceSINRGraph=None):
 		self.b = beta
 		self.interfGraph = interferenceGraph
@@ -25,7 +25,17 @@ class N_CSMA:
 		self.schedSizeFrequency = [0]*(len(interferenceGraph.nodes)+1)
 		self.onNodesCount = 0
 		self.onNodesFrequency = [0]*(len(interferenceGraph.nodes)+1)
-		self.newCP2=8
+
+		self.newQueueFunc = False
+		self.newSFunc = False
+		self.newQProb = False
+		self.newCP2 = False
+
+	def turnNewIdeias(self, newQF, newSF, newQP, newCP2):
+		self.newQueueFunc = newQF
+		self.newSFunc = newSF
+		self.newQProb = newQP
+		self.newCP2 = newCP2
 
 	def _run(self, iterations):
 		it = 0
@@ -37,10 +47,10 @@ class N_CSMA:
 			else:
 				self.controlPhase1()
 			slotSchedule = self.controlPhase2()
-			self.schedSizeFrequency[len(slotSchedule)]+=1			
+			self.schedSizeFrequency[len(slotSchedule)]+=1
 			self.slotCollisionFrequency[int(self.slotCollisionCount)]+=1
 			self.onNodesFrequency[self.onNodesCount]+=1
-			self.totalCollisionCount+=self.slotCollisionCount
+			self.totalCollisionCount+=self.slotCollisionCount			
 			it += 1
 		return slotSchedule
 
@@ -56,7 +66,7 @@ class N_CSMA:
 
 	def runHeuristic(self, iterations):
 		self.useHeuristic=True
-		return self._run(iterations)
+		return self._run(iterations)	
 
 	def S(self, node):
 		#sum of the node neighbours state(spins). desc after eq 5
@@ -65,20 +75,21 @@ class N_CSMA:
 		for neighbour in neighbours:
 			S += neighbour.state
 		#print node.id, S
-		return S/len(neighbours)
+		if self.newSFunc:
+			return S/len(neighbours)
+		return S
 
 	def q(self, node):
 	 	#eq 5
 	 	Av=self.queueFunction(node.getQueueSize())
-	 	#ret = 0.5*(1-tanh((node.state+1)*self.b*self.S(node)/2))
-	 	x = self.b*(Av-self.S(node))
-
-	 	if x > 0:
-	 		ret = exp(-1/x)
+	 	if self.newQProb == "tanhdif":
+	 		x = self.b*(Av-self.S(node))
+	 		ret= 0.5*(1+tanh(x))
+	 	elif self.newQProb == "sech":
+	 		ret = 1-(1/cosh((Av+1)*self.b*self.S(node)/2))
 	 	else:
-	 		ret = 0
-	 	ret= 0.5*(1+tanh(x))
-	 	#ret=1
+	 		ret = 0.5*(1-tanh((Av+1)*self.b*self.S(node)/2))
+	 	#print ret
 	 	return ret
 
 	def silenceNeighbours(self, node):
@@ -94,7 +105,15 @@ class N_CSMA:
 
 	#Av
 	def queueFunction(self, queue):
+		if self.newQueueFunc:
+			return self.newQFunc(queue)
+		return self.origQFunc(queue)
+
+	def newQFunc(self,queue):
 		return log(queue+1)
+
+	def origQFunc(self,queue):
+		return 2*(self.maxD-1)+log(queue+1)
 
 	def updateState(self, node):
 		if random() < node.get_q():
@@ -117,6 +136,7 @@ class N_CSMA:
 		map(lambda node: node.fillQueue(self.traffic.getNewValue()), self.interfGraph.nodes)
 		#reset visited, silenced and collided control variable
 		map(lambda node: node.resetCtrlVars(), self.interfGraph.nodes)
+
 		#set random backoff
 	 	map(lambda node: node.setBackoff(randint(0,self.W1)), self.interfGraph.nodes)
 	 	#sort
@@ -143,20 +163,21 @@ class N_CSMA:
 	 		if node.state != self.OFF:
 	 			self.onNodesCount+=1
 		 		if not node.silenced:
+	 				self.silenceNeighbours(node)
+	 				#if ack collided, this node is silenced now
+	 				if not node.silenced:
+	 					slotSchedule.append(node)
+
+	 	if self.newCP2>0:
+		 	map(lambda node: node.setBackoff(randint(0,self.newCP2)), self.interfGraph.nodes)
+		 	#sort
+		 	self.interfGraph.nodes.sort(key=lambda node: node.backoff)	 				
+		 	for node in self.interfGraph.nodes:
+		 		if (not node.silenced and node.state == self.OFF) or node.collided:
 		 			self.silenceNeighbours(node)
 		 			#if ack collided, this node is silenced now
 		 			if not node.silenced:
 		 				slotSchedule.append(node)
-
-	 	map(lambda node: node.setBackoff(randint(0,self.newCP2)), self.interfGraph.nodes)
-	 	#sort
-	 	self.interfGraph.nodes.sort(key=lambda node: node.backoff)	 				
-	 	for node in self.interfGraph.nodes:
-	 		if (not node.silenced and node.state == self.OFF) or node.collided:
-	 			self.silenceNeighbours(node)
-	 			#if ack collided, this node is silenced now
-	 			if not node.silenced:
-	 				slotSchedule.append(node)
 	 	#dump schedules queues
 		self.dumpQueue(slotSchedule)
 	 	return slotSchedule
