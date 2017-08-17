@@ -39,7 +39,7 @@ class I_CSMA:
 	def runHeuristic(self, iterations):
 		it = 0
 		while it < iterations:
-			self.heristicControlPhase1()
+			self.heuristicControlPhase1()
 			schedule = self.controlPhase2()
 			it += 1
 		return schedule		
@@ -131,7 +131,7 @@ class I_CSMA:
 		self.dumpQueue(slotSchedule)
 	 	return slotSchedule
 
-	def heristicControlPhase1(self):
+	def heuristicControlPhase1(self):
 		#calc S and q based on prev time slot
 		map(lambda node: node.set_q(self.q(node)), self.interfGraph.nodes)
 		#fill queues

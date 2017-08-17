@@ -13,7 +13,7 @@ print "Initializing"
 #INDICE DO REUSO - MEDIA NOS ESCALONADOS/MAX DE NOS ESCALONAVEIS
 print "X-CSMA lattice size 4"
 #(self, interferenceGraph, beta, W1, W2, rho, trafficMean, interferenceSINRGraph=None)
-betaL=[0.01, 0.1, 1 , 10]
+betaL=[10]
 beta=None
 alfa = 2.5
 W1 = 0
@@ -57,7 +57,7 @@ file.flush()
 params = []
 param1 = [False, True]
 param2 = [False, True]
-param3 = [False, "tanhdif", "sech"]
+param3 = [False, "tanhdif"]#, "sech"]
 param4 = [0, 8]
 params = [[a, b, c, d] for a in param1 for b in param2 for c in param3 for d in param4]
 

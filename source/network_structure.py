@@ -74,6 +74,7 @@ class Node:
 		self.S = None
 		self.q = None
 		self.sourceObj = obj
+		self.sched_algo = []
 		
 	def addEdge(self, e):
 		self.edges.append(e)

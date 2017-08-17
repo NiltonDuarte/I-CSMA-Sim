@@ -34,7 +34,7 @@ class InterferenceGraph:
 			outterIdx+= 1
 
 	def distance(self, deviceA, deviceB):
-		sqSum = (deviceA.position[0]-deviceB.position[0])**2+(deviceA.position[1]-deviceB.position[1])**2
+		sqSum = (deviceA.position[0]-deviceB.position[0])**2+(deviceA.position[1]-deviceB.position[1])**2+(deviceA.position[2]-deviceB.position[2])**2
 		dist = sqSum**0.5
 		return dist
 

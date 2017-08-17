@@ -43,7 +43,7 @@ class MOD_CSMA:
 			self.slotCollisionCount=0
 			self.onNodesCount=0
 			if self.useHeuristic:
-				self.heristicControlPhase1()
+				self.heuristicControlPhase1()
 			else:
 				self.controlPhase1()
 			slotSchedule = self.controlPhase2()
@@ -182,7 +182,7 @@ class MOD_CSMA:
 		self.dumpQueue(slotSchedule)
 	 	return slotSchedule
 
-	def heristicControlPhase1(self):
+	def heuristicControlPhase1(self):
 		#calc S and q based on prev time slot
 		map(lambda node: node.set_q(self.q(node)), self.interfGraph.nodes)
 		#fill queues
