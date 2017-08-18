@@ -39,6 +39,9 @@ for i in range(n):
 #sched size freq
 for i in range(n+1):
 	header += ",s"+str(i)+" "
+#n. on nodes freq
+for i in range(n+1):
+	header += ",o"+str(i)+" "
 header+='\n'
 f.write(str(header))
 f.flush()
@@ -62,7 +65,7 @@ for i in range(rounds):
 		for node in xcsma.interfGraph.nodes:
 			queuesList.append(node.queueSize)
 			queue += node.queueSize
-		results=", ".join(str(x) for x in ([r , beta, round(queue/n,2)] + queuesList + xcsma.schedSizeFrequency))
+		results=", ".join(str(x) for x in ([r , beta, round(queue/n,2)] + queuesList + xcsma.schedSizeFrequency) + xcsma.onNodesFrequency)
 		print results
 		f.write(str(results))
 		f.write('\n')

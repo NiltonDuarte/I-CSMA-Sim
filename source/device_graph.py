@@ -3,7 +3,7 @@ import math
 from network_structure import *
 
 class Lattice:
-	#each point in the lattice will have one device linked with itself 
+	#each point in the lattice will have one device linked with its pair
 	def __init__(self, size, distance, pairDist):
 		self.latticeGraph = [[0 for x in range(size)] for y in range(size)]
 		#list of nodes(devices)
@@ -31,7 +31,7 @@ class Lattice:
 				self.links.append(link)
 
 class Ring:
-	#each point in the ring is a device and are connected to the neighbours
+	#each point in the ring is a device and are connected its pair
 	def __init__(self, numNodes, radius, pairDist):
 		self.ringGraph = [0 for x in range(numNodes)]
 		angularDistance = 2*math.pi/numNodes

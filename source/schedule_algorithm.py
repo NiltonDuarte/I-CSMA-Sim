@@ -6,7 +6,7 @@ from network_structure import *
 
 WINNER = 1
 IDLE = 0
-LOOSER = 2
+LOSER = 2
 
 class Schedule_Algorithm:
 	def __init__(self, id, slot):
@@ -26,10 +26,10 @@ class Schedule_Algorithm:
 			return
 		for nbour in self.neighbours:
 			if nbour.state == WINNER:
-				self.state = LOOSER
+				self.state = LOSER
 				self.number = 0
 				return self
-			#elif nbour.state == LOOSER:
+			#elif nbour.state == LOSER:
 			#	self.neighbours.remove(nbour)
 			elif self.number < nbour.number:
 				win=False
