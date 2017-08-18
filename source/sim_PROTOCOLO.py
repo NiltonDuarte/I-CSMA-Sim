@@ -65,7 +65,7 @@ for i in range(rounds):
 		for node in xcsma.interfGraph.nodes:
 			queuesList.append(node.queueSize)
 			queue += node.queueSize
-		results=", ".join(str(x) for x in ([r , beta, round(queue/n,2)] + queuesList + xcsma.schedSizeFrequency) + xcsma.onNodesFrequency)
+		results=", ".join(str(x) for x in ([r , beta, round(queue/n,2)] + queuesList + xcsma.schedSizeFrequency + xcsma.onNodesFrequency))
 		print results
 		f.write(str(results))
 		f.write('\n')
