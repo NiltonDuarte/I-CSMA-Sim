@@ -17,15 +17,16 @@ class MOD_CSMA:
 		self.traffic = TrafficDistribution()
 		self.traffic.calc_L(rho*trafficMean)
 		self.interfSINRGraph = interferenceSINRGraph
+		self.numNodes = len(interferenceGraph.nodes)
 		self.useSINR = False
 		self.useHeuristic = False
 		self.OFF = -1
 		self.totalCollisionCount = 0
 		self.slotCollisionCount = 0
-		self.slotCollisionFrequency = [0]*(len(interferenceGraph.nodes)+1)
-		self.schedSizeFrequency = [0]*(len(interferenceGraph.nodes)+1)
+		self.slotCollisionFrequency = [0]*(self.numNodes+2)
+		self.schedSizeFrequency = [0]*(self.numNodes+1)
 		self.onNodesCount = 0
-		self.onNodesFrequency = [0]*(len(interferenceGraph.nodes)+1)
+		self.onNodesFrequency = [0]*(self.numNodes+1)
 
 		self.newQueueFunc = False
 		self.newSFunc = False
@@ -51,9 +52,11 @@ class MOD_CSMA:
 				self.controlPhase1()
 			slotSchedule = self.controlPhase2()
 			self.schedSizeFrequency[len(slotSchedule)]+=1
+			self.totalCollisionCount+=self.slotCollisionCount
+			if self.slotCollisionCount > self.numNodes:
+				self.slotCollisionCount = self.numNodes+1
 			self.slotCollisionFrequency[int(self.slotCollisionCount)]+=1
-			self.onNodesFrequency[self.onNodesCount]+=1
-			self.totalCollisionCount+=self.slotCollisionCount			
+			self.onNodesFrequency[self.onNodesCount]+=1		
 			it += 1
 		return slotSchedule
 
