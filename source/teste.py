@@ -37,18 +37,19 @@ l = map(lambda x: x.set(), listA)
 print time.clock() - init
 print l[10].a == 0
 """
-rho = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+#rho = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
 beta=[0.01, 0.1, 1, 10]
-hostname=['01', '01', '01', '03', '04']
+hostname=['01', '01', '01']#, '03', '04']
 aux = 0
 f = open('gridQsub.sh', 'w')
-for r in rho:
-	for b in beta:
-		node = "node"+hostname[aux%len(hostname)]
-		aux+=1
-		f.write("qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname="+node+" python sim_PROTOCOLO.py "+str(b)+" "+str(r))
-		f.write('\n')
-		f.flush()
+#for r in rho:
+for b in beta:
+	node = "node"+hostname[aux%len(hostname)]
+	aux+=1
+	#f.write("qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname="+node+" python sim_PROTOCOLO.py "+str(b)+" "+str(r))
+	f.write("qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname="+node+" python diff_ideias.py "+str(b))
+	f.write('\n')
+	f.flush()
 f.close()		
 
 print "Finished"

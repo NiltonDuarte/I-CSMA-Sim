@@ -11,6 +11,7 @@ class MOD_CSMA:
 		self.interfGraph = interferenceGraph
 		self.W1 = W1
 		self.W2 = W2
+		self.CP2W=8
 		self.maxD = interferenceGraph.getMaxDegree()
 		self.rho = rho
 		self.traffic = TrafficDistribution()
@@ -36,6 +37,8 @@ class MOD_CSMA:
 		self.newSFunc = newSF
 		self.newQProb = newQP
 		self.newCP2 = newCP2
+		if not newCP2:
+			self.W2 += self.CP2W
 
 	def _run(self, iterations):
 		it = 0
@@ -168,7 +171,7 @@ class MOD_CSMA:
 	 				if not node.silenced:
 	 					slotSchedule.append(node)
 
-	 	if self.newCP2>0:
+	 	if self.newCP2:
 		 	map(lambda node: node.setBackoff(randint(0,self.newCP2)), self.interfGraph.nodes)
 		 	#sort
 		 	self.interfGraph.nodes.sort(key=lambda node: node.backoff)	 				

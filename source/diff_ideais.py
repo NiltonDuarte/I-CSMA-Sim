@@ -14,7 +14,7 @@ print "Initializing"
 print "X-CSMA lattice size 4"
 #(self, interferenceGraph, beta, W1, W2, rho, trafficMean, interferenceSINRGraph=None)
 betaL=[10]
-beta=None
+beta = float(sys.argv[1])
 alfa = 2.5
 W1 = 0
 W2 = 20
@@ -25,8 +25,8 @@ mean = 0.5
 sinrbeta=4.0
 noiseBG=9.88211768803e-05/12.
 numExps = 3
-numIt = 100000
-file = open('results_diff_ideias.csv', 'w')
+numIt = 1000000
+file = open('results_diff_ideias_beta'+str(beta)+'_rho'+str(rho)+'.csv', 'w')
 
 LattInterfDist = 80.
 LattDistance = 70.
@@ -53,31 +53,32 @@ file.write(str(header))
 file.write('\n')
 file.flush()
 
-# builds all possible params argument
-params = []
+# builds all possible params argument newQF, newSF, newQP, newCP2
 param1 = [False, True]
 param2 = [False, True]
-param3 = [False, "tanhdif"]#, "sech"]
-param4 = [0, 8]
+if beta < 10:
+	param3 = [False, "tanhdif", "sech"]
+else:
+	param3 = [False, "tanhdif"]
+param4 = [False, True]
 params = [[a, b, c, d] for a in param1 for b in param2 for c in param3 for d in param4]
-
-for beta in betaL:
+for exps in range(numExps):
+	#for beta in betaL:
 	for newIdeiasParam in params:
-		for exps in range(numExps):
-			lattice = Lattice(LattSize,LattDistance,LattPairDist)
-			interfGraphLattice = InterferenceGraph(lattice, LattInterfDist)
-			#sinrGraph = InterferenceSINRGraph(lattice, alpha, sinrbeta, noiseBG)
-			modcsma = MOD_CSMA(interfGraphLattice, beta, W1, W2, rho, mean)#, sinrGraph)
-			modcsma.turnNewIdeias(*newIdeiasParam)
-			sched = modcsma.runHeuristic(numIt)
-			queue=0
-			queuesList = []	
-			modcsma.interfGraph.nodes.sort(key=lambda node: node.id)
-			for node in modcsma.interfGraph.nodes:
-				queuesList.append(node.queueSize)
-				queue += node.queueSize
-			results=", ".join(str(x) for x in ([rho, beta]+ newIdeiasParam + [round(queue/n,2), modcsma.totalCollisionCount] + queuesList + modcsma.schedSizeFrequency + modcsma.slotCollisionFrequency + modcsma.onNodesFrequency))
-			print "MOD-CSMA",results
-			file.write(str(results))
-			file.write('\n')
-			file.flush()
+		lattice = Lattice(LattSize,LattDistance,LattPairDist)
+		interfGraphLattice = InterferenceGraph(lattice, LattInterfDist)
+		#sinrGraph = InterferenceSINRGraph(lattice, alpha, sinrbeta, noiseBG)
+		modcsma = MOD_CSMA(interfGraphLattice, beta, W1, W2, rho, mean)
+		modcsma.turnNewIdeias(*newIdeiasParam)
+		sched = modcsma.runHeuristic(numIt)
+		queue=0
+		queuesList = []	
+		modcsma.interfGraph.nodes.sort(key=lambda node: node.id)
+		for node in modcsma.interfGraph.nodes:
+			queuesList.append(node.queueSize)
+			queue += node.queueSize
+		results=", ".join(str(x) for x in ([rho, beta]+ newIdeiasParam + [round(queue/n,2), modcsma.totalCollisionCount] + queuesList + modcsma.schedSizeFrequency + modcsma.slotCollisionFrequency + modcsma.onNodesFrequency))
+		print "MOD-CSMA",results
+		file.write(str(results))
+		file.write('\n')
+		file.flush()

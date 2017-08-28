@@ -237,3 +237,8 @@ for beta in betaL:
 		#f.write('\n')
 		#f.flush()
 
+
+		#analise estatistica fatorial
+		#adicionar intervalo de confiança
+		#fazer geração de pacotes de acordo com tamanho da fase de controle + transmissao
+
