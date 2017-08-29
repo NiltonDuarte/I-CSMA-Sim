@@ -24,7 +24,7 @@ mean = 0.5
 #alpha=2.5
 sinrbeta=4.0
 noiseBG=9.88211768803e-05/12.
-numExps = 3
+numExps = 30
 numIt = 1000000
 file = open('results_diff_ideias_beta'+str(beta)+'_rho'+str(rho)+'.csv', 'w')
 
