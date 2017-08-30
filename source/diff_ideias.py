@@ -26,7 +26,7 @@ sinrbeta=4.0
 noiseBG=9.88211768803e-05/12.
 numExps = 30
 numIt = 1000000
-file = open('results_diff_ideias_beta'+str(beta)+'_rho'+str(rho)+'.csv', 'w')
+file = open('results2_diff_ideias_beta'+str(beta)+'_rho'+str(rho)+'.csv', 'w')
 
 LattInterfDist = 80.
 LattDistance = 70.
