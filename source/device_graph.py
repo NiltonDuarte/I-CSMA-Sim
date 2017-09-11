@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import math
+from random import *
 from network_structure import *
 
 class Lattice:
@@ -58,5 +59,53 @@ class Ring:
 
 class RandomTopology:
 	#each point is a device and is connected to every near(by distance) device
-	def __init__(self):
-		pass
+	def __init__(self, numNodes, xSize, ySize, pairDist):
+		self.xSize = xSize
+		self.ySize = ySize
+		self.pairDist=pairDist
+		self.numNodes = numNodes
+		#list of nodes(devices)
+		self.devices = []
+		#list of links
+		self.links = []
+
+
+	def allRandom(self):
+		for i in range(self.numNodes):
+			pos = [uniform(0,self.xSize), uniform(0,self.ySize),0]
+			self.addDevice(i,pos)		
+
+	def nearPrevNode(self, radius):
+		pos = [self.xSize/2., self.ySize/2.,0]
+		self.addDevice(0,pos) 
+		for i in range(1,self.numNodes):
+			prevNode = choice(self.devices)
+			print math.floor(prevNode.id), "->", i
+			X = prevNode.position[0]
+			Y = prevNode.position[1]
+			ang = 2*math.pi*random()
+			r = uniform(0, radius**2)
+			r = math.sqrt(r)
+			pos = [X+r*math.cos(ang),Y+ r*math.sin(ang),0]
+			self.addDevice(i, pos)
+
+	def addDevice(self, idt, pos):
+			device1 = Device(idt, pos, Queue())
+			self.devices.append(device1)
+			pos2 = [pos[0], pos[1], self.pairDist]
+			device2 = Device(0.2+idt, pos2, Queue())
+			
+			self.devices.append(device2)
+			link = Link(idt, device1, device2)
+			device1.addLink(link)
+			device2.addLink(link)
+			self.links.append(link)	
+
+
+if __name__ == "__main__":
+	rt = RandomTopology(20,100,100,30)
+	rt.nearPrevNode(30)
+	for node in rt.devices:
+		if node.position[2] == 0:
+			print node.position
+

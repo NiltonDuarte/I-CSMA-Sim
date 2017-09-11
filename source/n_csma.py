@@ -7,14 +7,14 @@ from network_structure import *
 from schedule_algorithm import *
 
 class N_CSMA:
-	def __init__(self, interferenceGraph, beta, W1, W2, rho, trafficMean, interferenceSINRGraph=None):
+	def __init__(self, interferenceGraph, beta, W1, W2, totalMiniSlots, rho, trafficMean, interferenceSINRGraph=None):
 		self.b = beta
 		self.interfGraph = interferenceGraph
 		self.W1 = W1
 		self.W2 = W2
 		self.maxD = interferenceGraph.getMaxDegree()
 		self.rho = rho
-		self.traffic = TrafficDistribution()
+		self.traffic = TrafficDistribution(totalMiniSlots)
 		self.traffic.calc_L(rho*trafficMean)
 		self.interfSINRGraph = interferenceSINRGraph
 		self.useSINR = False
@@ -29,6 +29,7 @@ class N_CSMA:
 		self.onNodesFrequency = [0]*(len(interferenceGraph.nodes)+1)
 		self.newCP2=8
 		self.slot = 0
+
 
 	def _run(self, iterations):
 		it = 0
@@ -210,7 +211,7 @@ class N_CSMA:
 				if error: print "ERROR"
 
 			for algo in node.sched_algo:
-				algo.updateState()
+				algo.updateState2()
 
 			newAlgo = Schedule_Algorithm(node.id, self.slot)
 			if node.state == self.OFF:

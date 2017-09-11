@@ -24,7 +24,10 @@ class Queue:
 	pass	
 
 class TrafficDistribution:
-	def __init__(self):
+	def __init__(self, totalMiniSlots):
+		self.refMiniSlots = 280.
+		self.totalMiniSlots = totalMiniSlots
+		self.ratio = self.totalMiniSlots/self.refMiniSlots
 		self.L=None
 
 	def getNewValue(self):
@@ -40,6 +43,7 @@ class TrafficDistribution:
 		#return paretovariate(1)
 	
 	def calc_L(self, targetMean):
+		targetMean = targetMean*self.ratio
 		H=1000
 		g=1.5
 		meanDelta = 0.001
@@ -128,6 +132,9 @@ class Node:
 
 	def get_q(self):
 		return self.q
+
+	def __repr__(self):
+		return str(self.id)
 
 
 

@@ -44,7 +44,7 @@ for i in range(n):
 for i in range(n+1):
 	header += ",s"+str(i)+" "
 #n. collisions freq
-for i in range(n+1):
+for i in range(n+2):
 	header += ",c"+str(i)+" "
 #n. on nodes freq
 for i in range(n+1):

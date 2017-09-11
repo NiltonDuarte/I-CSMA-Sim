@@ -6,7 +6,7 @@ from random import *
 from network_structure import *
 
 class MOD_CSMA:
-	def __init__(self, interferenceGraph, beta, W1, W2, rho, trafficMean, interferenceSINRGraph=None):
+	def __init__(self, interferenceGraph, beta, W1, W2, totalMiniSlots, rho, trafficMean, interferenceSINRGraph=None):
 		self.b = beta
 		self.interfGraph = interferenceGraph
 		self.W1 = W1
@@ -14,7 +14,7 @@ class MOD_CSMA:
 		self.CP2W=8
 		self.maxD = interferenceGraph.getMaxDegree()
 		self.rho = rho
-		self.traffic = TrafficDistribution()
+		self.traffic = TrafficDistribution(totalMiniSlots)
 		self.traffic.calc_L(rho*trafficMean)
 		self.interfSINRGraph = interferenceSINRGraph
 		self.numNodes = len(interferenceGraph.nodes)

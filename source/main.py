@@ -214,7 +214,8 @@ for beta in betaL:
 		if True:
 			interfGraphLattice = InterferenceGraph(lattice, interfDist)
 			#sinrGraph = InterferenceSINRGraph(lattice, alpha, sinrbeta, noiseBG)
-			ncsma = N_CSMA(interfGraphLattice, beta, W1, W2, rho, mean)#, sinrGraph)
+			totalMiniSlots = 280 - 28 + 16
+			ncsma = N_CSMA(interfGraphLattice, beta, W1, W2,, rho, mean)#, sinrGraph)
 			#for runs in range(numIt):
 			sched = ncsma.runCollisionFree(numIt,5)
 				#if runs % 10000 == 0: print runs
@@ -242,3 +243,12 @@ for beta in betaL:
 		#adicionar intervalo de confiança
 		#fazer geração de pacotes de acordo com tamanho da fase de controle + transmissao
 
+#reuniao dia 11/09 3h da tarde
+#verificar RTS E CTS (20 bytes), probe request e ping # de bytes, beacon
+#estudar o algoritmo, implementar em toroide
+
+#3a (19/9) às 16h
+#mander email sobre salto de canal de randevouz
+#definir grau máximo para o número de nós da rede aleatoria
+#rejogar quem está fora
+#escolher entre colocar prox de alguem ou jogar aleatória, depois rejogar
