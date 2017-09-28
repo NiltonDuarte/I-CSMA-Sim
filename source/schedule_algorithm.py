@@ -72,107 +72,142 @@ if __name__ == "__main__":
 	LattSize = 4
 	LattPairDist = 40.
 	maxSteps = 0
-	lattice = Lattice(LattSize,LattDistance,LattPairDist)
-	interfGraphLattice = InterferenceGraph(lattice, LattInterfDist, True, LattDistance*(LattSize), LattDistance*(LattSize))
-	for node in interfGraphLattice.nodes:
-		print node.id, interfGraphLattice.getNeighbours(node)
-	n = len(interfGraphLattice.nodes)
-	stepsFreq=[0]*25
-	countFreq=[0]*n
-
-	for i in range(1000000):
-		sched = []
-		lattice = Lattice(LattSize,LattDistance,LattPairDist)
-		interfGraphLattice = InterferenceGraph(lattice, LattInterfDist, True, LattDistance*(LattSize), LattDistance*(LattSize))
-		interfGraphLattice.nodes.sort(key=lambda node: node.id)
-		
-		for node in interfGraphLattice.nodes:
-			node.sched_algo=Schedule_Algorithm(node.id,0)
-			node.sched_algo.genNumber(0,10000)
-
-		for node in interfGraphLattice.nodes:
-			node.sched_algo.neighbours=[obj.sched_algo for obj in interfGraphLattice.getNeighbours(node)]
-
-
-		#print [node.sched_algo.number for node in interfGraphLattice.nodes]
-
-		completed = False
-		
-		steps = 0
-		count = 0
-		while not completed:
-			steps+=1
-			shuffle(interfGraphLattice.nodes)
-			for node in interfGraphLattice.nodes:
-				if sys.argv[1] == 'v1':
-					node.sched_algo.updateState()
-				if sys.argv[1] == 'v2':
-					node.sched_algo.updateState2()
-			completed=True
-			for node in interfGraphLattice.nodes:
-				if node.sched_algo.state == IDLE:
-					completed = False
-			if steps>10: 
-				print '=SCHED='
+	numIt = 100000
+	#lattice = Lattice(LattSize,LattDistance,LattPairDist)
+	#interfGraphLattice = InterferenceGraph(lattice, LattInterfDist, True, LattDistance*(LattSize), LattDistance*(LattSize))
+	n = 16
+	totalCountFreq=[0]*n
+	filePath = "./randomGraphs/savedGraphs/"
+	fileNames = ["DevGraph16AllRandWR", "DevGraph16NPV","DevGraph16NPV_MD3_"]
+	print "Starting"
+	for name in fileNames:
+		resultsSaveFile = open("Results_"+name+sys.argv[1]+".csv",'w')
+		for nameIdx in range(40):
+			stepsFreq=[0]*25
+			countFreq=[0]*n
+			for i in range(numIt):
+				sched = []
+				rt = RandomTopology()
+				rt.load(filePath+name+str(nameIdx)+".csv")
+				interfGraphLattice = InterferenceGraph(rt, LattInterfDist, False, LattDistance*(LattSize), LattDistance*(LattSize))
+				interfGraphLattice.nodes.sort(key=lambda node: node.id)
+				
 				for node in interfGraphLattice.nodes:
-					print node.sched_algo.state,
-					print node.sched_algo.number,
-					if node.id%LattSize==(LattSize-1):
-						print
-		#v3
-		if False:	
-			for node in interfGraphLattice.nodes:
-				if node.sched_algo.state==WINNER:
-					neighboursCandidateList=[]
-					for neigh in node.sched_algo.neighbours:
-						neighsOns=0
-						for nneigh in neigh.neighbours:
-							if nneigh.state==WINNER:
-								neighsOns +=1
-						if neighsOns == 0:
-							print "Error 1"
-						if neighsOns == 1:
-							neighboursCandidateList.append(neigh)
-					if len(neighboursCandidateList)>1:
-						node.sched_algo.state=LOSER
-						for nodeschedalgo in neighboursCandidateList:
-							nodeschedalgo.state=WINNER
+					node.sched_algo=Schedule_Algorithm(node.id,0)
+					node.sched_algo.genNumber(0,10000)
 
-		for node in interfGraphLattice.nodes:
-			if node.sched_algo.state == WINNER:
-				for neigh in node.sched_algo.neighbours:
-					if neigh.state == WINNER:
-						print "ERROR 2"
-				count += 1
-				sched.append(node)
-		if count > n/2:
-			print '=SCHED2='
-			print steps
-			print [node.id for node in sched]
+				for node in interfGraphLattice.nodes:
+					node.sched_algo.neighbours=[obj.sched_algo for obj in interfGraphLattice.getNeighbours(node)]
 
-			for node in interfGraphLattice.nodes:
-				print node.sched_algo.number,
-			 	if node.id%LattSize==(LattSize-1):
-			 		print
-		#print "==SCHED=="
-		#for node in interfGraphLattice.nodes:
-		#	print node.sched_algo.state,
-		#	if node.id%4==3:
-		#		print			 		
-			#print [node.sched_algo.state for node in interfGraphLattice.nodes]
-			#print [node.sched_algo.number for node in interfGraphLattice.nodes]
-			#i=0
-			#for node in interfGraphLattice.nodes:
-			#	print node.sched_algo.state,
-			#	i+=1
-			#	if i%4==0: print
-			#print "======================"
-		if i%10000==0:
-			print i
+
+				#print [node.sched_algo.number for node in interfGraphLattice.nodes]
+
+				completed = False
+				
+				steps = 0
+				count = 0
+				while not completed:
+					steps+=1
+					shuffle(interfGraphLattice.nodes)
+					for node in interfGraphLattice.nodes:
+						if sys.argv[1] == 'v1':
+							node.sched_algo.updateState()
+						if sys.argv[1] == 'v2' or sys.argv[1] == 'v3':
+							node.sched_algo.updateState2()
+					completed=True
+					for node in interfGraphLattice.nodes:
+						if node.sched_algo.state == IDLE:
+							completed = False
+					if steps>10: 
+						print '=SCHED='
+						for node in interfGraphLattice.nodes:
+							print node.sched_algo.state,
+							print node.sched_algo.number,
+							if node.id%LattSize==(LattSize-1):
+								print
+
+				for node in interfGraphLattice.nodes:
+					if node.sched_algo.state == WINNER:
+						for neigh in node.sched_algo.neighbours:
+							if neigh.state == WINNER:
+								print "ERROR 2,1".i , node.id, neigh.id						
+				#v3
+				if sys.argv[1] == 'v3':	
+					for node in interfGraphLattice.nodes:
+						if node.sched_algo.state==WINNER:
+							neighboursCandidateList=[]
+							for neigh in node.sched_algo.neighbours:
+								nneighsOns=0
+								for nneigh in neigh.neighbours:
+									if nneigh.state==WINNER:
+										nneighsOns +=1
+								if nneighsOns == 0:
+									print "Error 1"
+								if nneighsOns == 1:
+									neighboursCandidateList.append(neigh)
+							if len(neighboursCandidateList)>1: 
+								#print "search ",node.id, [obj.id for obj in neighboursCandidateList]
+								node.sched_algo.state=LOSER
+								for nodeschedalgo in neighboursCandidateList:
+									allnneighOFF = True
+									for nneigh in nodeschedalgo.neighbours:
+										if nneigh.state==WINNER:
+											allnneighOFF = False
+									if allnneighOFF:
+										nodeschedalgo.state=WINNER
+
+
+				for node in interfGraphLattice.nodes:
+					if node.sched_algo.state == WINNER:
+						for neigh in node.sched_algo.neighbours:
+							if neigh.state == WINNER:
+								print "ERROR 2",i, node.id, neigh.id
+						count += 1
+						sched.append(node)
+				if count > n/2:
+					print '=SCHED2='
+					print steps
+					print [node.id for node in sched]
+
+					for node in interfGraphLattice.nodes:
+						print node.sched_algo.number,
+					 	#if node.id%LattSize==(LattSize-1):
+					print
+				#print "==SCHED=="
+				#for node in interfGraphLattice.nodes:
+				#	print node.sched_algo.state,
+				#	if node.id%4==3:
+				#		print			 		
+					#print [node.sched_algo.state for node in interfGraphLattice.nodes]
+					#print [node.sched_algo.number for node in interfGraphLattice.nodes]
+					#i=0
+					#for node in interfGraphLattice.nodes:
+					#	print node.sched_algo.state,
+					#	i+=1
+					#	if i%4==0: print
+					#print "======================"
+				if i%10000==0:
+					print i
+					print stepsFreq
+					print countFreq
+				stepsFreq[steps]+=1
+				countFreq[count]+=1
+				totalCountFreq[count]+=1
 			print stepsFreq
 			print countFreq
-		stepsFreq[steps]+=1
-		countFreq[count]+=1
-	print stepsFreq
-	print countFreq
+			mean = 0.
+			for aux in range(len(countFreq)):
+				mean += aux*countFreq[aux]
+			mean = mean/float(numIt)
+			resultsSaveFile.write(sys.argv[1]+","+str(nameIdx)+","+str(mean)+"\n")
+			resultsSaveFile.flush()
+	resultsSaveFile.close()
+	mean = 0.
+	for aux in range(len(countFreq)):
+		mean += aux*totalCountFreq[aux]
+	mean = mean/(numIt*40*len(fileNames))
+	resultVersion = open("Results_"+sys.argv[1]+".csv",'w')
+	resultVersion.write(sys.argv[1]+","+str(mean)+"\n")
+	resultVersion.flush()
+	resultVersion.close()
 

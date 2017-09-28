@@ -161,3 +161,11 @@ class Edge:
 			return self.nodes[0]
 		raise NameError("Edge has no destiny")
 
+
+def deviceDistance( deviceA, deviceB,useToroidalSpace=False, sizeX=None, sizeY=None):
+	if useToroidalSpace:
+		sqSum=min(abs(deviceA.position[0]-deviceB.position[0]), sizeX - abs(deviceA.position[0]-deviceB.position[0]))**2 + min(abs(deviceA.position[1]-deviceB.position[1]), sizeY - abs(deviceA.position[1]-deviceB.position[1]))**2+(deviceA.position[2]-deviceB.position[2])**2
+	else:
+		sqSum = (deviceA.position[0]-deviceB.position[0])**2+(deviceA.position[1]-deviceB.position[1])**2+(deviceA.position[2]-deviceB.position[2])**2
+	dist = sqSum**0.5
+	return dist

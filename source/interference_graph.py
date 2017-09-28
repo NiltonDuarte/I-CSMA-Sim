@@ -39,13 +39,11 @@ class InterferenceGraph:
 			outterIdx+= 1
 
 	def distance(self, deviceA, deviceB):
+		#network_structure device distance
 		if self.useToroidalSpace:
-			sqSum=min(abs(deviceA.position[0]-deviceB.position[0]), self.sizeX - abs(deviceA.position[0]-deviceB.position[0]))**2 + min(abs(deviceA.position[1]-deviceB.position[1]), self.sizeY - abs(deviceA.position[1]-deviceB.position[1]))**2+(deviceA.position[2]-deviceB.position[2])**2
+			return deviceDistance(deviceA,deviceB,True,self.sizeX,self.sizeY)
 		else:
-			sqSum = (deviceA.position[0]-deviceB.position[0])**2+(deviceA.position[1]-deviceB.position[1])**2+(deviceA.position[2]-deviceB.position[2])**2
-		dist = sqSum**0.5
-		return dist
-
+			return deviceDistance(deviceA,deviceB)
 
 	def getMaxDegree(self):
 		maxD = 0
