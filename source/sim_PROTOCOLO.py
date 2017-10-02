@@ -39,9 +39,7 @@ for i in range(n):
 #sched size freq
 for i in range(n+1):
 	header += ",s"+str(i)+" "
-#n. on nodes freq
-for i in range(n+1):
-	header += ",o"+str(i)+" "
+
 header+='\n'
 f.write(str(header))
 f.flush()
@@ -53,7 +51,7 @@ for i in range(rounds):
 		sinrGraph = None
 		if algorithm =="N":
 			xcsma = N_CSMA(interfGraphLattice, beta, windowP1, windowP2, 252+16, r, arrivalMean, sinrGraph)	
-			schedule = xcsma.runCollisionFree(testesIt,3)
+			schedule = xcsma.runCollisionFree(testesIt,3,"v1")
 		elif algorithm == "I":
 			xcsma = I_CSMA(interfGraphLattice, beta, windowP1, windowP2, 280,r, arrivalMean, sinrGraph)	
 			schedule = xcsma.run(testesIt)
@@ -65,7 +63,7 @@ for i in range(rounds):
 		for node in xcsma.interfGraph.nodes:
 			queuesList.append(node.queueSize)
 			queue += node.queueSize
-		results=", ".join(str(x) for x in ([r , beta, round(queue/n,2)] + queuesList + xcsma.schedSizeFrequency + xcsma.onNodesFrequency))
+		results=", ".join(str(x) for x in ([r , beta, round(queue/n,2)] + queuesList + xcsma.schedSizeFrequency))
 		print results
 		f.write(str(results))
 		f.write('\n')

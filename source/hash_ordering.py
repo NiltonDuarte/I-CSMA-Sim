@@ -60,7 +60,7 @@ if __name__ == "__main__":
 	hist = [[0 for x in range(size)] for y in range(size)] 
 	histOrder = {}
 	count = 0
-	for i in range(10000000):
+	for i in range(100000000):
 		order = ho.getOrder()
 		num = 0
 		for j in range(len(order)):
