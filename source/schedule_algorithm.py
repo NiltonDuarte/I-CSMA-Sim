@@ -61,11 +61,42 @@ class Schedule_Algorithm:
 			self.state=WINNER
 		return self
 
+	def updateState4(self, dc):
+		if self.state != IDLE:
+			return
+		nboursNumbers = []
+		for nbour in self.neighbours:
+			if nbour.state == WINNER:
+				self.state = LOSER
+				self.number = -1
+				return self
+			if self.number == nbour.number and self.id < nbour.id:
+				nboursNumbers.append(nbour.number-1)
+			elif self.number == nbour.number and self.id > nbour.id:
+				nboursNumbers.append(nbour.number+1)
+			else:
+				nboursNumbers.append(nbour.number)
+		if self.number>dc:
+			higher_numbers = filter(lambda x: x> self.number, nboursNumbers)
+			#print "n>dc higher", self.id, higher_numbers
+			if len(higher_numbers) <= 1:
+				self.state=WINNER
+		else:
+			dcIn_numbers = filter(lambda x: x> dc, nboursNumbers)
+			#print "n<dc dcin ", self.id, dcIn_numbers
+			if len(dcIn_numbers) >  0:
+				return self
+			higher_numbers = filter(lambda x: x> self.number, nboursNumbers)
+			#print "n<dc higher ", self.id, higher_numbers
+			if len(higher_numbers) <= 1:
+				self.state=WINNER
+		return self
+
 #>>> perm
 #[[4, 7, 1, 6, 2, 0, 5, 3], [1, 6, 3, 4, 7, 2, 5, 0], [2, 6, 3, 0, 1, 7, 5, 4]]		
 #int(hashlib.sha1('83').hexdigest(),16)%3
 
-if __name__ == "__main__":
+if __name__ == "false__main__":
 	
 	LattInterfDist = 80.
 	LattDistance = 70.
@@ -114,6 +145,9 @@ if __name__ == "__main__":
 							node.sched_algo.updateState()
 						if sys.argv[1] == 'v2' or sys.argv[1] == 'v3':
 							node.sched_algo.updateState2()
+						if sys.argv[1] == 'v4':
+							node.sched_algo.updateState4()
+						
 					completed=True
 					for node in interfGraphLattice.nodes:
 						if node.sched_algo.state == IDLE:
@@ -211,3 +245,123 @@ if __name__ == "__main__":
 	resultVersion.flush()
 	resultVersion.close()
 
+if __name__ == "__main__":
+	LattInterfDist = 80.
+	LattDistance = 70.
+	LattSize = 4
+	LattPairDist = 40.
+	maxSteps = 0
+	numIt = 100000	
+	dc = 50000
+	dmax=100000
+	dmin= 0
+	lattice = Lattice(LattSize,LattDistance,LattPairDist)
+	interfGraphLattice = InterferenceGraph(lattice, LattInterfDist, True, LattDistance*(LattSize), LattDistance*(LattSize))
+	n = 16
+	totalCountFreq=[0]*n
+	print "Starting"
+	#resultsSaveFile = open("Results_"+name+sys.argv[1]+".csv",'w')
+	stepsFreq=[0]*25
+	countFreq=[0]*n
+	notSched = []
+	sched = []
+	allSchedFreq = []
+	for i in range(numIt):
+		for s in sched:
+			if s in notSched:
+				notSched.remove(s)
+		#print "still left ", notSched
+		sched = []
+		if len(notSched) == 0:
+			notSched = [k for k in range(n)]
+			#print "all sched'ed ", i
+			allSchedFreq.append(i)
+		lattice = Lattice(LattSize,LattDistance,LattPairDist)
+		interfGraphLattice = InterferenceGraph(lattice, LattInterfDist, False, LattDistance*(LattSize), LattDistance*(LattSize))
+		interfGraphLattice.nodes.sort(key=lambda node: node.id)
+		
+		for node in interfGraphLattice.nodes:
+			node.sched_algo=Schedule_Algorithm(node.id,0)
+			#prio = [0,2,5,7,8,10,13,15]
+			prio = notSched
+			if node.id in prio:
+				node.sched_algo.genNumber(dc,dmax)
+			else:
+				node.sched_algo.genNumber(dmin,dc)
+
+		for node in interfGraphLattice.nodes:
+			node.sched_algo.neighbours=[obj.sched_algo for obj in interfGraphLattice.getNeighbours(node)]
+		
+		"""
+		print [node.id for node in interfGraphLattice.nodes]
+		print [node.sched_algo.state for node in interfGraphLattice.nodes]
+		print [node.sched_algo.number for node in interfGraphLattice.nodes]
+		"""
+		completed = False
+				
+		steps = 0
+		count = 0
+		while not completed:
+			steps+=1
+			shuffle(interfGraphLattice.nodes)
+			for node in interfGraphLattice.nodes:
+				if sys.argv[1] == 'v1':
+					node.sched_algo.updateState()
+				if sys.argv[1] == 'v2' or sys.argv[1] == 'v3':
+					node.sched_algo.updateState2()
+				if sys.argv[1] == 'v4':
+					node.sched_algo.updateState4(dc)
+				
+			completed=True
+			for node in interfGraphLattice.nodes:
+				if node.sched_algo.state == IDLE:
+					completed = False
+			if steps>10: 
+				print '=SCHED='
+				for node in interfGraphLattice.nodes:
+					print node.sched_algo.state,
+					print node.sched_algo.number,
+					if node.id%LattSize==(LattSize-1):
+						print
+		interfGraphLattice.nodes.sort(key=lambda node: node.id)
+		for node in interfGraphLattice.nodes:
+			if node.sched_algo.state == WINNER:
+				for neigh in node.sched_algo.neighbours:
+					if neigh.state == WINNER:
+						print "ERROR 1 invalid schedule.  asrkt",i, node.id, neigh.id
+				count += 1
+				sched.append(node.id)
+		"""	
+		print [node.sched_algo.state for node in interfGraphLattice.nodes]
+		print [node.sched_algo.number for node in interfGraphLattice.nodes]
+		
+		i=0
+		for node in interfGraphLattice.nodes:
+			print node.sched_algo.state,
+			i+=1
+			if i%4==0: print
+		print [nID for nID in sched]
+		print "======================"
+		"""
+		if i%10000==0:
+			print i
+			print stepsFreq
+			print countFreq
+		stepsFreq[steps]+=1
+		countFreq[count]+=1
+		totalCountFreq[count]+=1
+		#a = raw_input("press p/ continuar")
+	print "steps freq ",stepsFreq
+	print "count freq ",countFreq
+	mean = 0.
+	for h in range(len(countFreq)):
+		mean+=countFreq[h]*h
+	print "count mean ", mean/numIt
+	#print allSchedFreq
+	allSchedHisto = [0]*100
+	for v in range(len(allSchedFreq))[1:]:
+		time = allSchedFreq[v]-allSchedFreq[v-1]
+		allSchedHisto[time]+=1
+	
+	print "all sched mean ",float(allSchedFreq[-1])/(len(allSchedFreq)-1)
+	print "all sched histo ",allSchedHisto
