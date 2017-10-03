@@ -79,6 +79,7 @@ class Node:
 		self.q = None
 		self.sourceObj = obj
 		self.sched_algo = []
+		self.maxQueue = 700
 		
 	def addEdge(self, e):
 		self.edges.append(e)
@@ -119,6 +120,7 @@ class Node:
 
 	def fillQueue(self,val):
 		self.queueSize+= val
+		self.queueSize = self.queueSize if self.queueSize < self.maxQueue else self.maxQueue
 
 	def dumpQueue(self):
 		if self.queueSize < 1: self.queueSize = 0 

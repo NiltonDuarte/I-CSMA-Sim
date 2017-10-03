@@ -6,25 +6,34 @@ from random import *
 from network_structure import *
 
 class I_CSMA:
-	def __init__(self, interferenceGraph, beta, W1, W2, rho, trafficMean, interferenceSINRGraph=None):
+	def __init__(self, interferenceGraph, beta, W1, W2, totalMiniSlots, rho, trafficMean, interferenceSINRGraph=None):
 		self.b = beta
 		self.interfGraph = interferenceGraph
 		self.W1 = W1
 		self.W2 = W2
 		self.maxD = interferenceGraph.getMaxDegree()
 		self.rho = rho
-		self.traffic = TrafficDistribution()
+		self.traffic = TrafficDistribution(totalMiniSlots)
 		self.traffic.calc_L(rho*trafficMean)
 		self.interfSINRGraph = interferenceSINRGraph
 		self.useSINR = False
+		self.schedSizeFrequency = [0]*(len(interferenceGraph.nodes)+1)
+		self.numNodes = len(interferenceGraph.nodes)
+		self.maxMeanQueue = 600
+		self.it = None
 
 	def _run(self, iterations):
 		it = 0
 		while it < iterations:
-			self.controlPhase1()
-			schedule = self.controlPhase2()
+			if self.controlPhase1():
+				slotSchedule = self.controlPhase2()
+			else:
+				self.it=it
+				return slotSchedule
+			self.schedSizeFrequency[len(slotSchedule)]+=1
 			it += 1
-		return schedule
+		self.it=it
+		return slotSchedule
 
 	def run(self, iterations):
 		self.useSINR=False
@@ -88,11 +97,18 @@ class I_CSMA:
 		map(lambda node: node.dumpQueue(), sched)
 
 	def controlPhase1(self):
+		#check if the queues are too large and stop the algorithm
+		meanQ = reduce(lambda parcialSum,node: parcialSum+node.getQueueSize(),self.interfGraph.nodes,0)
+		meanQ /= self.numNodes
+		if meanQ > self.maxMeanQueue:
+			return False
+
 		#calc S and q based on prev time slot
 		#map(lambda node: node.setS(self.S(node)), self.interfGraph.nodes)
 		map(lambda node: node.set_q(self.q(node)), self.interfGraph.nodes)
 		#fill queues
 		map(lambda node: node.fillQueue(self.traffic.getNewValue()), self.interfGraph.nodes)
+
 		#reset visited control variable
 		map(lambda node: node.resetVisit(), self.interfGraph.nodes)
 		map(lambda node: node.resetSilence(), self.interfGraph.nodes)
@@ -108,6 +124,8 @@ class I_CSMA:
 	 			if not node.silenced:
 	 				self.updateState(node)
 	 	#for node in self.interfGraph.nodes: print node.backoff, node.state
+
+	 	return True
 
 	def controlPhase2(self):
 		#reset visited and silenced control variable
@@ -140,3 +158,32 @@ class I_CSMA:
 	 		self.updateState(node)
 
 
+if __name__ == '__main__':
+	from device_graph import *
+	from interference_graph import *
+	LattDistance = 70.
+	LattSize = 4
+	LattPairDist = 40.
+
+	windowP1 = 20
+	windowP2 = 8
+	#rho = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+	r = 0.9#map(float, sys.argv[2:])
+	arrivalMean = 0.5
+	beta = 0.01#float(sys.argv[1])
+	testesIt = 1000
+
+	LattInterfDist = 80.
+	lattice = Lattice(LattSize,LattDistance,LattPairDist)
+	interfGraphLattice = InterferenceGraph(lattice, LattInterfDist)
+	xcsma = I_CSMA(interfGraphLattice, beta, windowP1, windowP2, 252+28,r, arrivalMean, None)	
+	schedule = xcsma.run(testesIt)	
+	n=16.
+	queue=0
+	queuesList = []
+	xcsma.interfGraph.nodes.sort(key=lambda node: node.id)
+	for node in xcsma.interfGraph.nodes:
+		queuesList.append(node.queueSize)
+		queue += node.queueSize
+	results=", ".join(str(x) for x in ([r , beta, xcsma.it, round(queue/n,2)] + queuesList + xcsma.schedSizeFrequency))
+	print results

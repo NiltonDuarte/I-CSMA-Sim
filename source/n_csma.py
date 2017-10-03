@@ -29,6 +29,7 @@ class N_CSMA:
 		self.onNodesFrequency = [0]*(len(interferenceGraph.nodes)+1)
 		self.newCP2=8
 		self.slot = 0
+		self.version = None
 
 
 	def _run(self, iterations):
@@ -72,7 +73,7 @@ class N_CSMA:
 		self.interfGraph.nodes.sort(key=lambda node: node.id)
 		self.useCollisionFree = True
 		if self.slot == 0:
-			self.initCtrlPhase(steps)
+			self.initCtrlPhaseCF(steps)
 		return self._run(iterations)
 
 	def S(self, node):
@@ -183,7 +184,7 @@ class N_CSMA:
 	 	for node in self.interfGraph.nodes:
 	 		self.updateState(node)
 
-	def initCtrlPhase(self, steps):
+	def initCtrlPhaseCF(self, steps):
 		for i in range(steps):
 			for node in self.interfGraph.nodes:
 				algo = Schedule_Algorithm(node.id, self.slot)
