@@ -7,6 +7,7 @@ onde a ultima posicao na lista representaria a 'unidade', a penultima a 'dezena'
 """
 
 def decodificador(listaB, I, C):
+	#listaB[-1] acessa o ultimo elemento da lista
 	Q=listaB[-1]/2
 	R=listaB[-1]%2
 	listaB[-1] = Q
@@ -19,6 +20,7 @@ def decodificador(listaB, I, C):
 	else:
 		#if there still a int in the B list
 		if len(listaB)>1:
+			#deal with the change on the base system, we need to skip to ne next 64 mult
 			I = ((I/64)+1)*64
 			#remove last element
 			listaB = listaB[:-1]
