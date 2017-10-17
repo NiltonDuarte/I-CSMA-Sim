@@ -83,7 +83,7 @@ void Enumerator::find_fset(uint128_t x) {
 		print_cset();
 		f++;
 		for (uint64_t i = 0; i < limit; i++) find_fset(x + pow2(i));
-	} else 
+	}
 	del_link(limit);
 }
 
