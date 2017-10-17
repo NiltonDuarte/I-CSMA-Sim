@@ -56,3 +56,24 @@ class InterferenceGraph:
 		for edge in sourceNode.edges:
 			ret.append(edge.destiny(sourceNode))
 		return ret
+
+	def save(self, file):
+		with open(file, 'w') as f:
+			f.write(str(len(self.nodes))+'\n')
+			for edge in self.edges:
+				line = "{} {}\n".format(edge.nodes[0].id, edge.nodes[1].id)
+				f.write(line)
+
+if __name__ == '__main__':
+  from device_graph import *
+  LattDistance = 70.
+  LattSize = 4
+  LattPairDist = 40.
+
+  
+  LattInterfDist = 80.
+  lattice = Lattice(LattSize,LattDistance,LattPairDist)
+  interfGraphLattice = InterferenceGraph(lattice, LattInterfDist, 0)
+  interfGraphLattice.save("LatticeInterf.graph")
+
+
