@@ -77,13 +77,13 @@ void Enumerator::find_fset(uint128_t x) {
 	}*/
 	uint64_t limit = log2(x);
 	add_link(limit);
-	print_cset();
+	
 	if (is_feasible()) {
 		outfile->write((char*)&x, sizeof(uint128_t));
-		cout << "\t eh viavel" << endl;
+		print_cset();
 		f++;
 		for (uint64_t i = 0; i < limit; i++) find_fset(x + pow2(i));
-	} else cout << "\tnao eh viavel" << endl;
+	} else 
 	del_link(limit);
 }
 
@@ -144,7 +144,7 @@ uint64_t Enumerator::get_fset()
 }
 
 void Enumerator::print_cset() {
-	cout << "cset: ";
+	//cout << "cset: ";
 	for (vector<Node*>::iterator i = cset.begin(); i != cset.end(); ++i) {
 		cout << (*i)->get_id() << " ";
 	}
