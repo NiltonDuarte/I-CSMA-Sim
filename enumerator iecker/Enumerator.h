@@ -61,7 +61,7 @@ uint128_t pow2(uint64_t x) {
 }
 
 void Enumerator::find_fset_entry() {
-	uint64_t limit = m;
+	uint64_t limit = n;
 	uint128_t numero;
 	for (uint64_t i = 0; i < limit; i++) {
 		numero = pow2(i);
