@@ -60,6 +60,7 @@ class InterferenceGraph:
 	def save(self, file):
 		with open(file, 'w') as f:
 			f.write(str(len(self.nodes))+'\n')
+			f.write(str(len(self.edges))+'\n')
 			for edge in self.edges:
 				line = "{} {}\n".format(edge.nodes[0].id, edge.nodes[1].id)
 				f.write(line)
