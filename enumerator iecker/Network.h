@@ -67,6 +67,8 @@ public:
 			links.push_back(*link);
 		}
 		_file.close();
+		print_links();
+		print_nodes();
 	}
 	vector<Node> get_nodes();
 	vector<Link> get_links();
