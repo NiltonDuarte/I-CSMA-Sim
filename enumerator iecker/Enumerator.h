@@ -146,7 +146,7 @@ uint64_t Enumerator::get_fset()
 void Enumerator::print_cset() {
 	//cout << "cset: ";
 	for (vector<Node*>::iterator i = cset.begin(); i != cset.end(); ++i) {
-		cout << (*i)->get_id() << " ";
+		cout << (*i)->get_id() << ", ";
 	}
 	cout << endl;
 }
