@@ -154,7 +154,7 @@ class RandomTopology:
 					devc = Device(devID, pos, Queue())
 					self.devices.append(devc)
 				elif row[0]=='link':
-					linkID=float(row[1])
+					linkID=int(row[1])
 					dev1ID=float(row[2])
 					dev2ID=float(row[3])
 					for device in self.devices:

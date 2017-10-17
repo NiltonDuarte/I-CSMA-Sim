@@ -53,7 +53,7 @@ for i in range(rounds):
 			xcsma = N_CSMA(interfGraphLattice, beta, windowP1, windowP2, 252+16, r, arrivalMean, sinrGraph)	
 			schedule = xcsma.runCollisionFree(testesIt,3,"v1")
 		elif algorithm == "I":
-			xcsma = I_CSMA(interfGraphLattice, beta, windowP1, windowP2, 280,r, arrivalMean, sinrGraph)	
+			xcsma = I_CSMA(interfGraphLattice, beta, windowP1, windowP2, 252+28,r, arrivalMean, sinrGraph)	
 			schedule = xcsma.run(testesIt)
 		print algorithm+"-CSMA Window = ", (windowP1, windowP2), " Rho = ",r, " beta = ", beta, " it = ", i
 		

@@ -252,3 +252,10 @@ for beta in betaL:
 #definir grau máximo para o número de nós da rede aleatoria
 #rejogar quem está fora
 #escolher entre colocar prox de alguem ou jogar aleatória, depois rejogar
+
+  #explicar do algoritmo original onde eu estou me inspirando
+  #para que tipo de aplicação o protocolo é importante
+  #explicar do algoritmo original o que vai ser usado
+  ###pegar resultados antigos e comparar com os novos
+  #colocar fila como parametro
+  #lembrar rezende de falar com o guty antes da quinta dia 19/10
