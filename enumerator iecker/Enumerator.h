@@ -80,7 +80,7 @@ void Enumerator::find_fset(uint128_t x) {
 	
 	if (is_feasible()) {
 		outfile->write((char*)&x, sizeof(uint128_t));
-		//print_cset();
+		print_cset();
 		f++;
 		for (uint64_t i = 0; i < limit; i++) find_fset(x + pow2(i));
 	}
