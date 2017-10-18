@@ -160,7 +160,7 @@ void Enumerator::save_cset() {
 	ofstream saveFile;
 	saveFile.open(save_file, ios::out | ios::app);
 	for (vector<Node*>::iterator i = cset.begin(); i != cset.end(); ++i) {
-		saveFile << (*i)->get_id() << ", ";
+		saveFile << (*i)->get_id() << " ";
 	}
 	saveFile << "\n";
 	saveFile.close();
