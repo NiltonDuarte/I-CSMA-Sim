@@ -24,7 +24,7 @@ int main(int argc, char** argv)
   string file = argv[1];
 
 	string name = "networks/teste.dat";
-	string saveFile = argv[2]
+	string saveFile = argv[2];
 
 	ofstream outfile;
 	ifstream infile;
@@ -36,7 +36,6 @@ int main(int argc, char** argv)
 	double objfn;
 
 	network = new Network(file);
-	network.set_save_file(saveFile);
 	links = network->get_links().size();
 	delta = network->get_delta();
 
@@ -53,7 +52,7 @@ int main(int argc, char** argv)
 	outfile.open(name, ios::binary | ios::out);
 			       	
 	enumerator = new Enumerator(network, &outfile);
-	enumerator.set_save_file(saveFile);
+	enumerator->set_save_file(saveFile);
 	enumerator->find_fset_entry();
 	fsets = enumerator->get_fset();
 	
