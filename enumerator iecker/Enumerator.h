@@ -29,6 +29,8 @@ private:
 	vector<Node*> cset;
 	Network* network;
 	ofstream* outfile;
+	string save_file;
+
 
 	void add_link(uint64_t);
 	double calculate_interference(Node*, Node*);
@@ -43,6 +45,8 @@ public:
 	void find_fset(uint128_t);
 	uint64_t get_fset();
 	void print_cset();
+	void save_cset();
+	void set_save_file(string);
 };
 
 uint64_t log2(uint128_t x) {
@@ -80,7 +84,7 @@ void Enumerator::find_fset(uint128_t x) {
 	
 	if (is_feasible()) {
 		outfile->write((char*)&x, sizeof(uint128_t));
-		print_cset();
+		save_cset();
 		f++;
 		for (uint64_t i = 0; i < limit; i++) find_fset(x + pow2(i));
 	}
@@ -149,4 +153,19 @@ void Enumerator::print_cset() {
 		cout << (*i)->get_id() << ", ";
 	}
 	cout << endl;
+}
+
+void Enumerator::save_cset() {
+	//cout << "cset: ";
+	ofstream saveFile;
+	saveFile.open(save_file, ios::out | ios::app);
+	for (vector<Node*>::iterator i = cset.begin(); i != cset.end(); ++i) {
+		saveFile << (*i)->get_id() << ", ";
+	}
+	saveFile << "\n";
+	saveFile.close();
+}
+
+void Enumerator::set_save_file(string name) {
+	save_file = name;
 }
