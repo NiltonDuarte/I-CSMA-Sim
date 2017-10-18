@@ -14,10 +14,10 @@ using namespace std;
 
 int main(int argc, char** argv)
 {
-	if(argc != 2)
+	if(argc != 3)
 	{
 		cout << "Missing arguments!" << endl;
-		cout << "USAGE: ./main <file name>" << endl;
+		cout << "USAGE: ./main <input file name> <output file name>" << endl;
 		return 0;
 	}	
 
