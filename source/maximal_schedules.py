@@ -18,11 +18,11 @@ for name in fileNames:
   for nameIdx in range(40):
     #resultsSaveFile = open(maximalSchedPath+"MaximalScheds_"+name+str(nameIdx)+".csv",'w')
     
+    saveInterGraphPath = randInterGraphPath+name+str(nameIdx)+".interfgraph"
     if False: #already saved
       rt = RandomTopology()
       rt.load(randNetGraphPath+name+str(nameIdx)+".csv")
       interfGraph = InterferenceGraph(rt, interfDistance, False)
-      saveInterGraphPath = randInterGraphPath+name+str(nameIdx)+".interfgraph"
       interfGraph.save(saveInterGraphPath)
 
     if True:
