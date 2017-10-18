@@ -7,9 +7,9 @@ interfDistance = 70.
 
 randNetGraphPath = "./randomGraphs/savedGraphs/"
 randInterGraphPath = "./randomGraphs/savedInterfGraphs/"
-saveFilePath = "../resultados/"
+saveResultsFilePath = "../resultados/"
 feasibleSchedPath = "../resultados/feasible scheds/"
-maximalSchedPath = "../resultados/maximalScheds/"
+maximalSchedPath = "./randomGraphs/maximalScheds/"
 fileNames = ["DevGraph16AllRandWR", "DevGraph16NPV","DevGraph16NPV_MD3_"]
 print "Starting"
 
