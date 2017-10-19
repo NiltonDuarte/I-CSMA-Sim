@@ -330,6 +330,12 @@ if __name__ == '__main__':
   windowP1 = 20
   windowP2 = 8
   heuristicWindowP2 = 28
+  graphFilePath = "./randomGraphs/savedGraphs/"
+  maxSchedPath = "./randomGraphs/maximalScheds/"
+  maxSchedFileName = "MaximalScheds_"
+  fileNames = ["DevGraph16AllRandWR", "DevGraph16NPV","DevGraph16NPV_MD3_"]
+  name = fileNames[2]
+  nameIdx=22
   #rho = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
   r = 0.5#map(float, sys.argv[2:])
   #arrivalMean = {'0':0.10, '1':0.1, '2':0.2,  '3':0.3,  '4':0.4,  '5':0.5,  '6':0.06,  '7':0.07,
@@ -339,8 +345,10 @@ if __name__ == '__main__':
   beta = 1#float(sys.argv[1])
   testesIt = 1000000
   LattInterfDist = 80.
+  getArrivalVectorDict(maxSchedPath+maxSchedFileName+name+str(nameIdx)+".csv")
   print "Initializing"
   for beta in [0.1, 0.03, 1]:
+    break
     for r in [0.4, 0.5, 0.7]:
       for i in [0]:
         

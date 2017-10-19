@@ -12,7 +12,7 @@ print plotly.__version__                # At least 1.8.6 is required. Upgrade wi
 filePath = "./randomGraphs/savedGraphs/"
 fileNames = ["DevGraph16AllRandWR", "DevGraph16NPV","DevGraph16NPV_MD3_"]
 name = fileNames[2]
-nameIdx=10
+nameIdx=22
 
 LattInterfDist = 80.
 LattDistance = 70.

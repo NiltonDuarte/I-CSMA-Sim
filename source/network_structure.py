@@ -177,3 +177,22 @@ def deviceDistance( deviceA, deviceB,useToroidalSpace=False, sizeX=None, sizeY=N
     sqSum = (deviceA.position[0]-deviceB.position[0])**2+(deviceA.position[1]-deviceB.position[1])**2+(deviceA.position[2]-deviceB.position[2])**2
   dist = sqSum**0.5
   return dist
+
+def getArrivalVectorDict(inputFile):
+  arrivalDict = {}
+  n = 0
+  with open(inputFile) as file:
+    for line in file:
+      n += 1
+      l = eval(line)
+      for val in l:
+        val = str(val)
+        if val in arrivalDict:
+          arrivalDict[val] +=1
+        else:
+          arrivalDict[val] =1
+  print n
+  for key in sorted(arrivalDict):
+    arrivalDict[key] /= float(n)
+    print "%s: %s" % (key, round(arrivalDict[key],3)) 
+  return arrivalDict
