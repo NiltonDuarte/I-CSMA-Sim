@@ -26,7 +26,7 @@ for name in fileNames:
       interfGraph.save(saveInterGraphPath)
 
     saveFeasibleSchedPath = feasibleSchedPath+"feasibleSched_"+name+str(nameIdx)+".fsched"
-    if True: #done
+    if False: #done
       subprocess.call(['../enumerator iecker/main', saveInterGraphPath, saveFeasibleSchedPath])
 
     
