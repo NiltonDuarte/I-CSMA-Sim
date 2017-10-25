@@ -137,13 +137,16 @@ class MultipleAccessAlgorithm:
   def q(self, node):
     #eq 5
     Av=self.queueFunction(node.getQueueSize())
-    if self.newQProb == "tanhdif":
-      x = self.b*(Av-self.S(node))
-      ret= 0.5*(1+tanh(x))
-    elif self.newQProb == "sech":
-      ret = 1-(1/cosh((Av+1)*self.b*self.S(node)/2))
-    else:
-      ret = 0.5*(1-tanh((Av+1)*self.b*self.S(node)/2))
+    try:
+      if self.newQProb == "tanhdif":
+        x = self.b*(Av-self.S(node))
+        ret= 0.5*(1+tanh(x))
+      elif self.newQProb == "sech":
+        ret = 1-(1/cosh((Av+1)*self.b*self.S(node)/2))
+      else:
+        ret = 0.5*(1-tanh((Av+1)*self.b*self.S(node)/2))
+    except OverflowError as e:
+      print "(Av+1)*self.b*self.S(node)/2 = ", (Av+1)*self.b*self.S(node)/2
     #print ret
     return ret
 
@@ -361,7 +364,6 @@ if __name__ == '__main__':
           #beta = 0.01
           maa = MultipleAccessAlgorithm(interfGraphLattice, beta, 252+28,r, arrivalMean, False, True) 
           maa.turnOnFunctions(False,False,False,False)
-          maa.maxMeanQueue=9999999999999
           schedule = maa.runICSMA(testesIt, windowP1, windowP2) 
 
           #schedule = maa.runHeuristicCSMA(testesIt, heuristicWindowP2) 

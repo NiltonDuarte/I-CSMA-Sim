@@ -1,6 +1,8 @@
 import subprocess
 from interference_graph import *
 from device_graph import *
+import numpy as np
+import sympy as sp
 
 
 interfDistance = 80.
@@ -19,7 +21,7 @@ for name in fileNames:
 
     
     saveInterGraphPath = randInterGraphPath+name+str(nameIdx)+".interfgraph"
-    if True: #already saved
+    if False: #already saved
       rt = RandomTopology()
       rt.load(randNetGraphPath+name+str(nameIdx)+".csv")
       interfGraph = InterferenceGraph(rt, interfDistance, False)
@@ -51,9 +53,53 @@ for name in fileNames:
       if isMaximal:
         maximalScheds.append(fsched[outterSched])
     maximalScheds = map(list,maximalScheds)
-    with open(maximalSchedPath+"MaximalScheds_"+name+str(nameIdx)+".csv",'w') as resultsSaveFile:
-      for l in maximalScheds:
-        resultsSaveFile.write(str(l)+'\n')
+    #print len(maximalScheds), saveFeasibleSchedPath
+    listoflist = []
+
+    for sched in maximalScheds:
+      sched = sorted(sched)
+      aux = [0]*16
+      for pos in sched:
+        aux[pos]=1
+      listoflist.append(aux)
+
+    p0 = listoflist[0]
+    listoflist = listoflist[1:]
+    ums = [1]*16
+
+    for p in listoflist:
+      for i in range(len(p)):
+        p[i] -= p0[i]
+    #listoflist.append(ums)
+    if True:
+      matrix = np.array([np.array(vec) for vec in listoflist])
+      rank = np.linalg.matrix_rank(matrix)
+      spVecMatrix = sp.Matrix(listoflist)
+      nullSpace = spVecMatrix.nullspace()
+
+    
+    if True: #rank == 16:
+
+      if rank > 15: 
+        print "======== WTFFF RANK ========"
+        print len(maximalScheds), saveFeasibleSchedPath
+        print rank
+      if False:
+        allZero = True
+        for val in nullSpace[0]:
+          if val != 0:
+            allZero = False
+        if allZero:
+          print "======== WTFFF ========"
+          print nullSpace[0]
+      #print nullSpace
+      #print spVecMatrix*nullSpace[0]
+    
+    #print matrix[lambdas == 0,:]
+    if False:
+      with open(maximalSchedPath+"MaximalScheds_"+name+str(nameIdx)+".csv",'w') as resultsSaveFile:
+        for l in maximalScheds:
+          resultsSaveFile.write(str(l)+'\n')
 
 
 
@@ -61,3 +107,5 @@ for name in fileNames:
     #print map(list,maximalScheds)
 
         #print fsched[outterSched], fsched[innerSched]
+
+print "Finished"

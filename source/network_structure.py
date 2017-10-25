@@ -44,14 +44,16 @@ class TrafficDistribution:
   
   def calc_L(self, targetMean):
     targetMean = targetMean*self.ratio
+    #print "targetMean", targetMean
     H=1000
     g=1.5
-    meanDelta = 0.001
+    meanDelta = 0.0001
     L_step = 0.02
     L=0.16
     direction=1
     currMean=((L**g)/(1-(L/H)**g))*(g/(g-1))*((1/(L**(g-1)))-(1/H**(g-1)))
     while abs(targetMean-currMean)>meanDelta:
+      #print L
       if targetMean > currMean:
         if direction==-1: L_step/=2
         L+=L_step
@@ -60,6 +62,9 @@ class TrafficDistribution:
         if direction==1: L_step/=2
         L-=L_step
         direction = -1
+      if L < 0:
+        L += L_step
+        L_step/=2
       currMean=((L**g)/(1-(L/H)**g))*(g/(g-1))*((1/(L**(g-1)))-(1/H**(g-1)))
     self.L = L
     return L
@@ -191,8 +196,9 @@ def getArrivalVectorDict(inputFile):
           arrivalDict[val] +=1
         else:
           arrivalDict[val] =1
-  print n
+  arrivalSum = 0
   for key in sorted(arrivalDict):
     arrivalDict[key] /= float(n)
-    print "%s: %s" % (key, round(arrivalDict[key],3)) 
-  return arrivalDict
+    arrivalSum += arrivalDict[key]
+    #print "%s: %s" % (key, round(arrivalDict[key],3))
+  return arrivalDict, n, arrivalSum
