@@ -15,7 +15,7 @@ randNetGraphPath = "./randomGraphs/savedGraphs/"
 saveResultsFilePath = "../resultados/"
 maxSchedPath = "./randomGraphs/maximalScheds/"
 maxSchedFileName = "MaximalScheds_"
-fileNames = ["DevGraph16AllRandWR", "DevGraph16NPV","DevGraph16NPV_MD3_"]
+fileNames = ["DevGraph16AllRandWR", "DevGraph16NPV","DevGraph16NPV_MD3_"] #
 fileNamesIdx = 10
 
 windowP1 = 20
@@ -29,7 +29,7 @@ betaList = [float(sys.argv[1])] #[0.01,0.1,1]
 testesIt = 100000
 rounds = 5
 InterfDist = 80.
-algorithms = ["ICSMA", "HICSMA", "HICSMASEC", "CFv2", "CFv4"]
+algorithms = [ "HICSMASECNQF", "CFv4NQF", "CFv2NQF"]#"ICSMA", "HICSMA",
 print "Using rho = "+str(rho) + " and beta = "+str(betaList)
 
 n = 16
@@ -80,20 +80,20 @@ for name in fileNames:
               maa.turnOnFunctions(False,False,False,False)
               schedule = maa.runHeuristicICSMA(testesIt, heuristicWindowP2)
 
-            elif algorithm == "HICSMASEC":
+            elif algorithm == "HICSMASECNQF":
 
               maa = MultipleAccessAlgorithm(interfGraph, beta, 252+28,r, arrivalMean, False, True) 
-              maa.turnOnFunctions(False,True,'sech',False)
+              maa.turnOnFunctions(True,True,'sech',False)
               schedule = maa.runHeuristicICSMA(testesIt, heuristicWindowP2) 
-            elif algorithm == "CFv2":
+            elif algorithm == "CFv2NQF":
 
               maa = MultipleAccessAlgorithm(interfGraph, beta, 252+16,r, arrivalMean, False, True)     
-              maa.turnOnFunctions(False,True,'sech',False)
+              maa.turnOnFunctions(True,True,'sech',False)
               schedule = maa.runCollisionFree(testesIt, 'v2', 4, 4)
-            elif algorithm == "CFv4":
+            elif algorithm == "CFv4NQF":
 
               maa = MultipleAccessAlgorithm(interfGraph, beta, 252+16,r, arrivalMean, False, True) 
-              maa.turnOnFunctions(False,True,'sech',False)
+              maa.turnOnFunctions(True,True,'sech',False)
               schedule = maa.runCollisionFree(testesIt, 'v4', 4, 4)
 
             queue=0
