@@ -29,7 +29,7 @@ betaList = [float(sys.argv[1])] #[0.01,0.1,1]
 testesIt = 100000
 rounds = 5
 InterfDist = 80.
-algorithms = [ "HICSMASECNQF", "CFv4NQF", "CFv2NQF"]#"ICSMA", "HICSMA",
+algorithms = ["HICSMA-NCP2", "HICSMASEC-NCP2", "CFv2-NoQ", "CFv4-NoQ"]# "HICSMASECNQF", "CFv4NQF", "CFv2NQF"]#"ICSMA", "HICSMA", "HICSMASEC", "CFv4", "CFv2"
 print "Using rho = "+str(rho) + " and beta = "+str(betaList)
 
 n = 16
@@ -69,32 +69,64 @@ for name in fileNames:
 
             #turnOnFunctions(self, newQF, newSF, newQP, newCP2):
             if algorithm == "ICSMA":
-
               maa = MultipleAccessAlgorithm(interfGraph, beta, 252+28,r, arrivalMean, False, True) 
               maa.turnOnFunctions(False,False,False,False)
               schedule = maa.runICSMA(testesIt, windowP1, windowP2) 
 
             elif algorithm == "HICSMA":
-
               maa = MultipleAccessAlgorithm(interfGraph, beta, 252+28,r, arrivalMean, False, True) 
               maa.turnOnFunctions(False,False,False,False)
               schedule = maa.runHeuristicICSMA(testesIt, heuristicWindowP2)
 
-            elif algorithm == "HICSMASECNQF":
+            elif algorithm == "HICSMA-NCP2":
+              maa = MultipleAccessAlgorithm(interfGraph, beta, 252+28,r, arrivalMean, False, True) 
+              maa.turnOnFunctions(False,False,False,False)
+              schedule = maa.runHeuristicICSMA(testesIt, heuristicWindowP2)
 
+            elif algorithm == "HICSMASEC":
+              maa = MultipleAccessAlgorithm(interfGraph, beta, 252+28,r, arrivalMean, False, True) 
+              maa.turnOnFunctions(False,True,'sech',True)
+              schedule = maa.runHeuristicICSMA(testesIt, heuristicWindowP2) 
+
+            elif algorithm == "HICSMASEC-NCP2":
+              maa = MultipleAccessAlgorithm(interfGraph, beta, 252+28,r, arrivalMean, False, True) 
+              maa.turnOnFunctions(False,True,'sech',True)
+              schedule = maa.runHeuristicICSMA(testesIt, heuristicWindowP2)           
+
+            elif algorithm == "CFv2":
+              maa = MultipleAccessAlgorithm(interfGraph, beta, 252+16,r, arrivalMean, False, True)     
+              maa.turnOnFunctions(False,True,'sech',False)
+              schedule = maa.runCollisionFree(testesIt, 'v2', 4, 4)
+
+            elif algorithm == "CFv4":
+              maa = MultipleAccessAlgorithm(interfGraph, beta, 252+16,r, arrivalMean, False, True) 
+              maa.turnOnFunctions(False,True,'sech',False)
+              schedule = maa.runCollisionFree(testesIt, 'v4', 4, 4)
+
+            elif algorithm == "HICSMASECNQF":
               maa = MultipleAccessAlgorithm(interfGraph, beta, 252+28,r, arrivalMean, False, True) 
               maa.turnOnFunctions(True,True,'sech',False)
               schedule = maa.runHeuristicICSMA(testesIt, heuristicWindowP2) 
-            elif algorithm == "CFv2NQF":
 
+            elif algorithm == "CFv2NQF":
               maa = MultipleAccessAlgorithm(interfGraph, beta, 252+16,r, arrivalMean, False, True)     
               maa.turnOnFunctions(True,True,'sech',False)
               schedule = maa.runCollisionFree(testesIt, 'v2', 4, 4)
-            elif algorithm == "CFv4NQF":
 
+            elif algorithm == "CFv4NQF":
               maa = MultipleAccessAlgorithm(interfGraph, beta, 252+16,r, arrivalMean, False, True) 
               maa.turnOnFunctions(True,True,'sech',False)
               schedule = maa.runCollisionFree(testesIt, 'v4', 4, 4)
+
+            elif algorithm == "CFv2-NoQ":
+              maa = MultipleAccessAlgorithm(interfGraph, beta, 252+16,r, arrivalMean, False, True) 
+              maa.turnOnFunctions(True,True,'sech',False, False)
+              schedule = maa.runCollisionFree(testesIt, 'v4', 4, 4)
+
+            elif algorithm == "CFv4-NoQ":
+              maa = MultipleAccessAlgorithm(interfGraph, beta, 252+16,r, arrivalMean, False, True) 
+              maa.turnOnFunctions(True,True,'sech',False, False)
+              schedule = maa.runCollisionFree(testesIt, 'v4', 4, 4)              
 
             queue=0
             queuesList = []

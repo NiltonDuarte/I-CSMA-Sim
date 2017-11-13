@@ -26,6 +26,7 @@ class MultipleAccessAlgorithm:
     self.newSFunc = False
     self.newQProb = False
     self.newCP2 = False
+    self.useQueueInfo = True
     self.safeCheck = safeCheck
     #====================
     #STATISTICS VARIABLES
@@ -109,11 +110,13 @@ class MultipleAccessAlgorithm:
       return True
     return False
 
-  def turnOnFunctions(self, newQF, newSF, newQP, newCP2):
+  def turnOnFunctions(self, newQF, newSF, newQP, newCP2, useQueueInfo=True):
     self.newQueueFunc = newQF
     self.newSFunc = newSF
     self.newQProb = newQP
     self.newCP2 = newCP2
+    self.useQueueInfo = useQueueInfo
+
 
   def safetyCheck(self, sched):
     for schedNode in sched:
@@ -255,7 +258,9 @@ class MultipleAccessAlgorithm:
     dc = 4000
     max = 10000
     slotSchedule = []
+    print "====================="
     for node in self.interfGraph.nodes:
+      print node.sched_algo[0].number
       schedState = node.sched_algo.pop(0).state
       #print self.slot, node.id, schedState
       for obj in self.interfGraph.getNeighbours(node):
@@ -270,7 +275,7 @@ class MultipleAccessAlgorithm:
         algo.updateState2()
 
       newAlgo = Schedule_Algorithm(node.id, self.slot)
-      if node.state == self.OFF:
+      if node.state == self.OFF and self.useQueueInfo:
         newAlgo.genNumber(min, dc)
       else:
         newAlgo.genNumber(dc, max)
@@ -289,8 +294,11 @@ class MultipleAccessAlgorithm:
     slotSchedule = []
     algoIdx = self.it % self.parallelSchedAlgos
     startingNewAlgo = False
+    print "====================="
     for node in self.interfGraph.nodes:
+      
       nodeAlgo = node.sched_algo[algoIdx]
+      print nodeAlgo.number
       schedState = nodeAlgo.state
       if schedState == 1:
         slotSchedule.append(node)
@@ -300,7 +308,7 @@ class MultipleAccessAlgorithm:
       if nodeAlgo.round == self.maxSchedRounds:
         startingNewAlgo = True
         newAlgo = Schedule_Algorithm(node.id, self.slot)
-        if node.state == self.OFF:
+        if node.state == self.OFF and self.useQueueInfo:
           newAlgo.scheduled=True
         newAlgo.genNumberSA(min,dc, max)
         node.sched_algo[algoIdx]=newAlgo
@@ -346,14 +354,14 @@ if __name__ == '__main__':
   arrivalMean = {'0':0.50, '1':0.5, '2':0.5,  '3':0.5,  '4':0.5,  '5':0.5,  '6':0.5,  '7':0.5,
            '8':0.5, '9':0.5, '10':0.50, '11':0.5, '12':0.5, '13':0.5, '14':0.5, '15':0.5}
   beta = 1#float(sys.argv[1])
-  testesIt = 1000000
+  testesIt = 1000
   LattInterfDist = 80.
   getArrivalVectorDict(maxSchedPath+maxSchedFileName+name+str(nameIdx)+".csv")
   print "Initializing"
   for beta in [0.1, 0.03, 1]:
-    break
+    
     for r in [0.4, 0.5, 0.7]:
-      for i in [0]:
+      for i in [2]:
         
         lattice = Lattice(LattSize,LattDistance,LattPairDist)
         interfGraphLattice = InterferenceGraph(lattice, LattInterfDist, False)
@@ -375,12 +383,12 @@ if __name__ == '__main__':
         elif i == 2:
           beta = 1
           maa = MultipleAccessAlgorithm(interfGraphLattice, beta, 252+16,r, arrivalMean, True)      
-          maa.turnOnFunctions(False,False,'sech',False)
+          maa.turnOnFunctions(True,True,'sech',False,True)
           schedule = maa.runCollisionFree(testesIt, 'v2', 4, 4)
         elif i == 3:
           beta = 1
           maa = MultipleAccessAlgorithm(interfGraphLattice, beta, 252+16,r, arrivalMean, True)      
-          maa.turnOnFunctions(False,False,'sech',False)
+          maa.turnOnFunctions(False,True,'sech',False, False)
           schedule = maa.runCollisionFree(testesIt, 'v4', 4, 4)
         
 
