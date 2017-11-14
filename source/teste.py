@@ -37,21 +37,23 @@ l = map(lambda x: x.set(), listA)
 print time.clock() - init
 print l[10].a == 0
 """
-rho = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-beta=[0.01, 0.1, 1]
+rho = [0.4, 0.5]
+beta =[0.01, 0.1, 1]
+algorithms = ["ICSMA", "HICSMA", "HICSMASEC", "CFv4", "CFv2"]
 hostname=['11']#,'02','03', '04', '11']#, '03', '04']
 aux = 0
 f = open('gridQsub.sh', 'w')
 #for r in rho:
 for b in beta:
 	for r in rho:
-		node = "node"+hostname[aux%len(hostname)]
-		aux+=1
-		argStr = str(b)+ " " + str(r)
-		#f.write("qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname="+node+" python sim_PROTOCOLO.py "+str(b)+" "+str(r))
-		f.write("qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname="+node+" python sim_PROTOCOLO.py "+str(argStr))
-		f.write('\n')
-		f.flush()
+		for algo in algorithms:
+			node = "node"+hostname[aux%len(hostname)]
+			aux+=1
+			argStr = str(b)+ " " + str(r) + " " + algo
+			#f.write("qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname="+node+" python sim_PROTOCOLO.py "+str(b)+" "+str(r))
+			f.write("qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname="+node+" python sim_PROTOCOLO.py "+str(argStr))
+			f.write('\n')
+			f.flush()
 f.close()		
 
 print "Finished"
