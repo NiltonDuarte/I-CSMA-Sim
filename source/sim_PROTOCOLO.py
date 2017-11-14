@@ -29,8 +29,8 @@ betaList = [float(sys.argv[1])] #[0.01,0.1,1]
 testesIt = 100000
 rounds = 5
 InterfDist = 80.
-algorithms = ["HICSMA-NCP2", "HICSMASEC-NCP2", "CFv2-NoQ", "CFv4-NoQ"]# "HICSMASECNQF", "CFv4NQF", "CFv2NQF"]#"ICSMA", "HICSMA", "HICSMASEC", "CFv4", "CFv2"
-print "Using rho = "+str(rho) + " and beta = "+str(betaList)
+algorithms = ["ICSMA", "HICSMA", "HICSMASEC", "CFv4", "CFv2"]#"HICSMA-NCP2", "HICSMASEC-NCP2", "CFv2-NoQ", "CFv4-NoQ"]# "HICSMASECNQF", "CFv4NQF", "CFv2NQF"]#"ICSMA", "HICSMA", "HICSMASEC", "CFv4", "CFv2"
+#print "Using rho = "+str(rho) + " and beta = "+str(betaList)
 
 n = 16
 header = "Rho, Beta, QMean"
@@ -46,17 +46,17 @@ resultsSaveFile = saveResultsFilePath+"gitignoreR_"+".csv"
 for name in fileNames:
   for nameIdx in range(fileNamesIdx):
     netGraphName = randNetGraphPath+name+str(nameIdx)
-    print netGraphName
+    #print netGraphName
     arrivalMean, numMaxSched, arrivalSum = getArrivalVectorDict(maxSchedPath+maxSchedFileName+name+str(nameIdx)+".csv")
 
-    print arrivalMean
+    #print arrivalMean
 
     netGraphName = randNetGraphPath+name+str(nameIdx)
     netGraph = RandomTopology()
     netGraph.load(netGraphName+".csv")
     interfGraph = InterferenceGraph(netGraph, InterfDist, False)
     numEdges = len(interfGraph.edges)
-    print "Arrival Sum: {} N. Max Sched: {} N.Edges: {}".format(arrivalSum, numMaxSched, numEdges)
+    #print "Arrival Sum: {} N. Max Sched: {} N.Edges: {}".format(arrivalSum, numMaxSched, numEdges)
     for algorithm in algorithms:
       for i in range(rounds):
         for beta in betaList:
@@ -135,11 +135,11 @@ for name in fileNames:
               queuesList.append(node.queueSize)
               queue += node.queueSize
             results=", ".join(str(x) for x in ([round(queue/n,2), r, algorithm, name+str(nameIdx), beta, arrivalSum, numEdges, numMaxSched, testesIt] + queuesList + maa.schedSizeFrequency))
-            print algorithm, beta, r, round(queue/n,2)
+            #print algorithm, beta, r, round(queue/n,2)
             with open(resultsSaveFile,"a") as rsf:
               rsf.write(str(results))
               rsf.write('\n')
               rsf.flush()
-        print " "
+        #print " "
 
 print("--- %s seconds ---" % (time.time() - start_time))
