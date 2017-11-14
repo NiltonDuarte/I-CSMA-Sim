@@ -29,7 +29,7 @@ betaList = [float(sys.argv[1])] #[0.01,0.1,1]
 testesIt = 100000
 rounds = 5
 InterfDist = 80.
-algorithms = [sys.argv[2]]#["ICSMA", "HICSMA", "HICSMASEC", "CFv4", "CFv2"]#"HICSMA-NCP2", "HICSMASEC-NCP2", "CFv2-NoQ", "CFv4-NoQ"]# "HICSMASECNQF", "CFv4NQF", "CFv2NQF"]#"ICSMA", "HICSMA", "HICSMASEC", "CFv4", "CFv2"
+algorithms = [sys.argv[3]]#["ICSMA", "HICSMA", "HICSMASEC", "CFv4", "CFv2"]#"HICSMA-NCP2", "HICSMASEC-NCP2", "CFv2-NoQ", "CFv4-NoQ"]# "HICSMASECNQF", "CFv4NQF", "CFv2NQF"]#"ICSMA", "HICSMA", "HICSMASEC", "CFv4", "CFv2"
 #print "Using rho = "+str(rho) + " and beta = "+str(betaList)
 
 n = 16
