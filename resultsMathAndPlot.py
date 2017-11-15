@@ -58,13 +58,13 @@ print graphL
 #algo ['CFv2', 'CFv2-NoQ', 'CFv2NQF', 'CFv4', 'CFv4-NoQ', 'CFv4NQF', 'HICSMA', 'HICSMA-NCP2', 'HICSMASEC', 'HICSMASEC-NCP2', 'HICSMASECNQF', 'ICSMA']
 
 
-QueueInfo = collections.namedtuple("QueueInfo", "mean, queueML, rho, beta, algo, graph, resultsL")
+QueueInfo = collections.namedtuple("QueueInfo", "mean, queueML, meanFI, FIL, rho, beta, algo, graph, resultsL")
 queueMeanGraphL = []
 for graph in graphL:
   for rho in rhoL:
     for beta in betaL:
       for algo in algoL:
-        queue = QueueInfo([-1], [], rho, beta, algo, graph, [])
+        queue = QueueInfo([0], [], [0], [], rho, beta, algo, graph, [])
         queueMeanGraphL.append(queue)
 
 lenGraph = len(graphL)
@@ -99,7 +99,7 @@ for resultRow in doc:
     qMean.queueML.append(mean)
   qMean.resultsL.append(resultRow)
 
-
+"""
 print "Checking for wrong duplicates dealing"
 for q in queueMeanGraphL:
   print ".\r",
@@ -109,7 +109,7 @@ for q in queueMeanGraphL:
       if not result.mean in q.queueML:
         print "Error",result.mean, q.resultsL, q.queueML
 print "\nDone\n"
-
+"""
 removeList = []
 print "Checks for forgotten sims"
 for q in queueMeanGraphL:
@@ -130,12 +130,30 @@ for q in queueMeanGraphL:
     q.mean[0] = mean
 print "\nDone\n"
 
+
+print "Calculating Fairness Index"
+for q in queueMeanGraphL:
+  print ".\r",
+  for r in q.resultsL:
+    fiSum = 0
+    fiSqSum = 0
+    for nodeIdx in ["q{}".format(i+1) for i in range(n)]:
+      qVal = eval("r."+nodeIdx)
+      fiSum+=qVal
+      fiSqSum += qVal**2
+    fi = (fiSum**2)/(n*fiSqSum)
+    q.FIL.append(fi)
+  q.meanFI[0]=sum(q.FIL)/float(len(q.FIL))
+
+print "\nDone\n"
+
+
 #data structure
 queueMeanL = []
 for rho in rhoL:
   for beta in betaL:
     for algo in algoL:
-      queue = QueueInfo([-1], [], rho, beta, algo, None, None)
+      queue = QueueInfo([0], [],[0], [], rho, beta, algo, None, None)
       queueMeanL.append(queue)
 
 print "Test 2"
@@ -153,14 +171,18 @@ for qm in queueMeanL:
     param = qm.rho, qm.beta, qm.algo, graph
     qMean = queueMeanGraphL[getIdx(*param)]
     qm.queueML.append(qMean.mean[0])
+    qm.FIL.append(qMean.meanFI[0])
 
-print "Calculating Means"
+print "Calculating QMeans and FIMeans"
 for q in queueMeanL:
   print ".\r",
   summ = sum(q.queueML)
+  fiSumm = sum(q.FIL)
   if summ>0:
     mean = summ/len(q.queueML)
+    fimean = fiSumm/len(q.FIL)
     q.mean[0] = mean
+    q.meanFI[0] = fimean
 print "\nDone\n"
 
 
@@ -182,4 +204,19 @@ for qm in queueMeanL:
 bestBetaQueues.sort(key=lambda obj: obj.rho)
 for q in bestBetaQueues:
   #if q.rho == 0.8:
-  print "{}\t{}\t{}\t{}".format(q.rho, q.beta, q.algo, round(q.mean[0],3))
+  print "{}\t{}\t{}\t{}\t{}".format(q.rho, q.beta, round(q.meanFI[0],2), q.algo, round(q.mean[0],3))
+
+#collections.namedtuple("BetaFit", "algo, 0.01, 0.1, 1.0")
+algoBetaFit = [(algo,[0,0,0]) for algo in algoL]
+
+for algo in algoBetaFit:
+  for bestQ in bestBetaQueues:
+    if bestQ.algo == algo[0] and bestQ.rho > 0.6:
+      if bestQ.beta == 0.01:
+        algo[1][0] += 1
+      if bestQ.beta == 0.1:
+        algo[1][1] += 1
+      if bestQ.beta == 1.0:
+        algo[1][2] += 1
+print algoBetaFit
+
