@@ -144,7 +144,7 @@ for name in fileNames:
               schedule = maa.runCollisionFree(testesIt, 'v4', 4, 4)
 
             elif algorithm == "HICSMASEC-UT":
-            arrivalMean, numMaxSched, arrivalSum = getArrivalVectorDict(maxSchedPath+maxSchedFileName+name+str(nameIdx)+".csv",PGDist)
+              arrivalMean, numMaxSched, arrivalSum = getArrivalVectorDict(maxSchedPath+maxSchedFileName+name+str(nameIdx)+".csv",PGDist)
               maa = MultipleAccessAlgorithm(interfGraph, beta, 252+28,r, arrivalMean, False, True) 
               maa.turnOnFunctions(False,True,'sech',True)
               schedule = maa.runHeuristicICSMA(testesIt, heuristicWindowP2) 
