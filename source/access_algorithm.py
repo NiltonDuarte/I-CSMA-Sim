@@ -258,9 +258,9 @@ class MultipleAccessAlgorithm:
     dc = 4000
     max = 10000
     slotSchedule = []
-    print "====================="
+    #print "====================="
     for node in self.interfGraph.nodes:
-      print node.sched_algo[0].number
+      #print node.sched_algo[0].number
       schedState = node.sched_algo.pop(0).state
       #print self.slot, node.id, schedState
       for obj in self.interfGraph.getNeighbours(node):
@@ -294,11 +294,11 @@ class MultipleAccessAlgorithm:
     slotSchedule = []
     algoIdx = self.it % self.parallelSchedAlgos
     startingNewAlgo = False
-    print "====================="
+    #print "====================="
     for node in self.interfGraph.nodes:
       
       nodeAlgo = node.sched_algo[algoIdx]
-      print nodeAlgo.number
+      #print nodeAlgo.number
       schedState = nodeAlgo.state
       if schedState == 1:
         slotSchedule.append(node)
