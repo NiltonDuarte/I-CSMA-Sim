@@ -29,10 +29,15 @@ betaList = [float(sys.argv[1])] #[0.01,0.1,1]
 testesIt = 100000
 rounds = 5
 InterfDist = 80.
-algorithms = [sys.argv[3]]#["ICSMA", "HICSMA", "HICSMASEC", "CFv4", "CFv2"]#"HICSMA-NCP2", "HICSMASEC-NCP2", "CFv2-NoQ", "CFv4-NoQ"]# "HICSMASECNQF", "CFv4NQF", "CFv2NQF"]#"ICSMA", "HICSMA", "HICSMASEC", "CFv4", "CFv2"
+algorithms = [sys.argv[3]]#["ICSMA", "HICSMA", "HICSMASEC", "CFv4", "CFv2"]#"HICSMA-NCP2", "HICSMASEC-NCP2", "CFv2-NoQ", "CFv4-NoQ"]# "HICSMASECNQF", "CFv4NQF", "CFv2NQF"]
 #print "Using rho = "+str(rho) + " and beta = "+str(betaList)
 
 n = 16
+
+def PGDist(n):
+  a0 = 4
+  r = 0.2
+  return a0*(r**n)
 
 resultsSaveFile = saveResultsFilePath+"gitignoreR_"+".csv"
 for name in fileNames:
@@ -118,8 +123,61 @@ for name in fileNames:
             elif algorithm == "CFv4-NoQ":
               maa = MultipleAccessAlgorithm(interfGraph, beta, 252+16,r, arrivalMean, False, True) 
               maa.turnOnFunctions(True,True,'sech',False, False)
-              schedule = maa.runCollisionFree(testesIt, 'v4', 4, 4)              
+              schedule = maa.runCollisionFree(testesIt, 'v4', 4, 4)
+#"ICSMA-UT", "CFv4-UT", "CFv2-UT", "CFv2-NoQ-UT", "CFv4-NoQ-UT", "CFv4NQF-UT", "CFv2NQF-UT", "HICSMASEC-UT", "HICSMASECNQF-UT"
+            if algorithm == "ICSMA-UT":
+              arrivalMean, numMaxSched, arrivalSum = getArrivalVectorDict(maxSchedPath+maxSchedFileName+name+str(nameIdx)+".csv",PGDist)
+              maa = MultipleAccessAlgorithm(interfGraph, beta, 252+28,r, arrivalMean, False, True) 
+              maa.turnOnFunctions(False,False,False,False)
+              schedule = maa.runICSMA(testesIt, windowP1, windowP2) 
 
+            elif algorithm == "CFv2-UT":
+              arrivalMean, numMaxSched, arrivalSum = getArrivalVectorDict(maxSchedPath+maxSchedFileName+name+str(nameIdx)+".csv",PGDist)
+              maa = MultipleAccessAlgorithm(interfGraph, beta, 252+16,r, arrivalMean, False, True)     
+              maa.turnOnFunctions(False,True,'sech',False)
+              schedule = maa.runCollisionFree(testesIt, 'v2', 4, 4)
+
+            elif algorithm == "CFv4-UT":
+              arrivalMean, numMaxSched, arrivalSum = getArrivalVectorDict(maxSchedPath+maxSchedFileName+name+str(nameIdx)+".csv",PGDist)
+              maa = MultipleAccessAlgorithm(interfGraph, beta, 252+16,r, arrivalMean, False, True) 
+              maa.turnOnFunctions(False,True,'sech',False)
+              schedule = maa.runCollisionFree(testesIt, 'v4', 4, 4)
+
+            elif algorithm == "HICSMASEC-UT":
+            arrivalMean, numMaxSched, arrivalSum = getArrivalVectorDict(maxSchedPath+maxSchedFileName+name+str(nameIdx)+".csv",PGDist)
+              maa = MultipleAccessAlgorithm(interfGraph, beta, 252+28,r, arrivalMean, False, True) 
+              maa.turnOnFunctions(False,True,'sech',True)
+              schedule = maa.runHeuristicICSMA(testesIt, heuristicWindowP2) 
+
+            elif algorithm == "HICSMASECNQF-UT":
+              arrivalMean, numMaxSched, arrivalSum = getArrivalVectorDict(maxSchedPath+maxSchedFileName+name+str(nameIdx)+".csv",PGDist)
+              maa = MultipleAccessAlgorithm(interfGraph, beta, 252+28,r, arrivalMean, False, True) 
+              maa.turnOnFunctions(True,True,'sech',False)
+              schedule = maa.runHeuristicICSMA(testesIt, heuristicWindowP2) 
+
+            elif algorithm == "CFv2NQF-UT":
+              arrivalMean, numMaxSched, arrivalSum = getArrivalVectorDict(maxSchedPath+maxSchedFileName+name+str(nameIdx)+".csv",PGDist)
+              maa = MultipleAccessAlgorithm(interfGraph, beta, 252+16,r, arrivalMean, False, True)     
+              maa.turnOnFunctions(True,True,'sech',False)
+              schedule = maa.runCollisionFree(testesIt, 'v2', 4, 4)
+
+            elif algorithm == "CFv4NQF-UT":
+              arrivalMean, numMaxSched, arrivalSum = getArrivalVectorDict(maxSchedPath+maxSchedFileName+name+str(nameIdx)+".csv",PGDist)
+              maa = MultipleAccessAlgorithm(interfGraph, beta, 252+16,r, arrivalMean, False, True) 
+              maa.turnOnFunctions(True,True,'sech',False)
+              schedule = maa.runCollisionFree(testesIt, 'v4', 4, 4)
+
+            elif algorithm == "CFv2-NoQ-UT":
+              arrivalMean, numMaxSched, arrivalSum = getArrivalVectorDict(maxSchedPath+maxSchedFileName+name+str(nameIdx)+".csv",PGDist)
+              maa = MultipleAccessAlgorithm(interfGraph, beta, 252+16,r, arrivalMean, False, True) 
+              maa.turnOnFunctions(True,True,'sech',False, False)
+              schedule = maa.runCollisionFree(testesIt, 'v4', 4, 4)
+
+            elif algorithm == "CFv4-NoQ-UT":
+              arrivalMean, numMaxSched, arrivalSum = getArrivalVectorDict(maxSchedPath+maxSchedFileName+name+str(nameIdx)+".csv",PGDist)
+              maa = MultipleAccessAlgorithm(interfGraph, beta, 252+16,r, arrivalMean, False, True) 
+              maa.turnOnFunctions(True,True,'sech',False, False)
+              schedule = maa.runCollisionFree(testesIt, 'v4', 4, 4)
             queue=0
             queuesList = []
             maa.interfGraph.nodes.sort(key=lambda node: node.id)

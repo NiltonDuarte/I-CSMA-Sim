@@ -37,9 +37,10 @@ l = map(lambda x: x.set(), listA)
 print time.clock() - init
 print l[10].a == 0
 """
-rho = [1.0, 1.1]
+rho = [0.7, 0.8, 0.9, 1.0]
 beta =[0.01, 0.1, 1]
-algorithms = ["ICSMA", "HICSMA", "HICSMASEC", "CFv4", "CFv2", "HICSMA-NCP2", "HICSMASEC-NCP2", "CFv2-NoQ", "CFv4-NoQ", "HICSMASECNQF", "CFv4NQF", "CFv2NQF"]
+algorithms = ["ICSMA-UT", "CFv4-UT", "CFv2-UT", "CFv2-NoQ-UT", "CFv4-NoQ-UT", "CFv4NQF-UT", "CFv2NQF-UT", "HICSMASEC-UT", "HICSMASECNQF-UT"]#["ICSMA", "HICSMA", "HICSMASEC", "CFv4", "CFv2", "HICSMA-NCP2", "HICSMASEC-NCP2", "CFv2-NoQ", "CFv4-NoQ", "HICSMASECNQF", "CFv4NQF", "CFv2NQF",
+
 hostname=['11']#,'02','03', '04', '11']#, '03', '04']
 aux = 0
 f = open('gridQsub.sh', 'w')

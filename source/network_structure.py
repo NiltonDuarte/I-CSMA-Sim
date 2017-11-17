@@ -183,22 +183,45 @@ def deviceDistance( deviceA, deviceB,useToroidalSpace=False, sizeX=None, sizeY=N
   dist = sqSum**0.5
   return dist
 
-def getArrivalVectorDict(inputFile):
+def getArrivalVectorDict(inputFile, distributionFunc=None):
   arrivalDict = {}
   n = 0
+  totalDistributionSum = 0
   with open(inputFile) as file:
     for line in file:
       n += 1
       l = eval(line)
+      arrivalVal = 1
+      if distributionFunc != None:
+        arrivalVal = distributionFunc(n)
+      totalDistributionSum += arrivalVal
       for val in l:
         val = str(val)
+        
         if val in arrivalDict:
-          arrivalDict[val] +=1
+          arrivalDict[val]+= arrivalVal
         else:
-          arrivalDict[val] =1
+          arrivalDict[val] = arrivalVal
   arrivalSum = 0
   for key in sorted(arrivalDict):
-    arrivalDict[key] /= float(n)
+    arrivalDict[key] /= float(totalDistributionSum)
     arrivalSum += arrivalDict[key]
     #print "%s: %s" % (key, round(arrivalDict[key],3))
   return arrivalDict, n, arrivalSum
+
+if __name__ == '__main__':
+  maxSchedPath = "./randomGraphs/maximalScheds/"
+  maxSchedFileName = "MaximalScheds_"
+  fileNames = ["DevGraph16AllRandWR", "DevGraph16NPV","DevGraph16NPV_MD3_"] #
+  name=fileNames[2]
+  nameIdx = 15
+
+  arrivalMean, numMaxSched, arrivalSum = getArrivalVectorDict(maxSchedPath+maxSchedFileName+name+str(nameIdx)+".csv")
+  print arrivalSum, arrivalMean
+  print ""
+  def PGDist(n):
+    a0 = 4
+    r = 0.2
+    return a0*(r**n)
+  arrivalMean, numMaxSched, arrivalSum = getArrivalVectorDict(maxSchedPath+maxSchedFileName+name+str(nameIdx)+".csv", PGDist)
+  print arrivalSum, arrivalMean
