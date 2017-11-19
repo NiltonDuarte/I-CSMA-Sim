@@ -19,7 +19,7 @@ algoL = []
 graphL = []
 floatIdxs = range(42)[:2] + range(42)[4:]
 print floatIdxs
-with open('./resultados/gitignoreR_All.csv', 'r') as csvFile:
+with open('./resultados/gitignoreR_5.csv', 'r') as csvFile:
   #skip header
   #next(csvFile)
   reader = csv.reader(csvFile, delimiter=',')
@@ -202,7 +202,11 @@ for qm in queueMeanL:
 
 
 bestBetaQueues.sort(key=lambda obj: obj.rho)
+rhoMem = 0
 for q in bestBetaQueues:
+  if rhoMem != q.rho:
+    print "============="
+    rhoMem=q.rho
   #if q.rho == 0.8:
   print "{}\t{}\t{}\t{}\t{}".format(q.rho, q.beta, round(q.meanFI[0],2), q.algo, round(q.mean[0],3))
 
