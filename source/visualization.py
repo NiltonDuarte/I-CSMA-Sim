@@ -106,7 +106,7 @@ if __name__ == '__main__':
   windowP1 = 20
   windowP2 = 8
   heuristicWindowP2 = 28
-  r=0.5
+  r=0.7
   numIt = 10000
   plotRange = range(9990,10000)
 
@@ -118,7 +118,7 @@ if __name__ == '__main__':
              '8':0.5, '9':0.5, '10':0.5, '11':0.5, '12':0.5, '13':0.5, '14':0.5, '15':0.5}
 
   maa = MultipleAccessAlgorithm(interfGraph, beta, 252+28,r, arrivalMean, False, True)
-  maa.g=0.8
+  maa.g=1.1
   #turnOnFunctions(self, newQF, newSF, newQP, newCP2):
   #maa.turnOnFunctions(False,False, False, False)
 
@@ -126,8 +126,8 @@ if __name__ == '__main__':
 
   maa.turnOnFunctions(True,True, 'placeholder', False)
   for i in range(numIt):
-    schedule = maa.runCollisionFree(1, 'v2', 4, 4)
-    #schedule = maa.runICSMA(1, windowP1, windowP2)
+    #schedule = maa.runCollisionFree(1, 'v2', 4, 4)
+    schedule = maa.runICSMA(1, windowP1, windowP2)
     #schedule = maa.runHeuristicICSMA(1, heuristicWindowP2)
     if i in plotRange:
       plot(i, maa, schedule, name+str(i))
