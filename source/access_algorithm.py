@@ -9,6 +9,7 @@ from schedule_algorithm import *
 class MultipleAccessAlgorithm:
   def __init__(self, interferenceGraph, beta, totalMiniSlots, rho, trafficMean, maxMeanQueue, safeCheck = False):
     self.b = beta
+    self.g = 1 #gamma
     self.interfGraph = interferenceGraph
     self.numNodes = len(interferenceGraph.nodes)
     self.maxD = interferenceGraph.getMaxDegree()
@@ -140,12 +141,16 @@ class MultipleAccessAlgorithm:
   def q(self, node):
     #eq 5
     Av=self.queueFunction(node.getQueueSize())
+    S = self.S(node)
     try:
       if self.newQProb == "tanhdif":
         x = self.b*(Av-self.S(node))
         ret= 0.5*(1+tanh(x))
       elif self.newQProb == "sech":
         ret = 1-(1/cosh((Av+1)*self.b*self.S(node)/2))
+      elif self.newQProb == "placeholder":
+        expo = self.b*((self.g+S)-Av*(Av*self.g-S))
+        ret = 1./(1.+exp(expo))
       else:
         ret = 0.5*(1-tanh((Av+1)*self.b*self.S(node)/2))
     except OverflowError as e:

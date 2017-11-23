@@ -74,13 +74,14 @@ class Node:
     self.id = idf
     self.edges=[]
     #I-CSMA state {-1,Av} ou {-1,+1}(Ising)
-    self.state = -1
+    rn=random()
+    self.state = -1 if rn < 0.5 else 1
     self.backoff = None
     self.silenced = False
     self.visited = False
     self.collided = False
     self.queueSize = 0
-    self.S = None
+    #self.S = None
     self.q = None
     self.sourceObj = obj
     self.sched_algo = []

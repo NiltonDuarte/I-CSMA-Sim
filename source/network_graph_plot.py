@@ -21,7 +21,7 @@ LattPairDist = 40.
 
 rt = RandomTopology()
 rt.load(filePath+name+str(nameIdx)+".csv")
-interfGraph = InterferenceGraph(rt, LattInterfDist, False, LattDistance*(LattSize), LattDistance*(LattSize))
+interfGraph = InterferenceGraph(rt, LattInterfDist, False)
 interfGraph.nodes.sort(key=lambda node: node.id)
 
 edge_trace = Scatter(
