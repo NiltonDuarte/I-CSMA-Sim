@@ -90,7 +90,7 @@ def plot(indx, maa, schedule, name):
 
 
 
-  plotly.offline.plot(fig, filename='gitignore-graph{}.html'.format(indx))
+  #plotly.offline.plot(fig, filename='gitignore-graph{}.html'.format(indx))
   #plotly.offline.plot(fig, image='png', image_filename='lattice{}'.format(indx))
 
 
@@ -102,13 +102,14 @@ if __name__ == '__main__':
   LattDistance = 70.
   LattSize = 4
   LattPairDist = 40.
-  beta = 0.1
+  beta = 1.5
   windowP1 = 20
   windowP2 = 8
   heuristicWindowP2 = 28
   r=0.7
   numIt = 10000
   plotRange = range(9990,10000)
+  n=16.0
 
   lattice = Lattice(LattSize,LattDistance,LattPairDist)
   interfGraph = InterferenceGraph(lattice, LattInterfDist, False)
@@ -118,16 +119,28 @@ if __name__ == '__main__':
              '8':0.5, '9':0.5, '10':0.5, '11':0.5, '12':0.5, '13':0.5, '14':0.5, '15':0.5}
 
   maa = MultipleAccessAlgorithm(interfGraph, beta, 252+28,r, arrivalMean, False, True)
-  maa.g=1.1
+  maa.g=1.2
   #turnOnFunctions(self, newQF, newSF, newQP, newCP2):
+  params = ('base10',True, 'placeholder', False)
+  #params = (False,False, False, False)
+  #params = (True,True, False, False)
   #maa.turnOnFunctions(False,False, False, False)
 
   #maa.turnOnFunctions(True,True, False, False)
 
-  maa.turnOnFunctions(True,True, 'placeholder', False)
+  maa.turnOnFunctions(*params)
   for i in range(numIt):
+    func = maa.runICSMA
     #schedule = maa.runCollisionFree(1, 'v2', 4, 4)
-    schedule = maa.runICSMA(1, windowP1, windowP2)
+    schedule = func(1, windowP1, windowP2)
     #schedule = maa.runHeuristicICSMA(1, heuristicWindowP2)
     if i in plotRange:
-      plot(i, maa, schedule, name+str(i))
+      #plot(i, maa, schedule, name+str(i))
+      pass
+  queue=0
+
+  maa.interfGraph.nodes.sort(key=lambda node: node.id)
+  for node in maa.interfGraph.nodes:
+    queue += node.queueSize
+  results=", ".join(str(x) for x in ([round(queue/n,2), r, params, func.__name__, name, beta]))
+  print results

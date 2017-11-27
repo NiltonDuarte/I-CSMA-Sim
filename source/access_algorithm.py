@@ -52,7 +52,7 @@ class MultipleAccessAlgorithm:
       self.onNodesCount=0
       if self.queueLimit():
         return slotSchedule
-      if self.useHeuristic or self.useCollisionFree:
+      if self.useHeuristic:
         self.heuristicControlPhase1()
       else:
         self.controlPhase1()
@@ -79,12 +79,25 @@ class MultipleAccessAlgorithm:
   def runCollisionFree(self, iterations, version, steps, maxSchedRounds=None):
     #tdma slot assignment max rounds (colors)
     self.maxSchedRounds = maxSchedRounds
-    self.versionCollisionFree = version
     self.parallelSchedAlgos = steps
+    self.versionCollisionFree = version
+    self.useHeuristic = True
     self.useCollisionFree = True
     if self.slot == 0:
       self.initCtrlPhaseCF(steps)
     return self._run(iterations)
+
+  def runGDCollisionFree(self, iterations, version, W1, steps, maxSchedRounds=None):
+    self.W1 = W1
+    #tdma slot assignment max rounds (colors)
+    self.maxSchedRounds = maxSchedRounds
+    self.parallelSchedAlgos = steps
+    self.versionCollisionFree = version
+    self.useHeuristic = False
+    self.useCollisionFree = True
+    if self.slot == 0:
+      self.initCtrlPhaseCF(steps)
+    return self._run(iterations)    
     
   def runICSMA(self, iterations, W1, W2):
     self.W1 = W1
@@ -171,8 +184,10 @@ class MultipleAccessAlgorithm:
 
   #Av
   def queueFunction(self, queue):
-    if self.newQueueFunc:
+    if self.newQueueFunc == True:
       return log(queue+1)
+    elif self.newQueueFunc == "base10":
+      return log10(queue+1)
     return 2*(self.maxD-1)+log(queue+1)
 
   def updateState(self, node):
