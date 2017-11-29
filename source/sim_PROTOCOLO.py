@@ -27,7 +27,7 @@ betaList = [float(sys.argv[1])] #[0.01,0.1,1]
 #rho = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
 rho = [float(sys.argv[2])]
 
-testesIt = 100000
+testesIt = 1#100000
 rounds = 5
 InterfDist = 80.
 algorithms = [sys.argv[3]]#["ICSMA", "HICSMA", "HICSMASEC", "CFv4", "CFv2"]#"HICSMA-NCP2", "HICSMASEC-NCP2", "CFv2-NoQ", "CFv4-NoQ"]# "HICSMASECNQF", "CFv4NQF", "CFv2NQF"]
@@ -39,6 +39,7 @@ if sys.argv[4]:
 
 n = 16
 
+resultsList = []
 def PGDist(n):
   a0 = 4
   r = 0.2
@@ -324,11 +325,14 @@ for name in fileNames:
               queuesList.append(node.queueSize)
               queue += node.queueSize
             results=", ".join(str(x) for x in ([round(queue/n,2), r, algorithm, name+str(nameIdx), beta, gamma, arrivalSum, numEdges, numMaxSched, testesIt] + queuesList + maa.schedSizeFrequency))
+            resultsList.append(results)
             #print algorithm, beta, r, round(queue/n,2)
-            with open(resultsSaveFile,"a") as rsf:
-              rsf.write(str(results))
-              rsf.write('\n')
-              rsf.flush()
+
+with open(resultsSaveFile,"a") as rsf:
+  for result in resultsList:
+    rsf.write(str(result))
+    rsf.write('\n')
+  rsf.flush()
         #print " "
 
 print("--- %s seconds ---" % (time.time() - start_time))
