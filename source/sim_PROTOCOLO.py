@@ -33,6 +33,7 @@ InterfDist = 80.
 algorithms = [sys.argv[3]]#["ICSMA", "HICSMA", "HICSMASEC", "CFv4", "CFv2"]#"HICSMA-NCP2", "HICSMASEC-NCP2", "CFv2-NoQ", "CFv4-NoQ"]# "HICSMASECNQF", "CFv4NQF", "CFv2NQF"]
 #print "Using rho = "+str(rho) + " and beta = "+str(betaList)
 
+gamma = 0
 if sys.argv[4]:
   gamma = float(sys.argv[4])
 
@@ -322,7 +323,7 @@ for name in fileNames:
             for node in maa.interfGraph.nodes:
               queuesList.append(node.queueSize)
               queue += node.queueSize
-            results=", ".join(str(x) for x in ([round(queue/n,2), r, algorithm, name+str(nameIdx), beta, arrivalSum, numEdges, numMaxSched, testesIt] + queuesList + maa.schedSizeFrequency))
+            results=", ".join(str(x) for x in ([round(queue/n,2), r, algorithm, name+str(nameIdx), beta, gamma, arrivalSum, numEdges, numMaxSched, testesIt] + queuesList + maa.schedSizeFrequency))
             #print algorithm, beta, r, round(queue/n,2)
             with open(resultsSaveFile,"a") as rsf:
               rsf.write(str(results))
