@@ -284,7 +284,7 @@ class MultipleAccessAlgorithm:
           graphNodes.remove(neighb)
       if len(graphNodes) == 0:
         finished = True
-    print self.it, gdSelectedNodes
+    #print self.it, gdSelectedNodes
     self.calculateNodes_q()    #calc S and q based on prev time slot
     self.fillNodesQueues() 
     for node in gdSelectedNodes:
