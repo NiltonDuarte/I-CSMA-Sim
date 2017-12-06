@@ -23,6 +23,7 @@ class MultipleAccessAlgorithm:
     #CONTROL VARIABLES
     self.useHeuristic = False
     self.useCollisionFree = False
+    self.useCFPGD = False
     self.newQueueFunc = False
     self.newSFunc = False
     self.newQProb = False
@@ -54,6 +55,8 @@ class MultipleAccessAlgorithm:
         return slotSchedule
       if self.useHeuristic:
         self.heuristicControlPhase1()
+      elif self.useCFPGD:
+        self.CFPGD()
       else:
         self.controlPhase1()
       if self.useCollisionFree:
@@ -73,7 +76,8 @@ class MultipleAccessAlgorithm:
         #slotSchedule.append(self.interfGraph.nodes[0])
         if not self.safetyCheck(slotSchedule):
           print "SAFETY CHECK ERROR", slotSchedule
-          return "SAFETY CHECK ERROR"
+          quit()
+          #return "SAFETY CHECK ERROR"
     return slotSchedule
 
   def runCollisionFree(self, iterations, version, steps, maxSchedRounds=None):
@@ -87,13 +91,12 @@ class MultipleAccessAlgorithm:
       self.initCtrlPhaseCF(steps)
     return self._run(iterations)
 
-  def runGDCollisionFree(self, iterations, version, W1, steps, maxSchedRounds=None):
-    self.W1 = W1
+  def runGDCollisionFree(self, iterations, version, steps, maxSchedRounds=None):
     #tdma slot assignment max rounds (colors)
     self.maxSchedRounds = maxSchedRounds
     self.parallelSchedAlgos = steps
     self.versionCollisionFree = version
-    self.useHeuristic = False
+    self.useCFPGD = True
     self.useCollisionFree = True
     if self.slot == 0:
       self.initCtrlPhaseCF(steps)
@@ -263,6 +266,30 @@ class MultipleAccessAlgorithm:
     self.dumpNodesQueues(slotSchedule)
     return slotSchedule
 
+  def CFPGD(self):
+    """Collision Free Parallel Glauber Dynamics
+       Runing a parallel glauber dynamics is equivalent of running a collision free algorithm without queue information.
+       With that in mind, for the sake of simplicity and time I will do something faster at once      
+    """
+    graphNodes = self.interfGraph.nodes[:]
+    shuffle(graphNodes)
+    gdSelectedNodes = []
+    finished = False
+    while not finished:
+      selectedNode = graphNodes.pop()
+      gdSelectedNodes.append(selectedNode)
+      neighbours = self.interfGraph.getNeighbours(selectedNode)
+      for neighb in neighbours:
+        if neighb in graphNodes:
+          graphNodes.remove(neighb)
+      if len(graphNodes) == 0:
+        finished = True
+    print self.it, gdSelectedNodes
+    self.calculateNodes_q()    #calc S and q based on prev time slot
+    self.fillNodesQueues() 
+    for node in gdSelectedNodes:
+      self.updateState(node)
+
   def initCtrlPhaseCF(self, steps):  
     for i in range(steps):
       for node in self.interfGraph.nodes:
@@ -378,10 +405,10 @@ if __name__ == '__main__':
   LattInterfDist = 80.
   getArrivalVectorDict(maxSchedPath+maxSchedFileName+name+str(nameIdx)+".csv")
   print "Initializing"
-  for beta in [0.1, 0.03, 1]:
+  for beta in [0.01, 0.1, 1, 10]:
     
     for r in [0.4, 0.5, 0.7]:
-      for i in [2]:
+      for i in [3]:
         
         lattice = Lattice(LattSize,LattDistance,LattPairDist)
         interfGraphLattice = InterferenceGraph(lattice, LattInterfDist, False)
@@ -402,14 +429,16 @@ if __name__ == '__main__':
           schedule = maa.runHeuristicICSMA(testesIt, heuristicWindowP2) 
         elif i == 2:
           beta = 1
-          maa = MultipleAccessAlgorithm(interfGraphLattice, beta, 252+16,r, arrivalMean, True)      
+          maa = MultipleAccessAlgorithm(interfGraphLattice, beta, 252+16,r, arrivalMean, True)
+          #maa.CFPGD()
           maa.turnOnFunctions(True,True,'sech',False,True)
-          schedule = maa.runCollisionFree(testesIt, 'v2', 4, 4)
+          #schedule = maa.runCollisionFree(testesIt, 'v2', 4, 4)
         elif i == 3:
           beta = 1
-          maa = MultipleAccessAlgorithm(interfGraphLattice, beta, 252+16,r, arrivalMean, True)      
-          maa.turnOnFunctions(False,True,'sech',False, False)
-          schedule = maa.runCollisionFree(testesIt, 'v4', 4, 4)
+          maa = MultipleAccessAlgorithm(interfGraphLattice, beta, 252+16,r, arrivalMean, False, True)      
+          maa.g= 1.5
+          maa.turnOnFunctions(True,True,'placeholder',False)
+          schedule = maa.runGDCollisionFree(testesIt, 'v2', 4)
         
 
         n=16.
@@ -420,4 +449,4 @@ if __name__ == '__main__':
           queuesList.append(node.queueSize)
           queue += node.queueSize
         results=", ".join(str(x) for x in ([r , beta, maa.it, round(queue/n,2)] + queuesList + maa.schedSizeFrequency))
-        print i, results
+        #print i, results

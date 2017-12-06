@@ -66,10 +66,13 @@ def plot(indx, maa, schedule, name):
       CcOFF = -maa.g
       st = 1 if node.state!=-1 else -1
       node_trace['marker']['color'].append(st)
+      #node_info = "Id:{} St:{} Q:{:3.3f}\
+      #        <br>Fv:{:3.2f} S:{:3.2f} q:{:3.2f}\
+      #        <br>C+:{:3.3f} C-:{:3.3f}".format(node.id, st, node.queueSize,Fv,S,node.q,CvON+CcON,CvOFF+CcOFF)
       node_info = "Id:{} St:{} Q:{:10.3f}\
-              <br>Fv:{:10.3f} S:{:10.3f} q:{:10.3f}\
-              <br>C+:{:10.3f} Cv+:{:10.3f} Cc+:{:10.3f}\
-              <br>C-:{:10.3f} Cv-:{:10.3f} Cc-:{:10.3f}".format(node.id, st, node.queueSize,Fv,S,node.q,CvON+CcON,CvON,CcON,CvOFF+CcOFF,CvOFF,CcOFF)
+              <br>Fv:{:3.2f} S:{:3.2f} q:{:1.2f}\
+              <br>C+:{:3.3f} Cv+:{:3.3f} Cc+:{:3.3f}\
+              <br>C-:{:3.3f} Cv-:{:3.3f} Cc-:{:3.3f}".format(node.id, st, node.queueSize,Fv,S,node.q,CvON+CcON,CvON,CcON,CvOFF+CcOFF,CvOFF,CcOFF)
       node_trace['text'].append(node_info)
    
   fig = Figure(data=Data([edge_trace, node_trace]),
@@ -90,7 +93,7 @@ def plot(indx, maa, schedule, name):
 
 
 
-  #plotly.offline.plot(fig, filename='gitignore-graph{}.html'.format(indx))
+  plotly.offline.plot(fig, filename='gitignore-graph{}.html'.format(indx))
   #plotly.offline.plot(fig, image='png', image_filename='lattice{}'.format(indx))
 
 
@@ -102,7 +105,7 @@ if __name__ == '__main__':
   LattDistance = 70.
   LattSize = 4
   LattPairDist = 40.
-  beta = 1.5
+  beta = 0.1
   windowP1 = 20
   windowP2 = 8
   heuristicWindowP2 = 28
@@ -119,7 +122,7 @@ if __name__ == '__main__':
              '8':0.5, '9':0.5, '10':0.5, '11':0.5, '12':0.5, '13':0.5, '14':0.5, '15':0.5}
 
   maa = MultipleAccessAlgorithm(interfGraph, beta, 252+28,r, arrivalMean, False, True)
-  maa.g=1.2
+  maa.g=0
   #turnOnFunctions(self, newQF, newSF, newQP, newCP2):
   params = ('base10',True, 'placeholder', False)
   #params = (False,False, False, False)
@@ -130,13 +133,13 @@ if __name__ == '__main__':
 
   maa.turnOnFunctions(*params)
   for i in range(numIt):
-    func = maa.runICSMA
+    func = maa.runHeuristicICSMA
     #schedule = maa.runCollisionFree(1, 'v2', 4, 4)
-    schedule = func(1, windowP1, windowP2)
-    #schedule = maa.runHeuristicICSMA(1, heuristicWindowP2)
+    #schedule = func(1, windowP1, windowP2)
+    schedule = func(1, heuristicWindowP2)
     if i in plotRange:
-      #plot(i, maa, schedule, name+str(i))
-      pass
+      plot(i, maa, schedule, name+str(i))
+      #pass
   queue=0
 
   maa.interfGraph.nodes.sort(key=lambda node: node.id)

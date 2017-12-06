@@ -37,14 +37,15 @@ l = map(lambda x: x.set(), listA)
 print time.clock() - init
 print l[10].a == 0
 """
-rho = [0.7, 0.8, 0.9, 1.0]
-beta =[0.01, 0.1, 1, 1.5]
-gamma = [0.8, 1, 1.2, 1.4, 1.5]
-algorithms = ["MICE10-ICSMA", "MICEe-ICSMA", "MICE10-CFv2", "MICEe-CFv2", "MICE10-CFv4", "MICEe-CFv4", "MICE10-CFGDv2", "MICEe-CFGDv2", "MICE10-CFGDv4", "MICEe-CFGDv4" ]
+rho = [0.8, 0.9, 1.0]
+beta =[0.1, 1, 1.5]
+gamma = [0.5, 1.0, 1.5, 2.0, 2.5]
+algorithms = ["MICE-ICSMAPURE", "MICEe-TrueCFGDv2", "MICEe-TrueCFGDv4", "MICEe-CFv2-UT", "MICEe-CFv4-UT", "MICE-ICSMAPURE-UT", "MICEe-TrueCFGDv2-UT", "MICEe-TrueCFGDv4-UT", "MICEe-CFv2-UT2", "MICEe-CFv4-UT2", "MICE-ICSMAPURE-UT2", "MICEe-TrueCFGDv2-UT2", "MICEe-TrueCFGDv4-UT2"]
+#["MICE10-ICSMA", "MICEe-ICSMA", "MICE10-CFv2", "MICEe-CFv2", "MICE10-CFv4", "MICEe-CFv4", "MICE10-CFGDv2", "MICEe-CFGDv2", "MICE10-CFGDv4", "MICEe-CFGDv4" ]
 #["ICSMA-UT2", "CFv4-UT2", "CFv2-UT2", "CFv2-NoQ-UT2", "CFv4-NoQ-UT2", "CFv4NQF-UT2", "CFv2NQF-UT2", "HICSMASEC-UT2", "HICSMASECNQF-UT2"]
 #["ICSMA-UT", "CFv4-UT", "CFv2-UT", "CFv2-NoQ-UT", "CFv4-NoQ-UT", "CFv4NQF-UT", "CFv2NQF-UT", "HICSMASEC-UT", "HICSMASECNQF-UT"]#["ICSMA", "HICSMA", "HICSMASEC", "CFv4", "CFv2", "HICSMA-NCP2", "HICSMASEC-NCP2", "CFv2-NoQ", "CFv4-NoQ", "HICSMASECNQF", "CFv4NQF", "CFv2NQF",
 
-hostname=['11']#,'02','03', '04', '11']#, '03', '04']
+hostname=['10','10','10','08','01','01','02','02','02']#,'02','03', '04', '11']#, '03', '04']
 aux = 0
 f = open('gridQsub.sh', 'w')
 #for r in rho:

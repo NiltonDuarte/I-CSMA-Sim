@@ -27,7 +27,7 @@ betaList = [float(sys.argv[1])] #[0.01,0.1,1]
 #rho = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
 rho = [float(sys.argv[2])]
 
-testesIt = 100000
+testesIt = 10
 rounds = 5
 InterfDist = 80.
 algorithms = [sys.argv[3]]#["ICSMA", "HICSMA", "HICSMASEC", "CFv4", "CFv2"]#"HICSMA-NCP2", "HICSMASEC-NCP2", "CFv2-NoQ", "CFv4-NoQ"]# "HICSMASECNQF", "CFv4NQF", "CFv2NQF"]
@@ -40,6 +40,7 @@ if sys.argv[4]:
 n = 16
 
 resultsList = []
+
 def PGDist(n):
   a0 = 4
   r = 0.2
@@ -50,7 +51,7 @@ def PGDist2(n):
   r = 0.6
   return a0*(r**n)
 
-resultsSaveFile = saveResultsFilePath+"gitignoreR_"+".csv"
+resultsSaveFile = saveResultsFilePath+"gitignoreR_TESTE"+".csv"
 for name in fileNames:
   for nameIdx in range(fileNamesIdx):
     netGraphName = randNetGraphPath+name+str(nameIdx)
@@ -88,12 +89,14 @@ for name in fileNames:
 
             elif algorithm == "HICSMA-NCP2":
               maa = MultipleAccessAlgorithm(interfGraph, beta, 252+28,r, arrivalMean, False, True) 
-              maa.turnOnFunctions(False,False,False,False)
+              #ERRO SIM - SIM THIS AGAIN - USED IT > maa.turnOnFunctions(False,False,False,False)
+              maa.turnOnFunctions(False,False,False,True)
               schedule = maa.runHeuristicICSMA(testesIt, heuristicWindowP2)
 
             elif algorithm == "HICSMASEC":
               maa = MultipleAccessAlgorithm(interfGraph, beta, 252+28,r, arrivalMean, False, True) 
-              maa.turnOnFunctions(False,True,'sech',True)
+              #ERRO SIM - SIM THIS AGAIN - USED IT > maa.turnOnFunctions(False,True,'sech',True)
+              maa.turnOnFunctions(False,True,'sech',False)
               schedule = maa.runHeuristicICSMA(testesIt, heuristicWindowP2) 
 
             elif algorithm == "HICSMASEC-NCP2":
@@ -317,6 +320,100 @@ for name in fileNames:
               maa.g= gamma
               maa.turnOnFunctions(True,True,'placeholder',False)
               schedule = maa.runGDCollisionFree(testesIt, 'v4',20, 4, 4) 
+
+#===================== More MODELO DE ISING com CAMPO EXTERNO ===================================          
+            elif algorithm == "MICE-ICSMAPURE":
+              arrivalMean, numMaxSched, arrivalSum = getArrivalVectorDict(maxSchedPath+maxSchedFileName+name+str(nameIdx)+".csv")
+              maa = MultipleAccessAlgorithm(interfGraph, beta, 252+28,r, arrivalMean, False, True) 
+              maa.g= gamma
+              maa.turnOnFunctions(False,False,'placeholder',False)
+              schedule = maa.runICSMA(testesIt, windowP1, windowP2)
+
+            elif algorithm == "MICEe-TrueCFGDv2":
+              arrivalMean, numMaxSched, arrivalSum = getArrivalVectorDict(maxSchedPath+maxSchedFileName+name+str(nameIdx)+".csv")
+              maa = MultipleAccessAlgorithm(interfGraph, beta, 252+16,r, arrivalMean, False, True) 
+              maa.g= gamma
+              maa.turnOnFunctions(True,True,'placeholder',False)
+              schedule = maa.runGDCollisionFree(testesIt, 'v2', 4, 4)                       
+
+            elif algorithm == "MICEe-TrueCFGDv4":
+              arrivalMean, numMaxSched, arrivalSum = getArrivalVectorDict(maxSchedPath+maxSchedFileName+name+str(nameIdx)+".csv")
+              maa = MultipleAccessAlgorithm(interfGraph, beta, 252+16,r, arrivalMean, False, True) 
+              maa.g= gamma
+              maa.turnOnFunctions(True,True,'placeholder',False)
+              schedule = maa.runGDCollisionFree(testesIt, 'v4', 4, 4) 
+
+#===================== UNVEN TRAFFIC MODELO DE ISING com CAMPO EXTERNO ===================================   
+            elif algorithm == "MICEe-CFv2-UT":
+              arrivalMean, numMaxSched, arrivalSum = getArrivalVectorDict(maxSchedPath+maxSchedFileName+name+str(nameIdx)+".csv",PGDist)
+              maa = MultipleAccessAlgorithm(interfGraph, beta, 252+16,r, arrivalMean, False, True) 
+              maa.g= gamma
+              maa.turnOnFunctions(True,True,'placeholder',False)
+              schedule = maa.runCollisionFree(testesIt, 'v2', 4, 4)
+
+            elif algorithm == "MICEe-CFv4-UT":
+              arrivalMean, numMaxSched, arrivalSum = getArrivalVectorDict(maxSchedPath+maxSchedFileName+name+str(nameIdx)+".csv",PGDist)
+              maa = MultipleAccessAlgorithm(interfGraph, beta, 252+16,r, arrivalMean, False, True) 
+              maa.g= gamma
+              maa.turnOnFunctions(True,True,'placeholder',False)
+              schedule = maa.runCollisionFree(testesIt, 'v4', 4, 4) 
+
+            elif algorithm == "MICE-ICSMAPURE-UT":
+              arrivalMean, numMaxSched, arrivalSum = getArrivalVectorDict(maxSchedPath+maxSchedFileName+name+str(nameIdx)+".csv",PGDist)
+              maa = MultipleAccessAlgorithm(interfGraph, beta, 252+28,r, arrivalMean, False, True) 
+              maa.g= gamma
+              maa.turnOnFunctions(False,False,'placeholder',False)
+              schedule = maa.runICSMA(testesIt, windowP1, windowP2)
+
+            elif algorithm == "MICEe-TrueCFGDv2-UT":
+              arrivalMean, numMaxSched, arrivalSum = getArrivalVectorDict(maxSchedPath+maxSchedFileName+name+str(nameIdx)+".csv",PGDist)
+              maa = MultipleAccessAlgorithm(interfGraph, beta, 252+16,r, arrivalMean, False, True) 
+              maa.g= gamma
+              maa.turnOnFunctions(True,True,'placeholder',False)
+              schedule = maa.runGDCollisionFree(testesIt, 'v2', 4, 4)                       
+
+            elif algorithm == "MICEe-TrueCFGDv4-UT":
+              arrivalMean, numMaxSched, arrivalSum = getArrivalVectorDict(maxSchedPath+maxSchedFileName+name+str(nameIdx)+".csv",PGDist)
+              maa = MultipleAccessAlgorithm(interfGraph, beta, 252+16,r, arrivalMean, False, True) 
+              maa.g= gamma
+              maa.turnOnFunctions(True,True,'placeholder',False)
+              schedule = maa.runGDCollisionFree(testesIt, 'v4', 4, 4) 
+
+            elif algorithm == "MICEe-CFv2-UT2":
+              arrivalMean, numMaxSched, arrivalSum = getArrivalVectorDict(maxSchedPath+maxSchedFileName+name+str(nameIdx)+".csv",PGDist2)
+              maa = MultipleAccessAlgorithm(interfGraph, beta, 252+16,r, arrivalMean, False, True) 
+              maa.g= gamma
+              maa.turnOnFunctions(True,True,'placeholder',False)
+              schedule = maa.runCollisionFree(testesIt, 'v2', 4, 4)
+
+            elif algorithm == "MICEe-CFv4-UT2":
+              arrivalMean, numMaxSched, arrivalSum = getArrivalVectorDict(maxSchedPath+maxSchedFileName+name+str(nameIdx)+".csv",PGDist2)
+              maa = MultipleAccessAlgorithm(interfGraph, beta, 252+16,r, arrivalMean, False, True) 
+              maa.g= gamma
+              maa.turnOnFunctions(True,True,'placeholder',False)
+              schedule = maa.runCollisionFree(testesIt, 'v4', 4, 4) 
+
+            elif algorithm == "MICE-ICSMAPURE-UT2":
+              arrivalMean, numMaxSched, arrivalSum = getArrivalVectorDict(maxSchedPath+maxSchedFileName+name+str(nameIdx)+".csv",PGDist2)
+              maa = MultipleAccessAlgorithm(interfGraph, beta, 252+28,r, arrivalMean, False, True) 
+              maa.g= gamma
+              maa.turnOnFunctions(False,False,'placeholder',False)
+              schedule = maa.runICSMA(testesIt, windowP1, windowP2)
+
+            elif algorithm == "MICEe-TrueCFGDv2-UT2":
+              arrivalMean, numMaxSched, arrivalSum = getArrivalVectorDict(maxSchedPath+maxSchedFileName+name+str(nameIdx)+".csv",PGDist2)
+              maa = MultipleAccessAlgorithm(interfGraph, beta, 252+16,r, arrivalMean, False, True) 
+              maa.g= gamma
+              maa.turnOnFunctions(True,True,'placeholder',False)
+              schedule = maa.runGDCollisionFree(testesIt, 'v2', 4, 4)                       
+
+            elif algorithm == "MICEe-TrueCFGDv4-UT2":
+              arrivalMean, numMaxSched, arrivalSum = getArrivalVectorDict(maxSchedPath+maxSchedFileName+name+str(nameIdx)+".csv",PGDist2)
+              maa = MultipleAccessAlgorithm(interfGraph, beta, 252+16,r, arrivalMean, False, True) 
+              maa.g= gamma
+              maa.turnOnFunctions(True,True,'placeholder',False)
+              schedule = maa.runGDCollisionFree(testesIt, 'v4', 4, 4)               
+
 
             queue=0
             queuesList = []
