@@ -158,6 +158,7 @@ class MultipleAccessAlgorithm:
     #eq 5
     Av=self.queueFunction(node.getQueueSize())
     S = self.S(node)
+
     try:
       if self.newQProb == "tanhdif":
         x = self.b*(Av-self.S(node))
@@ -170,7 +171,9 @@ class MultipleAccessAlgorithm:
       else:
         ret = 0.5*(1-tanh((Av+1)*self.b*self.S(node)/2))
     except OverflowError as e:
-      print "(Av+1)*self.b*self.S(node)/2 = ", (Av+1)*self.b*self.S(node)/2
+      if self.newQProb == "placeholder":
+        ret=0.0
+
     #print ret
     return ret
 
@@ -408,7 +411,7 @@ if __name__ == '__main__':
   for beta in [0.01, 0.1, 1, 10]:
     
     for r in [0.4, 0.5, 0.7]:
-      for i in [3]:
+      for i in [0]:
         
         lattice = Lattice(LattSize,LattDistance,LattPairDist)
         interfGraphLattice = InterferenceGraph(lattice, LattInterfDist, False)
@@ -416,12 +419,10 @@ if __name__ == '__main__':
         #turnOnFunctions(self, newQF, newSF, newQP, newCP2):
         #runCollisionFree(self, iterations, version, steps, maxSchedRounds=None):
         if i == 0:
-          #beta = 0.01
           maa = MultipleAccessAlgorithm(interfGraphLattice, beta, 252+28,r, arrivalMean, False, True) 
-          maa.turnOnFunctions(False,False,False,False)
-          schedule = maa.runICSMA(testesIt, windowP1, windowP2) 
-
-          #schedule = maa.runHeuristicCSMA(testesIt, heuristicWindowP2) 
+          maa.g= 1
+          maa.turnOnFunctions(False,False,'placeholder',False)
+          schedule = maa.runICSMA(testesIt, windowP1, windowP2)
         elif i == 1:
           beta = 1
           maa = MultipleAccessAlgorithm(interfGraphLattice, beta, 252+28,r, arrivalMean, True)
