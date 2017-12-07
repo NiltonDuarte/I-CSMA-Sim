@@ -124,7 +124,7 @@ for q in queueMeanGraphL:
       if not result.mean in q.queueML:
         print "Error",result.mean, q.resultsL, q.queueML
 print "\nDone\n"
-"""
+
 removeList = []
 print "Checks for forgotten sims"
 for q in queueMeanGraphL:
@@ -135,6 +135,25 @@ for q in queueMeanGraphL:
 #for q in removeList:
 #  queueMeanGraphL.remove(q)
 print "\nDone\n"
+"""
+auxrho = [0.7, 0.8, 0.9, 1.0]
+auxbeta =[0.01, 0.1, 1, 1.5]
+auxgamma = [0.8, 1, 1.2, 1.4, 1.5]
+auxalgorithms = ["MICE10-ICSMA", "MICEe-ICSMA", "MICE10-CFv2", "MICEe-CFv2", "MICE10-CFv4", "MICEe-CFv4", "MICE10-CFGDv2", "MICEe-CFGDv2", "MICE10-CFGDv4", "MICEe-CFGDv4" ]
+leftSims = []
+#search for leftover sims
+for q in queueMeanGraphL:
+  if len(q.queueML) != 5:
+    if q.rho in auxrho and q.beta in auxbeta and q.gamma in auxgamma and q.algo in auxalgorithms:
+      params = q.rho, q.beta, q.gamma, q.algo
+      if not params in leftSims:
+        leftSims.append(params)
+for i in leftSims:
+  print i
+print len(leftSims)
+
+
+
 
 print "Calculating Means"
 for q in queueMeanGraphL:
