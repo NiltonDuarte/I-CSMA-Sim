@@ -150,7 +150,8 @@ for q in queueMeanGraphL:
         leftSims.append(params)
 for i in leftSims:
   print i
-print len(leftSims)
+sortedleftsims = sorted(leftSims, lambda x,y: x[1] > y[1])  
+print len(sortedleftsims)
 
 
 
