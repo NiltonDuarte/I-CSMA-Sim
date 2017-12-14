@@ -16,7 +16,7 @@ saveResultsFilePath = "../resultados/"
 maxSchedPath = "./randomGraphs/maximalScheds/"
 maxSchedFileName = "MaximalScheds_"
 fileNames = ["DevGraph16AllRandWR", "DevGraph16NPV","DevGraph16NPV_MD3_"] #
-fileNamesIdx = 10
+fileNamesIdx = (10,20)
 
 windowP1 = 20
 windowP2 = 8
@@ -28,7 +28,7 @@ betaList = [float(sys.argv[1])] #[0.01,0.1,1]
 rho = [float(sys.argv[2])]
 
 testesIt = 100000
-rounds = 5
+rounds = 30
 InterfDist = 80.
 algorithms = [sys.argv[3]]#["ICSMA", "HICSMA", "HICSMASEC", "CFv4", "CFv2"]#"HICSMA-NCP2", "HICSMASEC-NCP2", "CFv2-NoQ", "CFv4-NoQ"]# "HICSMASECNQF", "CFv4NQF", "CFv2NQF"]
 #print "Using rho = "+str(rho) + " and beta = "+str(betaList)
@@ -51,9 +51,9 @@ def PGDist2(n):
   r = 0.6
   return a0*(r**n)
 
-resultsSaveFile = saveResultsFilePath+"gitignoreR_"+".csv"
+resultsSaveFile = saveResultsFilePath+"gitignoreRF_"+".csv"
 for name in fileNames:
-  for nameIdx in range(fileNamesIdx):
+  for nameIdx in range(*fileNamesIdx):
     netGraphName = randNetGraphPath+name+str(nameIdx)
     #print netGraphName
     arrivalMean, numMaxSched, arrivalSum = getArrivalVectorDict(maxSchedPath+maxSchedFileName+name+str(nameIdx)+".csv")
