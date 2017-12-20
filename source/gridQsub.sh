@@ -1,108 +1,18 @@
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node02 python sim_PROTOCOLO.py 1.5 0.6 MICEe-CFv2 2.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node02 python sim_PROTOCOLO.py 1.5 0.6 MICEe-TrueCFGDv2 2.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node02 python sim_PROTOCOLO.py 1.5 0.6 MICEe-CFv4 2.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node03 python sim_PROTOCOLO.py 1.5 0.6 MICEe-TrueCFGDv4 2.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node10 python sim_PROTOCOLO.py 0 0.6 CFv2-NoQ 0
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node10 python sim_PROTOCOLO.py 0.1 0.6 MICE-ICSMAPURE 1.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node10 python sim_PROTOCOLO.py 0.1 0.6 ICSMA 0
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node11 python sim_PROTOCOLO.py 1 0.6 MICE-ICSMAPURE 1.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node11 python sim_PROTOCOLO.py 1.5 0.6 MICE-ICSMAPURE 1.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node11 python sim_PROTOCOLO.py 0.1 0.6 MICE-ICSMAPURE 0.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node02 python sim_PROTOCOLO.py 0.1 0.6 MICE-ICSMAPURE 1.0
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node02 python sim_PROTOCOLO.py 0.1 0.6 MICE-ICSMAPURE 2.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node02 python sim_PROTOCOLO.py 1.5 0.7 MICEe-CFv2 2.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node03 python sim_PROTOCOLO.py 1.5 0.7 MICEe-TrueCFGDv2 2.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node10 python sim_PROTOCOLO.py 1.5 0.7 MICEe-CFv4 2.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node10 python sim_PROTOCOLO.py 1.5 0.7 MICEe-TrueCFGDv4 2.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node10 python sim_PROTOCOLO.py 0 0.7 CFv2-NoQ 0
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node11 python sim_PROTOCOLO.py 0.1 0.7 MICE-ICSMAPURE 1.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node11 python sim_PROTOCOLO.py 0.1 0.7 ICSMA 0
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node11 python sim_PROTOCOLO.py 1 0.7 MICE-ICSMAPURE 1.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node02 python sim_PROTOCOLO.py 1.5 0.7 MICE-ICSMAPURE 1.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node02 python sim_PROTOCOLO.py 0.1 0.7 MICE-ICSMAPURE 0.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node02 python sim_PROTOCOLO.py 0.1 0.7 MICE-ICSMAPURE 1.0
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node03 python sim_PROTOCOLO.py 0.1 0.7 MICE-ICSMAPURE 2.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node10 python sim_PROTOCOLO.py 1.5 0.8 MICEe-CFv2 2.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node10 python sim_PROTOCOLO.py 1.5 0.8 MICEe-TrueCFGDv2 2.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node10 python sim_PROTOCOLO.py 1.5 0.8 MICEe-CFv4 2.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node11 python sim_PROTOCOLO.py 1.5 0.8 MICEe-TrueCFGDv4 2.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node11 python sim_PROTOCOLO.py 0 0.8 CFv2-NoQ 0
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node11 python sim_PROTOCOLO.py 0.1 0.8 MICE-ICSMAPURE 1.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node02 python sim_PROTOCOLO.py 0.1 0.8 ICSMA 0
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node02 python sim_PROTOCOLO.py 1 0.8 MICE-ICSMAPURE 1.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node02 python sim_PROTOCOLO.py 1.5 0.8 MICE-ICSMAPURE 1.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node03 python sim_PROTOCOLO.py 0.1 0.8 MICE-ICSMAPURE 0.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node10 python sim_PROTOCOLO.py 0.1 0.8 MICE-ICSMAPURE 1.0
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node10 python sim_PROTOCOLO.py 0.1 0.8 MICE-ICSMAPURE 2.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node10 python sim_PROTOCOLO.py 1.5 0.9 MICEe-CFv2 2.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node11 python sim_PROTOCOLO.py 1.5 0.9 MICEe-TrueCFGDv2 2.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node11 python sim_PROTOCOLO.py 1.5 0.9 MICEe-CFv4 2.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node11 python sim_PROTOCOLO.py 1.5 0.9 MICEe-TrueCFGDv4 2.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node02 python sim_PROTOCOLO.py 0 0.9 CFv2-NoQ 0
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node02 python sim_PROTOCOLO.py 0.1 0.9 MICE-ICSMAPURE 1.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node02 python sim_PROTOCOLO.py 0.1 0.9 ICSMA 0
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node03 python sim_PROTOCOLO.py 1 0.9 MICE-ICSMAPURE 1.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node10 python sim_PROTOCOLO.py 1.5 0.9 MICE-ICSMAPURE 1.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node10 python sim_PROTOCOLO.py 0.1 0.9 MICE-ICSMAPURE 0.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node10 python sim_PROTOCOLO.py 0.1 0.9 MICE-ICSMAPURE 1.0
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node11 python sim_PROTOCOLO.py 0.1 0.9 MICE-ICSMAPURE 2.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node11 python sim_PROTOCOLO.py 1.5 0.92 MICEe-CFv2 2.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node11 python sim_PROTOCOLO.py 1.5 0.92 MICEe-TrueCFGDv2 2.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node02 python sim_PROTOCOLO.py 1.5 0.92 MICEe-CFv4 2.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node02 python sim_PROTOCOLO.py 1.5 0.92 MICEe-TrueCFGDv4 2.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node02 python sim_PROTOCOLO.py 0 0.92 CFv2-NoQ 0
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node03 python sim_PROTOCOLO.py 0.1 0.92 MICE-ICSMAPURE 1.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node10 python sim_PROTOCOLO.py 0.1 0.92 ICSMA 0
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node10 python sim_PROTOCOLO.py 1 0.92 MICE-ICSMAPURE 1.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node10 python sim_PROTOCOLO.py 1.5 0.92 MICE-ICSMAPURE 1.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node11 python sim_PROTOCOLO.py 0.1 0.92 MICE-ICSMAPURE 0.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node11 python sim_PROTOCOLO.py 0.1 0.92 MICE-ICSMAPURE 1.0
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node11 python sim_PROTOCOLO.py 0.1 0.92 MICE-ICSMAPURE 2.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node02 python sim_PROTOCOLO.py 1.5 0.94 MICEe-CFv2 2.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node02 python sim_PROTOCOLO.py 1.5 0.94 MICEe-TrueCFGDv2 2.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node02 python sim_PROTOCOLO.py 1.5 0.94 MICEe-CFv4 2.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node03 python sim_PROTOCOLO.py 1.5 0.94 MICEe-TrueCFGDv4 2.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node10 python sim_PROTOCOLO.py 0 0.94 CFv2-NoQ 0
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node10 python sim_PROTOCOLO.py 0.1 0.94 MICE-ICSMAPURE 1.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node10 python sim_PROTOCOLO.py 0.1 0.94 ICSMA 0
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node11 python sim_PROTOCOLO.py 1 0.94 MICE-ICSMAPURE 1.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node11 python sim_PROTOCOLO.py 1.5 0.94 MICE-ICSMAPURE 1.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node11 python sim_PROTOCOLO.py 0.1 0.94 MICE-ICSMAPURE 0.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node02 python sim_PROTOCOLO.py 0.1 0.94 MICE-ICSMAPURE 1.0
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node02 python sim_PROTOCOLO.py 0.1 0.94 MICE-ICSMAPURE 2.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node02 python sim_PROTOCOLO.py 1.5 0.96 MICEe-CFv2 2.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node03 python sim_PROTOCOLO.py 1.5 0.96 MICEe-TrueCFGDv2 2.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node10 python sim_PROTOCOLO.py 1.5 0.96 MICEe-CFv4 2.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node10 python sim_PROTOCOLO.py 1.5 0.96 MICEe-TrueCFGDv4 2.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node10 python sim_PROTOCOLO.py 0 0.96 CFv2-NoQ 0
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node11 python sim_PROTOCOLO.py 0.1 0.96 MICE-ICSMAPURE 1.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node11 python sim_PROTOCOLO.py 0.1 0.96 ICSMA 0
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node11 python sim_PROTOCOLO.py 1 0.96 MICE-ICSMAPURE 1.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node02 python sim_PROTOCOLO.py 1.5 0.96 MICE-ICSMAPURE 1.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node02 python sim_PROTOCOLO.py 0.1 0.96 MICE-ICSMAPURE 0.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node02 python sim_PROTOCOLO.py 0.1 0.96 MICE-ICSMAPURE 1.0
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node03 python sim_PROTOCOLO.py 0.1 0.96 MICE-ICSMAPURE 2.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node10 python sim_PROTOCOLO.py 1.5 0.98 MICEe-CFv2 2.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node10 python sim_PROTOCOLO.py 1.5 0.98 MICEe-TrueCFGDv2 2.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node10 python sim_PROTOCOLO.py 1.5 0.98 MICEe-CFv4 2.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node11 python sim_PROTOCOLO.py 1.5 0.98 MICEe-TrueCFGDv4 2.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node11 python sim_PROTOCOLO.py 0 0.98 CFv2-NoQ 0
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node11 python sim_PROTOCOLO.py 0.1 0.98 MICE-ICSMAPURE 1.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node02 python sim_PROTOCOLO.py 0.1 0.98 ICSMA 0
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node02 python sim_PROTOCOLO.py 1 0.98 MICE-ICSMAPURE 1.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node02 python sim_PROTOCOLO.py 1.5 0.98 MICE-ICSMAPURE 1.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node03 python sim_PROTOCOLO.py 0.1 0.98 MICE-ICSMAPURE 0.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node10 python sim_PROTOCOLO.py 0.1 0.98 MICE-ICSMAPURE 1.0
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node10 python sim_PROTOCOLO.py 0.1 0.98 MICE-ICSMAPURE 2.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node10 python sim_PROTOCOLO.py 1.5 1.0 MICEe-CFv2 2.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node11 python sim_PROTOCOLO.py 1.5 1.0 MICEe-TrueCFGDv2 2.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node11 python sim_PROTOCOLO.py 1.5 1.0 MICEe-CFv4 2.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node11 python sim_PROTOCOLO.py 1.5 1.0 MICEe-TrueCFGDv4 2.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node02 python sim_PROTOCOLO.py 0 1.0 CFv2-NoQ 0
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node02 python sim_PROTOCOLO.py 0.1 1.0 MICE-ICSMAPURE 1.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node02 python sim_PROTOCOLO.py 0.1 1.0 ICSMA 0
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node03 python sim_PROTOCOLO.py 1 1.0 MICE-ICSMAPURE 1.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node10 python sim_PROTOCOLO.py 1.5 1.0 MICE-ICSMAPURE 1.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node10 python sim_PROTOCOLO.py 0.1 1.0 MICE-ICSMAPURE 0.5
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node10 python sim_PROTOCOLO.py 0.1 1.0 MICE-ICSMAPURE 1.0
-qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname=node11 python sim_PROTOCOLO.py 0.1 1.0 MICE-ICSMAPURE 2.5
+qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l python sim_PROTOCOLO.py 1.5 0.8 MICE-ICSMAPURE-UT2 2.5
+qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l python sim_PROTOCOLO.py 1.5 1.0 MICE-ICSMAPURE-UT2 0.5
+qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l python sim_PROTOCOLO.py 1.5 0.9 MICE-ICSMAPURE-UT2 1.5
+qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l python sim_PROTOCOLO.py 0.1 1.0 MICE-ICSMAPURE-UT2 2.5
+qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l python sim_PROTOCOLO.py 1.5 1.0 MICEe-TrueCFGDv2-UT2
+qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l python sim_PROTOCOLO.py 1.0 0.9 MICE-ICSMAPURE 2.5
+qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l python sim_PROTOCOLO.py 1.0 1.0 MICE-ICSMAPURE 1.5
+qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l python sim_PROTOCOLO.py 0.1 0.9 MICE-ICSMAPURE 1.0
+qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l python sim_PROTOCOLO.py 0.1 0.8 MICE-ICSMAPURE 2.0
+qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l python sim_PROTOCOLO.py 1.5 0.8 MICE-ICSMAPURE 0.5
+qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l python sim_PROTOCOLO.py 0.1 0.9 MICEe-CFv2-UT 2.5
+qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l python sim_PROTOCOLO.py 0.1 0.8 MICEe-TrueCFGDv4-UT 2.5
+qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l python sim_PROTOCOLO.py 1.0 1.0 MICEe-ICSMAPURE-UT 2.5
+qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l python sim_PROTOCOLO.py 1.0 0.8 MICEe-CFv2-UT 2.5
+qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l python sim_PROTOCOLO.py 1.5 0.9 MICEe-ICSMAPURE-UT 0.5
+qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l python sim_PROTOCOLO.py 1.5 0.8 MICEe-ICSMAPURE-UT 1.5
+qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l python sim_PROTOCOLO.py 0.1 0.9 MICEe-ICSMAPURE-UT 2.0
+qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l python sim_PROTOCOLO.py 0.1 1.0 MICEe-ICSMAPURE-UT 1.0
