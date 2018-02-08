@@ -5,9 +5,10 @@ from network_structure import *
 #undirected interference graph
 
 class InterferenceGraph:
-	def __init__(self, deviceGraph, interferenceDistance, maxQueue, useToroidalSpace=False, sizeX=-1, sizeY=-1):
+	def __init__(self, deviceGraph, interferenceDistance, maxQueue, delayT=1, useToroidalSpace=False, sizeX=-1, sizeY=-1):
 		self.deviceGraph = deviceGraph
 		self.interferenceDistance = interferenceDistance
+		self.delayT = delayT
 		self.sizeX = sizeX
 		self.sizeY = sizeY
 		self.useToroidalSpace = useToroidalSpace
@@ -19,7 +20,7 @@ class InterferenceGraph:
 
 	def createGraph(self, maxQueue):
 		for link in self.deviceGraph.links:
-			node = Node(link, link.id, maxQueue)
+			node = Node(link, link.id, maxQueue,self.delayT)
 			self.nodes.append(node)
 		outterIdx= 0
 		innerIdx= 0

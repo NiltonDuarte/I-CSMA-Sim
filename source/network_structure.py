@@ -70,12 +70,12 @@ class TrafficDistribution:
     return L
 
 class Node:
-  def __init__(self, obj, idf, maxQueue):
+  def __init__(self, obj, idf, maxQueue, delayT=1):
     self.id = idf
     self.edges=[]
     #I-CSMA state {-1,Av} ou {-1,+1}(Ising)
     rn=random()
-    self.state = -1 if rn < 0.5 else 1
+    #self.state = -1 if rn < 0.5 else 1
     self.backoff = None
     self.silenced = False
     self.visited = False
@@ -86,6 +86,8 @@ class Node:
     self.sourceObj = obj
     self.sched_algo = []
     self.maxQueue = maxQueue
+    self.delayT = delayT
+    self.delayedState = [0]*delayT
     
   def addEdge(self, e):
     self.edges.append(e)
@@ -95,8 +97,9 @@ class Node:
     self.backoff=time
     return self
 
-  def setState(self,st):
-    self.state = st
+  def setState(self,st, currT):
+    #self.state = st
+    self.delayedState[currT] = st
     return self
 
   def setSilenced(self, st):

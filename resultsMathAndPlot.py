@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import operator
 
 n=16
-namedTuple = "mean, rho, algo, graph, beta, gamma, ArrSum, NumEdges, MaxScheds, Iter"
+namedTuple = "mean, rho, algo, graph, beta, gamma, delayT, ArrSum, NumEdges, MaxScheds, Iter"
 #queue size
 for i in range(n):
   namedTuple += ", q"+str(i+1)+" "
@@ -26,13 +26,15 @@ rhoL = []
 algoL = []
 graphL = []
 gammaL=[]
+delayTL= []
 floatIdxs = range(42)[:2] + range(42)[4:]
-#([round(queue/n,2), r, algorithm, name+str(nameIdx), beta, gamma, arrivalSum, numEdges, numMaxSched, testesIt] + queuesList + maa.schedSizeFrequency))
+#([round(queue/n,2), r, algorithm, name+str(nameIdx), beta, gamma, delayT, arrivalSum, numEdges, numMaxSched, testesIt] + queuesList + maa.schedSizeFrequency))
 print floatIdxs
-files , resultFileIdx= "Rfiles", ['2_','_All', '_3', '_4', '_5', '_6','_7']
-#files , resultFileIdx = "RFfiles", ['F_','F_1']
+#files , resultFileIdx= "Rfiles", ['R2_','R_All', 'R_3', 'R_4', 'R_5', 'R_6','R_7']
+#files , resultFileIdx = "RFfiles", ['RF_','RF_1']
+files , resultFileIdx= "DelayedTeste", ["DelayedTeste_"]
 for rfi in resultFileIdx:
-  with open('./resultados/gitignoreR{}.csv'.format(rfi), 'r') as csvFile:
+  with open('./resultados/gitignore{}.csv'.format(rfi), 'r') as csvFile:
     #skip header
     #next(csvFile)
     reader = csv.reader(csvFile, delimiter=',')
@@ -60,6 +62,8 @@ for rfi in resultFileIdx:
         algoL.append(r.algo)
       if not r.gamma in gammaL:
         gammaL.append(r.gamma)
+      if not r.delayT in delayTL:
+        delayTL.append(r.delayT)
       #print r
       #floatList = map(float, row)
       doc.append(r)
@@ -70,40 +74,47 @@ betaL.sort()
 rhoL.sort()
 algoL.sort()
 graphL.sort()
+gammaL.sort()
+delayTL.sort()
 print "betaL",betaL
 print "rhoL",rhoL
 print "algoL",algoL
 print "graphL",graphL
 print "gammaL",gammaL
+print "delayTL",delayTL
 #beta [0.01, 0.1, 1.0]
 #rho  [0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
 #algo ['CFv2', 'CFv2-NoQ', 'CFv2NQF', 'CFv4', 'CFv4-NoQ', 'CFv4NQF', 'HICSMA', 'HICSMA-NCP2', 'HICSMASEC', 'HICSMASEC-NCP2', 'HICSMASECNQF', 'ICSMA']
 
 
-QueueInfo = collections.namedtuple("QueueInfo", "mean, queueML, meanFI, FIL, rho, beta, gamma, algo, graph, resultsL")
+QueueInfo = collections.namedtuple("QueueInfo", "mean, queueML, meanFI, FIL, rho, beta, gamma, delayT, algo, graph, resultsL")
 queueMeanGraphL = []
 for graph in graphL:
   for rho in rhoL:
     for beta in betaL:
       for gamma in gammaL:
-        for algo in algoL:
-          queue = QueueInfo([-1], [], [-1], [], rho, beta, gamma, algo, graph, [])
-          queueMeanGraphL.append(queue)
+        for delayT in delayTL:
+          for algo in algoL:
+            queue = QueueInfo([-1], [], [-1], [], rho, beta, gamma, delayT, algo, graph, [])
+            queueMeanGraphL.append(queue)
 
 lenGraph = len(graphL)
 lenRho = len(rhoL)
 lenBeta = len(betaL)
-lenAlgo = len(algoL)
 lenGamma = len(gammaL)
+lenDelayT = len(delayTL)
+lenAlgo = len(algoL)
 
-def getIdx(rho, beta, gamma, algo, graph):
+
+def getIdx(rho, beta, gamma, delayT, algo, graph):
   gIdx = graphL.index(graph)
   rIdx = rhoL.index(rho)
   bIdx = betaL.index(beta)
   gammaIdx = gammaL.index(gamma)
+  tIdx = delayTL.index(delayT)
   algoIdx = algoL.index(algo)
   
-  return gIdx*lenRho*lenBeta*lenAlgo*lenGamma + rIdx*lenBeta*lenAlgo*lenGamma + bIdx*lenAlgo*lenGamma + gammaIdx*lenAlgo + algoIdx
+  return gIdx*lenRho*lenBeta*lenAlgo*lenGamma*lenDelayT + rIdx*lenBeta*lenAlgo*lenGamma*lenDelayT + bIdx*lenAlgo*lenGamma*lenDelayT + gammaIdx*lenDelayT*lenAlgo + tIdx*lenAlgo + algoIdx
 
 print "Test 1"
 for graph in graphL:
@@ -111,14 +122,15 @@ for graph in graphL:
     for beta in betaL:
       for algo in algoL:
         for gamma in gammaL:
-          t = queueMeanGraphL[getIdx(rho=rho, beta=beta, gamma=gamma, algo=algo, graph=graph)]
-          if t.rho != rho or t.beta != beta or t.algo != algo or t.graph != graph or t.gamma!=gamma:
-            print "Error"
+          for dT in delayTL:
+            t = queueMeanGraphL[getIdx(rho=rho, beta=beta, gamma=gamma, delayT=dT ,algo=algo, graph=graph)]
+            if t.rho != rho or t.beta != beta or t.algo != algo or t.graph != graph or t.gamma!=gamma or t.delayT!=dT:
+              print "Error"
 print "Done\n"          
 
 
 for resultRow in doc:
-  param = resultRow.rho, resultRow.beta, resultRow.gamma, resultRow.algo, resultRow.graph
+  param = resultRow.rho, resultRow.beta, resultRow.gamma, resultRow.delayT, resultRow.algo, resultRow.graph
   qMean = queueMeanGraphL[getIdx(*param)]
   mean = resultRow.mean
   #do not append more than 5 results rows, removing duplicates and some sims
@@ -203,24 +215,27 @@ queueMeanL = []
 for rho in rhoL:
   for beta in betaL:
     for gamma in gammaL:
-      for algo in algoL:
-        queue = QueueInfo([-1], [],[-1], [], rho, beta, gamma, algo, None, None)
-        queueMeanL.append(queue)
+      for dT in delayTL:
+        for algo in algoL:
+          queue = QueueInfo([-1], [],[-1], [], rho, beta, gamma, dT, algo, None, None)
+          queueMeanL.append(queue)
 
 print "Test 2"
 for rho in rhoL:
   for beta in betaL:
     for gamma in gammaL:
-      for algo in algoL:
-        t = queueMeanL[getIdx(rho=rho, beta=beta, gamma=gamma, algo=algo, graph=graphL[0])]
-        if t.rho != rho or t.beta != beta or t.algo != algo or t.gamma != gamma:
-          print "Error"
+      for dT in delayTL:
+        for algo in algoL:
+          t = queueMeanL[getIdx(rho=rho, beta=beta, gamma=gamma, delayT=dT, algo=algo, graph=graphL[0])]
+          if t.rho != rho or t.beta != beta or t.algo != algo or t.gamma != gamma or t.delayT!= dT:
+            print "Error"
 print "Done\n"
 
-#mean over all graphs of a given rho, beta and algo
+#mean over all graphs of a given rho, beta, delayT and algo
+#getIdx(rho, beta, gamma, T, algo, graph):
 for qm in queueMeanL:
   for graph in graphL:
-    param = qm.rho, qm.beta, qm.gamma, qm.algo, graph
+    param = qm.rho, qm.beta, qm.gamma, qm.delayT, qm.algo, graph
     qMean = queueMeanGraphL[getIdx(*param)]
     qm.queueML.append(qMean.mean[0])
     qm.FIL.append(qMean.meanFI[0])
@@ -260,13 +275,13 @@ print "===============  EVEN TRAFFIC =============="
 print "============================================"
 saveFile = "processedResults.csv"
 prf = open(saveFile,'w')
-prf.write("rho, beta, gamma, FI, algo, mean\n")
+prf.write("rho, beta, gamma, dT, FI, algo, mean\n")
 rhoMem = 0
 for q in bestBetaQueues:
   if "UT" in q.algo:
     continue
   if rhoMem != q.rho:
-    print "\n-Rho-\t-Beta-\t-Gamma-\t-FI-\t-Algo-\t\t\t-QMean-"
+    print "\n-Rho-\t-Beta-\t-Gamma-\t-dT-\t-FI-\t-Algo-\t\t\t-QMean-"
     rhoMem=q.rho
   #if q.rho == 0.8:
   if True:
@@ -277,8 +292,8 @@ for q in bestBetaQueues:
     elif len(q.algo)<8:
       algoSpcs = q.algo+"\t\t\t"
         #algoSpcs = q.algo if len(q.algo) > 7 else q.algo+"\t"
-    print "{}\t{}\t{}\t{}\t{}{}".format(q.rho, q.beta, q.gamma, round(q.meanFI[0],2), algoSpcs, round(q.mean[0],3))
-    line = "{},{},{},{},{},{}\n".format(q.rho, q.beta, q.gamma, round(q.meanFI[0],2), q.algo, round(q.mean[0],3))
+    print "{}\t{}\t{}\t{}\t{}\t{}{}".format(q.rho, q.beta, q.gamma, q.delayT, round(q.meanFI[0],2), algoSpcs, round(q.mean[0],3))
+    line = "{},{},{},{},{},{},{}\n".format(q.rho, q.beta, q.gamma, q.delayT, round(q.meanFI[0],2), q.algo, round(q.mean[0],3))
     prf.write(line)
 print ""
 print "============================================"
@@ -300,8 +315,8 @@ for q in bestBetaQueues:
     elif len(q.algo)<8:
       algoSpcs = q.algo+"\t\t\t"
         #algoSpcs = q.algo if len(q.algo) > 7 else q.algo+"\t"
-    print "{}\t{}\t{}\t{}\t{}{}".format(q.rho, q.beta, q.gamma, round(q.meanFI[0],2), algoSpcs, round(q.mean[0],3))
-    line = "{},{},{},{},{},{}\n".format(q.rho, q.beta, q.gamma, round(q.meanFI[0],2), q.algo, round(q.mean[0],3))
+    print "{}\t{}\t{}\t{}\t{}\t{}{}".format(q.rho, q.beta, q.gamma, q.delayT, round(q.meanFI[0],2), algoSpcs, round(q.mean[0],3))
+    line = "{},{},{},{},{},{},{}\n".format(q.rho, q.beta, q.gamma, q.delayT, round(q.meanFI[0],2), q.algo, round(q.mean[0],3))
     prf.write(line)
 prf.flush()
 #collections.namedtuple("BetaFit", "algo, 0.01, 0.1, 1.0")
