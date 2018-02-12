@@ -20,6 +20,7 @@ class MultipleAccessAlgorithm:
     #STORE VALUES
     self.maxMeanQueue = maxMeanQueue
     self.OFF = -1
+    self.ON = 1
     self.CP2W=8
     #CONTROL VARIABLES
     self.useHeuristic = False
@@ -64,9 +65,11 @@ class MultipleAccessAlgorithm:
         self.controlPhase1()
       if self.useCollisionFree:
         slotSchedule = self._collisionFreePhase2()
+        self.updateLastQueueSize(self.interfGraph.nodes)
         self.slot+=1
       else:
         slotSchedule = self.controlPhase2()
+        self.updateLastQueueSize(slotSchedule)
       self.totalCollisionCount+=self.slotCollisionCount
       if self.slotCollisionCount > self.numNodes:
         self.slotCollisionCount = self.numNodes+1  
@@ -83,6 +86,7 @@ class MultipleAccessAlgorithm:
           #return "SAFETY CHECK ERROR"
 
       self.offDuration(slotSchedule)
+
     self.calcCoV()
     return slotSchedule
 
@@ -98,7 +102,12 @@ class MultipleAccessAlgorithm:
           self.nodeOffInfo[n][1] = 0
       #print self.nodeOffInfo
 
+  def updateLastQueueSize(self,nodes):
+    for node in nodes:
+      node.setLastQueueSize()
+
   def calcCoV(self):
+    return
     self.offDuration(self.interfGraph.nodes)
     nodesCoV = [self.rho, self.b, self.g, self.delayT]
     mean = 0.0
@@ -108,6 +117,7 @@ class MultipleAccessAlgorithm:
       ID = info[0]
       offDur = info[2]
       size = len(offDur)
+      if size==0: size=1
       mean = sum(offDur)/size
       for val in offDur:
         var += (val-mean)**2
@@ -116,7 +126,7 @@ class MultipleAccessAlgorithm:
       cov = stddev/mean
       nodesCoV.append((ID, round(mean,3), round(cov,3))) 
     #print self.nodeOffInfo
-    print nodesCoV
+    #print nodesCoV
 
   def runCollisionFree(self, iterations, version, steps, maxSchedRounds=None):
     #tdma slot assignment max rounds (colors)
@@ -187,7 +197,8 @@ class MultipleAccessAlgorithm:
     S = 0.0
     currT = self.it%self.delayT
     for neighbour in neighbours:
-      S+= neighbour.delayedState[currT]
+      neighState = neighbour.delayedState[currT]
+      S+=  neighState if neighState == self.OFF else self.queueFunction(neighbour.getLastQueueSize())
       #S += neighbour.state
     #print node.id, S
     if self.newSFunc:
@@ -239,8 +250,8 @@ class MultipleAccessAlgorithm:
   def updateState(self, node):
     currT = self.it%self.delayT
     if random() < node.get_q():
-      Av = self.queueFunction(node.getQueueSize())
-      node.setState(Av, currT)
+      #Av = self.queueFunction(node.getQueueSize())
+      node.setState(self.ON, currT)
       #print node.id, Av
     else:
       node.setState(self.OFF, currT)  
@@ -353,7 +364,7 @@ class MultipleAccessAlgorithm:
     #print "====================="
     for node in self.interfGraph.nodes:
       #print node.sched_algo[0].number
-      schedState = node.sched_algo.pop(0).delayedState[currT]
+      schedState = node.sched_algo.pop(0).state
       #print self.slot, node.id, schedState
       for obj in self.interfGraph.getNeighbours(node):
         error = True

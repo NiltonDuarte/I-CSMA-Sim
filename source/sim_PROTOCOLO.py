@@ -4,8 +4,8 @@ from access_algorithm import *
 from network_structure import *
 import sys
 import time
-print "Initializing sim"
-print sys.argv
+#print "Initializing sim"
+#print sys.argv
 start_time = time.time()
 
 #LattDistance = 70.
@@ -27,7 +27,7 @@ betaList = [float(sys.argv[1])] #[0.01,0.1,1]
 #rho = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
 rho = [float(sys.argv[2])]
 
-testesIt = 1000000
+testesIt = 10
 rounds = 1
 InterfDist = 80.
 algorithms = [sys.argv[3]]
@@ -436,4 +436,4 @@ with open(resultsSaveFile,"a") as rsf:
   rsf.flush()
         #print " "
 
-print("--- %s seconds ---" % (time.time() - start_time))
+#print("--- %s seconds ---" % (time.time() - start_time))

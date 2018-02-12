@@ -81,6 +81,7 @@ class Node:
     self.visited = False
     self.collided = False
     self.queueSize = 0
+    self.lastQueueSize = 0
     #self.S = None
     self.q = None
     self.sourceObj = obj
@@ -126,6 +127,12 @@ class Node:
 
   def getQueueSize(self):
     return self.queueSize
+
+  def getLastQueueSize(self):
+    return self.lastQueueSize
+
+  def setLastQueueSize(self):
+    self.lastQueueSize = self.queueSize
 
   def fillQueue(self):
     val = self.traffic.getNewValue()
