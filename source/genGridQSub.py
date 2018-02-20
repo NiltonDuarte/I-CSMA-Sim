@@ -71,8 +71,8 @@ if True:
 						node = "node"+hostname[aux%len(hostname)]
 						aux+=1
 						argStr = "{} {} {} {} {}".format(b, r, algo, g, T)
-						#f.write("qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname="+node+" python sim_PROTOCOLO.py "+str(b)+" "+str(r))
-						qsubStr= "python sim_PROTOCOLO.py "
+						qsubStr = "qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname="+node+" python sim_PROTOCOLO.py "+str(b)+" "+str(r)
+						#qsubStr= "python sim_PROTOCOLO.py "
 						f.write(qsubStr+str(argStr))
 						f.write('\n')
 						f.flush()
@@ -91,8 +91,8 @@ if True:
 					argStr = "{} {} {} {} {}".format(b, r, algo, -1, T)
 					#f.write("qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname="+node+" python sim_PROTOCOLO.py "+str(b)+" "+str(r))
 					qsubStr ="qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname="+node+" python sim_PROTOCOLO.py " 
-					qsubStr= "python sim_PROTOCOLO.py "
-					f.write(qsubStr+str(argStr)+" &")
+					#qsubStr= "python sim_PROTOCOLO.py "
+					f.write(qsubStr+str(argStr))
 					f.write('\n')
 					f.flush()
 
@@ -108,7 +108,7 @@ if False:
 					argStr = "{} {} {} {} {}".format(-1, r, algo, -1, T)
 					#f.write("qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname="+node+" python sim_PROTOCOLO.py "+str(b)+" "+str(r))
 					qsubStr ="qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname="+node+" python sim_PROTOCOLO.py " 
-					qsubStr= "python sim_PROTOCOLO.py "
+					#qsubStr= "python sim_PROTOCOLO.py "
 					f.write(qsubStr+str(argStr))
 					f.write('\n')
 					f.flush()
