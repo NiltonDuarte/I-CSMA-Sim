@@ -16,7 +16,6 @@ saveResultsFilePath = "../resultados/"
 maxSchedPath = "./randomGraphs/maximalScheds/"
 maxSchedFileName = "MaximalScheds_"
 fileNames = ["DevGraph16AllRandWR"]#, "DevGraph16NPV","DevGraph16NPV_MD3_"] #
-fileNamesIdx = (5,6)#(0,10)#(10,20)
 
 windowP1 = 20
 windowP2 = 8
@@ -39,7 +38,7 @@ gamma = 0
 gamma = float(sys.argv[4])
 
 delayT = int(sys.argv[5])
-delayList = range(delayT, delayT+10)
+delayList = [delayT]
 n = 16
 
 resultsList = []
@@ -54,7 +53,7 @@ def PGDist2(n):
   r = 0.6
   return a0*(r**n)
 
-resultsSaveFile = saveResultsFilePath+"gitignoreDelayedTeste_"+".csv"
+resultsSaveFile = saveResultsFilePath+"gitignoreRDelayed_"+".csv"
 for name in fileNames:
   for nameIdx in range(*fileNamesIdx):
     netGraphName = randNetGraphPath+name+str(nameIdx)
