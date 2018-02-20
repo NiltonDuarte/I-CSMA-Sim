@@ -38,11 +38,11 @@ print time.clock() - init
 print l[10].a == 0
 """
 
-rho = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+rho = [0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
 
-beta =[0.01, 0.1, 1, 10, 100]
-gamma = [0.01, 0.1, 1, 10, 100]
-delayT = [1, 2, 3, 4, 5, 10, 15, 20, 25, 30]
+beta = [0.1]#[0.01, 0.1, 1, 10, 100]
+gamma = [2.5]#[0.01, 0.1, 1, 10, 100]
+delayT = [1, 2, 3, 4, 5, 10, 15, 20]
 #params = [(1.5, 'MICEe-CFv2', 2.5), (1.5,'MICEe-TrueCFGDv2', 2.5), (0,'CFv2-NoQ',0), (0.1, 'MICE-ICSMAPURE', 1.5), (0.1,'ICSMA',0), (1, 'MICE-ICSMAPURE', 1.5), (1.5, 'MICE-ICSMAPURE', 1.5), (0.1, 'MICE-ICSMAPURE', 0.5), (0.1, 'MICE-ICSMAPURE', 1.0), (0.1, 'MICE-ICSMAPURE', 2.5)]
 
 #["MICEe-ICSMA", "MICEe-CFv2", "MICEe-CFv4"]
@@ -58,6 +58,9 @@ f = open('gridQsub.sh', 'w')
 algorithms = ["MICE-ICSMAPURE",     "MICEe-CFv2",     "MICEe-TrueCFGDv2",     "MICEe-CFv4",     "MICEe-TrueCFGDv4",
 						  "MICE-ICSMAPURE-UT",  "MICEe-CFv2-UT",  "MICEe-TrueCFGDv2-UT",  "MICEe-CFv4-UT",  "MICEe-TrueCFGDv4-UT",
 						  "MICE-ICSMAPURE-UT2", "MICEe-CFv2-UT2", "MICEe-TrueCFGDv2-UT2", "MICEe-CFv4-UT2", "MICEe-TrueCFGDv4-UT2"]
+algorithms = ["MICE-ICSMAPURE",     "MICEe-TrueCFGDv2",  "MICEe-TrueCFGDv4"]
+						 # "MICE-ICSMAPURE-UT",  "MICEe-CFv2-UT",  "MICEe-TrueCFGDv2-UT",  "MICEe-CFv4-UT",  "MICEe-TrueCFGDv4-UT",
+						 # "MICE-ICSMAPURE-UT2", "MICEe-CFv2-UT2", "MICEe-TrueCFGDv2-UT2", "MICEe-CFv4-UT2", "MICEe-TrueCFGDv4-UT2"]
 #MICE Algo's - depende de gamma, beta e rho
 if True:
 	for b in beta:
@@ -75,7 +78,9 @@ if True:
 						f.flush()
 
 #ICSMA - depende apenas de beta e rho
-algorithms = ["ICSMA","ICSMA-UT","ICSMA-UT2"]
+beta = [0.01]#[0.01, 0.1, 1, 10, 100]
+#gamma = [2.5]#[0.01, 0.1, 1, 10, 100]
+algorithms = ["ICSMA"]#,"ICSMA-UT","ICSMA-UT2"]
 if True:
 	for b in beta:
 		for r in rho:
@@ -91,21 +96,22 @@ if True:
 					f.write('\n')
 					f.flush()
 
-#No Queue - depende apenas de rho
-algorithms = ["CFv2-NoQ", "CFv2-NoQ-UT", "CFv2-NoQ-UT2"]
-if True:
-	for r in rho:
-		for algo in algorithms:
-			for T in delayT:
-				node = "node"+hostname[aux%len(hostname)]
-				aux+=1
-				argStr = "{} {} {} {} {}".format(-1, r, algo, -1, T)
-				#f.write("qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname="+node+" python sim_PROTOCOLO.py "+str(b)+" "+str(r))
-				qsubStr ="qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname="+node+" python sim_PROTOCOLO.py " 
-				qsubStr= "python sim_PROTOCOLO.py "
-				f.write(qsubStr+str(argStr))
-				f.write('\n')
-				f.flush()
+if False:
+	#No Queue - depende apenas de rho
+	algorithms = ["CFv2-NoQ", "CFv2-NoQ-UT", "CFv2-NoQ-UT2"]
+	if True:
+		for r in rho:
+			for algo in algorithms:
+				for T in delayT:
+					node = "node"+hostname[aux%len(hostname)]
+					aux+=1
+					argStr = "{} {} {} {} {}".format(-1, r, algo, -1, T)
+					#f.write("qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname="+node+" python sim_PROTOCOLO.py "+str(b)+" "+str(r))
+					qsubStr ="qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname="+node+" python sim_PROTOCOLO.py " 
+					qsubStr= "python sim_PROTOCOLO.py "
+					f.write(qsubStr+str(argStr))
+					f.write('\n')
+					f.flush()
 
 #Resultados mais granulares
 rho = [0.92, 0.94, 0.96, 0.98]

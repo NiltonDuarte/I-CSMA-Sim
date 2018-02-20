@@ -4,7 +4,7 @@ from access_algorithm import *
 from network_structure import *
 import sys
 import time
-#print "Initializing sim"
+print "Initializing sim ", sys.argv
 #print sys.argv
 start_time = time.time()
 
@@ -27,8 +27,8 @@ betaList = [float(sys.argv[1])] #[0.01,0.1,1]
 #rho = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
 rho = [float(sys.argv[2])]
 
-testesIt = 10
-rounds = 1
+testesIt = 100000
+rounds = 5
 InterfDist = 80.
 algorithms = [sys.argv[3]]
 #["ICSMA", "HICSMA", "HICSMASEC", "CFv4", "CFv2"]#"HICSMA-NCP2", "HICSMASEC-NCP2", "CFv2-NoQ", "CFv4-NoQ"]# "HICSMASECNQF", "CFv4NQF", "CFv2NQF"]
@@ -436,4 +436,4 @@ with open(resultsSaveFile,"a") as rsf:
   rsf.flush()
         #print " "
 
-#print("--- %s seconds ---" % (time.time() - start_time))
+print "--- {} seconds ---  {}".format((time.time() - start_time), sys.argv)
