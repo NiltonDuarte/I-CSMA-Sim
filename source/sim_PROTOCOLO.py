@@ -27,7 +27,7 @@ betaList = [float(sys.argv[1])] #[0.01,0.1,1]
 #rho = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
 rho = [float(sys.argv[2])]
 
-testesIt = 10
+testesIt = 100000
 rounds = 5
 InterfDist = 80.
 algorithms = [sys.argv[3]]
@@ -54,7 +54,7 @@ def PGDist2(n):
   r = 0.6
   return a0*(r**n)
 
-resultsSaveFile = saveResultsFilePath+"gitignoreTesteDelayed_"+".csv"
+resultsSaveFile = saveResultsFilePath+"gitignoreRDelayed_"+".csv"
 for name in fileNames:
   for nameIdx in range(*fileNamesIdx):
     netGraphName = randNetGraphPath+name+str(nameIdx)
