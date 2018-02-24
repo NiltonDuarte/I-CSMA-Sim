@@ -32,7 +32,7 @@ floatIdxs = range(42)[:2] + range(42)[4:]
 print floatIdxs
 #files , resultFileIdx= "Rfiles", ['R2_','R_All', 'R_3', 'R_4', 'R_5', 'R_6','R_7']
 #files , resultFileIdx = "RFfiles", ['RF_','RF_1']
-files , resultFileIdx= "DelayedTeste", ["DelayedTeste_"]
+files , resultFileIdx= "RDelayed", ["RDelayed_"]
 for rfi in resultFileIdx:
   with open('./resultados/gitignore{}.csv'.format(rfi), 'r') as csvFile:
     #skip header
@@ -47,8 +47,8 @@ for rfi in resultFileIdx:
       #trimming string
       row[2] = row[2].strip()
       row[3] = row[3].strip()
-      if files!= "RFfiles" and not 'MICE' in row[2]:
-        row = row[:5]+[0]+row[5:]
+      #if files!= "RFfiles" and not 'MICE' in row[2]:
+      #  row = row[:5]+[0]+row[5:]
         #print row
       r = ResultRow(*row)
       if r.rho > 1.0: continue
@@ -722,3 +722,12 @@ if figName == "RFfiles":
                            variationRestrictionList=[0.9],
                            yAxisTicks=yaxis1) 
 
+if figName=="RDelayed":
+  multiLinePlot(figName+"01-", aliasDict, queueMeanL,variationParam="algo",
+                         ordenationParam="delayT",
+                         #restrictionParam="algo",
+                         #restrictionValueList=["MICE-ICSMAPURE"],
+                         restrictionParam2="rho", 
+                         restrictionValueList2=[0.8],
+                         #variationRestrictionList=None,
+                         yAxisTicks=yaxis1) 

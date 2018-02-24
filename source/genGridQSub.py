@@ -58,9 +58,9 @@ f = open('gridQsub.sh', 'w')
 algorithms = ["MICE-ICSMAPURE",     "MICEe-CFv2",     "MICEe-TrueCFGDv2",     "MICEe-CFv4",     "MICEe-TrueCFGDv4",
 						  "MICE-ICSMAPURE-UT",  "MICEe-CFv2-UT",  "MICEe-TrueCFGDv2-UT",  "MICEe-CFv4-UT",  "MICEe-TrueCFGDv4-UT",
 						  "MICE-ICSMAPURE-UT2", "MICEe-CFv2-UT2", "MICEe-TrueCFGDv2-UT2", "MICEe-CFv4-UT2", "MICEe-TrueCFGDv4-UT2"]
-algorithms = ["MICE-ICSMAPURE",     "MICEe-TrueCFGDv2",  "MICEe-TrueCFGDv4"]
-						 # "MICE-ICSMAPURE-UT",  "MICEe-CFv2-UT",  "MICEe-TrueCFGDv2-UT",  "MICEe-CFv4-UT",  "MICEe-TrueCFGDv4-UT",
-						 # "MICE-ICSMAPURE-UT2", "MICEe-CFv2-UT2", "MICEe-TrueCFGDv2-UT2", "MICEe-CFv4-UT2", "MICEe-TrueCFGDv4-UT2"]
+algorithms = [#"MICE-ICSMAPURE",     "MICEe-TrueCFGDv2",  "MICEe-TrueCFGDv4"]
+						  "MICE-ICSMAPURE-UT",  "MICEe-CFv2-UT",  "MICEe-TrueCFGDv2-UT",  "MICEe-CFv4-UT",  "MICEe-TrueCFGDv4-UT",
+						  "MICE-ICSMAPURE-UT2", "MICEe-CFv2-UT2", "MICEe-TrueCFGDv2-UT2", "MICEe-CFv4-UT2", "MICEe-TrueCFGDv4-UT2"]
 #MICE Algo's - depende de gamma, beta e rho
 if True:
 	for b in beta:
