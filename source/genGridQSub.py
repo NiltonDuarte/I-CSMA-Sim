@@ -61,6 +61,7 @@ algorithms = ["MICE-ICSMAPURE",     "MICEe-CFv2",     "MICEe-TrueCFGDv2",     "M
 algorithms = [#"MICE-ICSMAPURE",     "MICEe-TrueCFGDv2",  "MICEe-TrueCFGDv4"]
 						  "MICE-ICSMAPURE-UT",  "MICEe-CFv2-UT",  "MICEe-TrueCFGDv2-UT",  "MICEe-CFv4-UT",  "MICEe-TrueCFGDv4-UT",
 						  "MICE-ICSMAPURE-UT2", "MICEe-CFv2-UT2", "MICEe-TrueCFGDv2-UT2", "MICEe-CFv4-UT2", "MICEe-TrueCFGDv4-UT2"]
+algorithms = []
 #MICE Algo's - depende de gamma, beta e rho
 if True:
 	for b in beta:
@@ -81,6 +82,7 @@ if True:
 beta = [0.01]#[0.01, 0.1, 1, 10, 100]
 #gamma = [2.5]#[0.01, 0.1, 1, 10, 100]
 algorithms = ["ICSMA"]#,"ICSMA-UT","ICSMA-UT2"]
+algorithms = ["ICSMA-UT","ICSMA-UT2"]
 if True:
 	for b in beta:
 		for r in rho:
