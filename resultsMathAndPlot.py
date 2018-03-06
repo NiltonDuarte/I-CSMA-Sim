@@ -27,7 +27,7 @@ algoL = []
 graphL = []
 gammaL=[]
 delayTL= []
-floatIdxs = range(42)[:2] + range(42)[4:]
+floatIdxs = range(44)[:2] + range(44)[4:]
 #([round(queue/n,2), r, algorithm, name+str(nameIdx), beta, gamma, delayT, arrivalSum, numEdges, numMaxSched, testesIt] + queuesList + maa.schedSizeFrequency))
 print floatIdxs
 #files , resultFileIdx= "Rfiles", ['R2_','R_All', 'R_3', 'R_4', 'R_5', 'R_6','R_7']
@@ -38,10 +38,12 @@ for rfi in resultFileIdx:
     #skip header
     #next(csvFile)
     reader = csv.reader(csvFile, delimiter=',')
+    rowCount = 0
     for row in reader:
-
+      rowCount += 1
       #convert string to float
-      #print len(row), row
+      #print rowCount, len(row), row
+
       for i in floatIdxs:
         row[i] = float(row[i])
       #trimming string
@@ -451,8 +453,10 @@ aliasDict = {"MICE-ICSMAPURE":"MICE-ICSMA",
              "ICSMA-UT" : "ICSMA",
              "ICSMA-UT2" : "ICSMA",
 }
-#print queueMeanL
-if figName == "Rfiles":
+#for q in queueMeanL:
+#  print q
+#  print "------" 
+if False and figName == "Rfiles":
   if True:
   #ICSMA variando beta
     multiLinePlot(figName+"01-", aliasDict, queueMeanL,variationParam="beta",
@@ -662,7 +666,7 @@ if figName == "Rfiles":
 
 
 
-if figName == "RFfiles":
+if False and figName == "RFfiles":
   #comparação ICSMA e MICE-ICSMA
   multiLinePlot(figName+"01-", aliasDict, queueMeanL,variationParam="algo",
                          ordenationParam="rho",
@@ -722,7 +726,7 @@ if figName == "RFfiles":
                            variationRestrictionList=[0.9],
                            yAxisTicks=yaxis1) 
 
-if figName=="RDelayed":
+if False and figName=="RDelayed":
   multiLinePlot(figName+"01-", aliasDict, queueMeanL,variationParam="algo",
                          ordenationParam="delayT",
                          #restrictionParam="algo",

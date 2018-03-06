@@ -51,16 +51,16 @@ delayT = [1, 2, 3, 4, 5, 10, 15, 20]
 #["ICSMA-UT2", "CFv4-UT2", "CFv2-UT2", "CFv2-NoQ-UT2", "CFv4-NoQ-UT2", "CFv4NQF-UT2", "CFv2NQF-UT2", "HICSMASEC-UT2", "HICSMASECNQF-UT2"]
 #["ICSMA-UT", "CFv4-UT", "CFv2-UT", "CFv2-NoQ-UT", "CFv4-NoQ-UT", "CFv4NQF-UT", "CFv2NQF-UT", "HICSMASEC-UT", "HICSMASECNQF-UT"]#["ICSMA", "HICSMA", "HICSMASEC", "CFv4", "CFv2", "HICSMA-NCP2", "HICSMASEC-NCP2", "CFv2-NoQ", "CFv4-NoQ", "HICSMASECNQF", "CFv4NQF", "CFv2NQF",
 
-hostname=['02','02', '02', '03', '10', '10', '10', '11', '11', '11']#, '03', '04']
+hostname=['02','02', '02', '10', '10', '10', '11', '11', '11']#, '03', '04']
 aux = 0
 f = open('gridQsub.sh', 'w')
 
 algorithms = ["MICE-ICSMAPURE",     "MICEe-CFv2",     "MICEe-TrueCFGDv2",     "MICEe-CFv4",     "MICEe-TrueCFGDv4",
 						  "MICE-ICSMAPURE-UT",  "MICEe-CFv2-UT",  "MICEe-TrueCFGDv2-UT",  "MICEe-CFv4-UT",  "MICEe-TrueCFGDv4-UT",
 						  "MICE-ICSMAPURE-UT2", "MICEe-CFv2-UT2", "MICEe-TrueCFGDv2-UT2", "MICEe-CFv4-UT2", "MICEe-TrueCFGDv4-UT2"]
-algorithms = [#"MICE-ICSMAPURE",     "MICEe-TrueCFGDv2",  "MICEe-TrueCFGDv4"]
-						  "MICE-ICSMAPURE-UT",  "MICEe-CFv2-UT",  "MICEe-TrueCFGDv2-UT",  "MICEe-CFv4-UT",  "MICEe-TrueCFGDv4-UT",
-						  "MICE-ICSMAPURE-UT2", "MICEe-CFv2-UT2", "MICEe-TrueCFGDv2-UT2", "MICEe-CFv4-UT2", "MICEe-TrueCFGDv4-UT2"]
+algorithms = ["MICE-ICSMAPURE",     "MICEe-TrueCFGDv2",  "MICEe-TrueCFGDv4",
+				"MICE-ICSMAPURE-UT",  "MICEe-TrueCFGDv2-UT", "MICEe-TrueCFGDv4-UT",
+				"MICE-ICSMAPURE-UT2", "MICEe-TrueCFGDv2-UT2", "MICEe-TrueCFGDv4-UT2"]
 algorithms = []
 #MICE Algo's - depende de gamma, beta e rho
 if True:
@@ -81,8 +81,8 @@ if True:
 #ICSMA - depende apenas de beta e rho
 beta = [0.01]#[0.01, 0.1, 1, 10, 100]
 #gamma = [2.5]#[0.01, 0.1, 1, 10, 100]
-algorithms = ["ICSMA"]#,"ICSMA-UT","ICSMA-UT2"]
-algorithms = ["ICSMA-UT","ICSMA-UT2"]
+algorithms = ["ICSMA","ICSMA-UT","ICSMA-UT2"]
+#algorithms = ["ICSMA-UT","ICSMA-UT2"]
 if True:
 	for b in beta:
 		for r in rho:
