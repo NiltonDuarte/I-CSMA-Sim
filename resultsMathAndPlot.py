@@ -7,6 +7,8 @@ import collections
 #from plotly.graph_objs import *
 import matplotlib.pyplot as plt
 import operator
+import scipy.stats as st
+import numpy as np
 
 n=16
 namedTuple = "mean, rho, algo, graph, beta, gamma, delayT, ArrSum, NumEdges, MaxScheds, Iter"
@@ -372,10 +374,15 @@ def multiLinePlot(figname, aliasLegDict, data, variationParam, ordenationParam, 
     #print "1",i,dataDVal   
     ordes=set(map(lambda pair: pair[0], dataDVal.valuePairs))
     newpairs = [(orde,[pair[1] for pair in dataDVal.valuePairs if pair[0]==orde]) for orde in ordes]
+    y = [pair[1] for pair in dataDVal.valuePairs if pair[0]==orde]*20
+    print "Y=",y
+    erroy = st.t.interval(0.95, len(y)-1, loc=np.mean(y), scale=st.sem(y))
+    print "ERRO Y",erroy
     meanvaluePairs = []
     for pairs in newpairs:
       mean = sum(pairs[1])/len(pairs[1])
-      pair = (pairs[0],mean)
+      err = abs(erroy[0]-mean)
+      pair = (pairs[0],mean, err)
       meanvaluePairs.append(pair)
     del dataDVal.valuePairs[:]
     for pair in meanvaluePairs:
@@ -383,19 +390,22 @@ def multiLinePlot(figname, aliasLegDict, data, variationParam, ordenationParam, 
 
 
   traces = []
-  markerList = ["o", "^", "s", "*", "D", "x", "+","v", "H"]
+  markerList = ["o", "^", "s", "*", "D", "x", "+","v", "H","o", "^", "s", "*", "D", "x", "+","v", "H","o", "^", "s", "*", "D", "x", "+","v", "H"]
   mLIdx = 0
   legendHandler = []
   xMaxLen = []
+  plt.rc('font', size=17) 
   for i in dataD.keys():
     dataDVal = dataD[i]
     #print "2",i,dataDVal
     dataDVal.valuePairs.sort(key=lambda valPair: valPair[0])
-    x, y = zip(*dataDVal.valuePairs)
+    x, y, erroy = zip(*dataDVal.valuePairs)
     if len(x) > len(xMaxLen): xMaxLen=x[:]
     legString = i
     if i in aliasLegDict.keys():
       legString=aliasLegDict[i]
+    print y
+    plt.errorbar(x,y,yerr=erroy)
     plt.plot(x,y, markerList[mLIdx]+'-', label='{}={}'.format(variationParam,legString), color='black', linewidth=1)
     #legendHandler.append(leg)
     mLIdx += 1
@@ -726,11 +736,11 @@ if False and figName == "RFfiles":
                            variationRestrictionList=[0.9],
                            yAxisTicks=yaxis1) 
 
-if False and figName=="RDelayed":
+if True and figName=="RDelayed":
   multiLinePlot(figName+"01-", aliasDict, queueMeanL,variationParam="algo",
                          ordenationParam="delayT",
-                         #restrictionParam="algo",
-                         #restrictionValueList=["MICE-ICSMAPURE"],
+                         restrictionParam="algo",
+                         restrictionValueList=["MICE-ICSMAPURE","ICSMA"],
                          restrictionParam2="rho", 
                          restrictionValueList2=[0.8],
                          #variationRestrictionList=None,
