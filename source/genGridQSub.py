@@ -261,7 +261,7 @@ for p in params:
 		aux+=1
 		argStr = "{} {} {} {} {}".format(p[0], p[1], p[2], p[3], p[4])
 		qsubStr="qsub -e /homesim/nilton.gduarte/error.log -o /homesim/nilton.gduarte/output.log -V -b y -cwd -shell n -q all.q -l hostname="+node+" python sim_PROTOCOLO.py "
-		qsubStr= "python sim_PROTOCOLO.py "
+		#qsubStr= "python sim_PROTOCOLO.py "
 		f.write(qsubStr+str(argStr))
 		f.write('\n')
 		f.flush()
