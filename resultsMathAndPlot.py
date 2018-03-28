@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 import operator
 import scipy.stats as st
 import numpy as np
+import math
 
 n=16
 namedTuple = "mean, rho, algo, graph, beta, gamma, delayT, ArrSum, NumEdges, MaxScheds, Iter"
@@ -32,9 +33,10 @@ delayTL= []
 floatIdxs = range(44)[:2] + range(44)[4:]
 #([round(queue/n,2), r, algorithm, name+str(nameIdx), beta, gamma, delayT, arrivalSum, numEdges, numMaxSched, testesIt] + queuesList + maa.schedSizeFrequency))
 print floatIdxs
-#files , resultFileIdx= "Rfiles", ['R2_','R_All', 'R_3', 'R_4', 'R_5', 'R_6','R_7']
+files , resultFileIdx= "Rfiles", ['R2_','R_All', 'R_3', 'R_4', 'R_5', 'R_6','R_7']
 #files , resultFileIdx = "RFfiles", ['RF_','RF_1']
-files , resultFileIdx= "RDelayed", ["RDelayed_"]
+#files , resultFileIdx= "RDelayed", ["RDelayed_"]
+#files , resultFileIdx= ["Rfiles","RFfiles"], ['R2_','R_All', 'R_3', 'R_4', 'R_5', 'R_6','R_7']+['RF_','RF_1']
 for rfi in resultFileIdx:
   with open('./resultados/gitignore{}.csv'.format(rfi), 'r') as csvFile:
     #skip header
@@ -44,15 +46,20 @@ for rfi in resultFileIdx:
     for row in reader:
       rowCount += 1
       #convert string to float
-      #print rowCount, len(row), row
+      #print rowCount, len(row), rfi, row
 
+      
+      if (rfi == 'R_All' or rfi == 'R_3' or rfi == 'R_4' or rfi == 'R_5' or rfi == 'R_6') and not 'MICE' in row[2]:
+        row = row[:5]+[0]+row[5:]
+      if "RFfiles" in files or "Rfiles" in files:
+        row = row[:6] + [1] + row[6:]
+      if len(row) != 44: print rowCount, len(row), rfi, row; quit()
       for i in floatIdxs:
         row[i] = float(row[i])
       #trimming string
       row[2] = row[2].strip()
       row[3] = row[3].strip()
-      #if files!= "RFfiles" and not 'MICE' in row[2]:
-      #  row = row[:5]+[0]+row[5:]
+      
         #print row
       r = ResultRow(*row)
       if r.rho > 1.0: continue
@@ -163,7 +170,7 @@ for q in queueMeanGraphL:
 #for q in removeList:
 #  queueMeanGraphL.remove(q)
 print "\nDone\n"
-"""
+
 auxrho = [0.7, 0.8, 0.9, 1.0]
 auxbeta =[0.01, 0.1, 1, 1.5]
 auxgamma = [0.8, 1, 1.2, 1.4, 1.5]
@@ -181,7 +188,7 @@ for i in leftSims:
 sortedleftsims = sorted(leftSims, lambda x,y: x[1] > y[1])  
 print len(sortedleftsims)
 
-
+"""
 
 
 print "Calculating Means"
@@ -240,8 +247,8 @@ print "Done\n"
 for qm in queueMeanL:
   for graph in graphL:
     param = qm.rho, qm.beta, qm.gamma, qm.delayT, qm.algo, graph
-    qMean = queueMeanGraphL[getIdx(*param)]
-    qm.queueML.append(qMean.mean[0])
+    graphQ = queueMeanGraphL[getIdx(*param)]
+    qm.queueML.extend(graphQ.queueML)
     qm.FIL.append(qMean.meanFI[0])
 
 print "Calculating QMeans and FIMeans"
@@ -342,7 +349,7 @@ print algoBetaFit
 
 def multiLinePlot(figname, aliasLegDict, data, variationParam, ordenationParam, restrictionParam="", restrictionValueList=[""], restrictionParam2="", 
                                                restrictionValueList2=[""], variationRestrictionList="Todos", ordenationRestricionList = "Todos", yAxisTicks=None,
-                                               varFileNameAlias = None):
+                                               varFileNameAlias = None, fontSize=16, legFont=16, legPos='best', ylabels=[]):
   dataInfo = collections.namedtuple("TraceInfo", "valuePairs, varParam, originalData")
   mData = data[:]
   varParam = variationParam
@@ -350,37 +357,48 @@ def multiLinePlot(figname, aliasLegDict, data, variationParam, ordenationParam, 
   dataD = {}
   printList = []
   for d in mData:
+    #print "d=",d
     if d.mean[0] > -1:
       if (variationRestrictionList == "Todos" or getattr(d,varParam) in variationRestrictionList) and (ordenationRestricionList == "Todos" or getattr(d,oParam) in ordenationRestricionList):
         #printList.append((round(d.mean[0]), "beta=",d.beta, "rho=",d.rho, "gamma=",d.gamma))
-        #print "===========", round(d.mean[0],3), "beta=",d.beta, "rho=",d.rho, "gamma=",d.gamma
+
+        #if d.gamma in [0,2.5]: print "===========", round(d.mean[0],3), "beta=",d.beta, "rho=",d.rho, "gamma=",d.gamma
         #print "============================================"
         if getattr(d,restrictionParam,"") in restrictionValueList and getattr(d,restrictionParam2,"") in restrictionValueList2:
+          #if d.gamma in [0,2.5]: print "==================", round(d.mean[0],3), "beta=",d.beta, "rho=",d.rho, "gamma=",d.gamma
           varParamVal = getattr(d, varParam)
           oParamVal = getattr(d, oParam)
         
-          #print "===========", round(d.mean[0],3), "beta=",d.beta, "rho=",d.rho, "gamma=",d.gamma
+          print "===========", round(d.mean[0],3), "beta=",d.beta, "rho=",d.rho, "gamma=",d.gamma, "algo=", d.algo
           if not varParamVal in dataD.keys():
-            dataD[varParamVal] = dataInfo([(oParamVal, d.mean[0])], varParamVal, 0)
+            dataD[varParamVal] = dataInfo([(oParamVal, d.mean[0])], varParamVal, [(oParamVal, d.queueML)])
           else:
             dataD[varParamVal].valuePairs.append((oParamVal, d.mean[0]))
-  printList.sort(key=lambda t: t[6])
-  printList.sort(key=lambda t: t[4])
-  printList.sort(key=lambda t: t[2])
+            dataD[varParamVal].originalData.append((oParamVal, d.queueML))
+          #print dataD[varParamVal].valuePairs
+
+  #printList.sort(key=lambda t: t[6])
+  #printList.sort(key=lambda t: t[4])
+  #printList.sort(key=lambda t: t[2])
   #for t in printList:
     #print t
   for i in dataD.keys():
     dataDVal = dataD[i]   
     #print "1",i,dataDVal   
     ordes=set(map(lambda pair: pair[0], dataDVal.valuePairs))
-    newpairs = [(orde,[pair[1] for pair in dataDVal.valuePairs if pair[0]==orde]) for orde in ordes]
-    y = [pair[1] for pair in dataDVal.valuePairs if pair[0]==orde]*20
-    print "Y=",y
-    erroy = st.t.interval(0.95, len(y)-1, loc=np.mean(y), scale=st.sem(y))
-    print "ERRO Y",erroy
+    #print "ordes=",ordes
+    newpairs = [(orde,[pair[1] for pair in dataDVal.valuePairs if pair[0]==orde],[origData[1] for origData in dataDVal.originalData if origData[0]==orde][0]) for orde in ordes]
+    #print "newpairs=",newpairs
+    #print "newpairs",newpairs
     meanvaluePairs = []
     for pairs in newpairs:
+      #print "---- pair -----"
+      #print pairs
+      #print pairs[2]
       mean = sum(pairs[1])/len(pairs[1])
+      #print pairs[2]
+      print "n={} mean={} ord={} var={}".format(len(pairs[2]), round(np.mean(pairs[2]),2), pairs[0], i)
+      erroy = st.t.interval(0.90, len(pairs[2])-1, loc=np.mean(pairs[2]), scale=st.sem(pairs[2]))
       err = abs(erroy[0]-mean)
       pair = (pairs[0],mean, err)
       meanvaluePairs.append(pair)
@@ -390,23 +408,27 @@ def multiLinePlot(figname, aliasLegDict, data, variationParam, ordenationParam, 
 
 
   traces = []
-  markerList = ["o", "^", "s", "*", "D", "x", "+","v", "H","o", "^", "s", "*", "D", "x", "+","v", "H","o", "^", "s", "*", "D", "x", "+","v", "H"]
+  markerList = ["o", "^", "s", "*", "D", "x", "+","v", "H"]#,"o", "^", "s", "*", "D", "x", "+","v", "H","o", "^", "s", "*", "D", "x", "+","v", "H"]
   mLIdx = 0
   legendHandler = []
   xMaxLen = []
-  plt.rc('font', size=17) 
+  plt.rc('font', size=fontSize) 
   for i in dataD.keys():
     dataDVal = dataD[i]
     #print "2",i,dataDVal
     dataDVal.valuePairs.sort(key=lambda valPair: valPair[0])
     x, y, erroy = zip(*dataDVal.valuePairs)
+    #print "y plot values", y
+    #print "x plot values", x
+    #print "erroy plot values", erroy
     if len(x) > len(xMaxLen): xMaxLen=x[:]
     legString = i
     if i in aliasLegDict.keys():
       legString=aliasLegDict[i]
-    print y
-    plt.errorbar(x,y,yerr=erroy)
-    plt.plot(x,y, markerList[mLIdx]+'-', label='{}={}'.format(variationParam,legString), color='black', linewidth=1)
+    
+    plt.errorbar(x,y,yerr=erroy, color='black', linewidth=0.6)
+    plt.plot(x,y, markerList[mLIdx]+'-', label='{}={}'.format(variationParam,legString), color='black', linewidth=0.6)
+    print legString, zip(x,map(lambda n: round(n,2),y))
     #legendHandler.append(leg)
     mLIdx += 1
 
@@ -414,7 +436,7 @@ def multiLinePlot(figname, aliasLegDict, data, variationParam, ordenationParam, 
   hl = sorted(zip(handles, labels),
             key=operator.itemgetter(1))
   handles2, labels2 = zip(*hl)
-  plt.legend(handles2, labels2)
+  plt.legend(handles2, labels2, fontsize=legFont, loc=legPos)
   plt.yscale('log')  
   plt.ylabel(u'Média do tamanho das filas')
   plt.xticks(xMaxLen)
@@ -423,7 +445,9 @@ def multiLinePlot(figname, aliasLegDict, data, variationParam, ordenationParam, 
   #plt.title(restrictionValueList)
   varfilename = variationRestrictionList
   if varFileNameAlias != None: varfilename = varFileNameAlias
-  figName = "{}-var={}={}-ord={}={}-{}={}-{}={}.png".format(figname, variationParam,varfilename, ordenationParam,ordenationRestricionList, restrictionParam, restrictionValueList, restrictionParam2, restrictionValueList2)
+  figName = "plots/{}-var={}={}-ord={}={}-{}={}-{}={}.png".format(figname, variationParam,varfilename, ordenationParam,"", restrictionParam, restrictionValueList, restrictionParam2, restrictionValueList2)
+  print figName
+  print "--=--=--=--=--=--=--=--=--=--=--=--=--"
   plt.savefig(figName)
   #plt.show()
   plt.clf()
@@ -437,10 +461,12 @@ rho02=[0.9, 0.92, 0.94, 0.96, 0.98, 1.0]
 rho03=[0.8, 0.9, 1.0]
 yaxis1 = [10**3, 10**4]
 yaxis2 = [1, 10, 10**2, 10**3, 10**4]
-yaxis3 = [7*10**3, 10**4, 1.5*10**4]
+yaxis3 = [0.7*10**4, 0.8*10**4, 0.9*10**4, 10**4, 2*10**4]
+label3 = ['0.7', '0.8', '0.9', '1', '1.5']
 yaxis4 = [10**3, 10**4, 10**5]
 yaxis5 = [1, 10, 10**2, 10**3]
 yaxis6 = [10**3, 7*10**3]
+#yaxis6 = [10**3, 10**4]
 yaxis7 = [1, 10, 10**2]
 aliasDict = {"MICE-ICSMAPURE":"MICE-ICSMA",
              "MICEe-TrueCFGDv4": "MICE-GD-EsMAI",
@@ -463,44 +489,53 @@ aliasDict = {"MICE-ICSMAPURE":"MICE-ICSMA",
              "ICSMA-UT" : "ICSMA",
              "ICSMA-UT2" : "ICSMA",
 }
+
 #for q in queueMeanL:
 #  print q
 #  print "------" 
-if False and figName == "Rfiles":
-  if True:
+
+if True and "Rfiles" in figName:
+  if False:
   #ICSMA variando beta
-    multiLinePlot(figName+"01-", aliasDict, queueMeanL,variationParam="beta",
+    multiLinePlot(str(figName)+"01-", aliasDict, queueMeanL,variationParam="beta",
                              ordenationParam="rho",
+                             ordenationRestricionList=rho01,
                              restrictionParam="algo",
                              restrictionValueList=["ICSMA"],
                              yAxisTicks=yaxis1)
                                                        
     #MICE-ICSMA variando beta, todos gamma
-    multiLinePlot(figName+"06-", aliasDict, queueMeanL,variationParam="beta",
+    multiLinePlot(str(figName)+"06-", aliasDict, queueMeanL,variationParam="beta",
                              ordenationParam="rho",
+                             ordenationRestricionList=rho03,
                              restrictionParam="algo",
                              restrictionValueList=["MICE-ICSMAPURE"],
                              yAxisTicks=yaxis1)
-
+    """
     #MICE-ICSMA variando gamma, fixo beta = 1.0
-    multiLinePlot(figName+"07.0-", aliasDict, queueMeanL,variationParam="gamma",
+    multiLinePlot(str(figName)+"07.0-", aliasDict, queueMeanL,variationParam="gamma",
                              ordenationParam="rho",
+                             ordenationRestricionList=rho01,
                              restrictionParam="algo",
                              restrictionValueList=["MICE-ICSMAPURE"],
                              restrictionParam2="beta", 
                              restrictionValueList2=[1.0],
                              yAxisTicks=yaxis1)
+                             """
     #MICE-ICSMA variando gamma, fixo beta = 0.1
-    multiLinePlot(figName+"07.1-", aliasDict, queueMeanL,variationParam="gamma",
+    multiLinePlot(str(figName)+"07.1-", aliasDict, queueMeanL,variationParam="gamma",
                              ordenationParam="rho",
+                             ordenationRestricionList=rho03,
                              restrictionParam="algo",
                              restrictionValueList=["MICE-ICSMAPURE"],
                              restrictionParam2="beta", 
                              restrictionValueList2=[0.1],
                              yAxisTicks=yaxis1)
+    """
     #MICE-ICSMA variando gamma, fixo beta = 1.5
-    multiLinePlot(figName+"07.2-", aliasDict, queueMeanL,variationParam="gamma",
+    multiLinePlot(str(figName)+"07.2-", aliasDict, queueMeanL,variationParam="gamma",
                              ordenationParam="rho",
+                             ordenationRestricionList=rho01,
                              restrictionParam="algo",
                              restrictionValueList=["MICE-ICSMAPURE"],
                              restrictionParam2="beta", 
@@ -508,13 +543,14 @@ if False and figName == "Rfiles":
                              yAxisTicks=yaxis1)
 
     #MICE-ICSMA variando gamma, todos beta
-    multiLinePlot(figName+"08-", aliasDict, queueMeanL,variationParam="gamma",
+    multiLinePlot(str(figName)+"08-", aliasDict, queueMeanL,variationParam="gamma",
                              ordenationParam="rho",
+                             ordenationRestricionList=rho01,
                              restrictionParam="algo",
                              restrictionValueList=["MICE-ICSMAPURE"],
                              yAxisTicks=yaxis1)
 
-    multiLinePlot(figName+"09.0-UT-", aliasDict, queueMeanL,variationParam="algo",
+    multiLinePlot(str(figName)+"09.0-UT-", aliasDict, queueMeanL,variationParam="algo",
                            ordenationParam="rho",
                            restrictionParam="beta",
                            restrictionValueList=[0.1],
@@ -524,8 +560,8 @@ if False and figName == "Rfiles":
                            ordenationRestricionList=rho03,
                            yAxisTicks=yaxis1,
                            varFileNameAlias="UT")
-
-    multiLinePlot(figName+"09.1-UT-", aliasDict, queueMeanL,variationParam="algo",
+    """
+    multiLinePlot(str(figName)+"09.1-UT-", aliasDict, queueMeanL,variationParam="algo",
                            ordenationParam="rho",
                            restrictionParam="beta",
                            restrictionValueList=[1.0],
@@ -535,8 +571,8 @@ if False and figName == "Rfiles":
                            ordenationRestricionList=rho03,
                            yAxisTicks=yaxis1,
                            varFileNameAlias="UT")
-
-    multiLinePlot(figName+"09.2-UT-", aliasDict, queueMeanL,variationParam="algo",
+    """
+    multiLinePlot(str(figName)+"09.2-UT-", aliasDict, queueMeanL,variationParam="algo",
                            ordenationParam="rho",
                            restrictionParam="beta",
                            restrictionValueList=[1.0],
@@ -547,7 +583,7 @@ if False and figName == "Rfiles":
                            yAxisTicks=yaxis1,
                            varFileNameAlias="UT")      
 
-  multiLinePlot(figName+"10-UT2-", aliasDict, queueMeanL,variationParam="algo",
+  multiLinePlot(str(figName)+"10-UT2-", aliasDict, queueMeanL,variationParam="algo",
                          ordenationParam="rho",
                          restrictionParam="beta",
                          restrictionValueList=[0.01, 0.1, 1.5],
@@ -559,23 +595,26 @@ if False and figName == "Rfiles":
                          varFileNameAlias="UT2")
 
   #MICE-ICSMA-UT variando gamma, fixo beta = 1.0
-  multiLinePlot(figName+"11.0-UT-", aliasDict, queueMeanL,variationParam="gamma",
+  multiLinePlot(str(figName)+"11.0-UT-", aliasDict, queueMeanL,variationParam="gamma",
                            ordenationParam="rho",
                            restrictionParam="algo",
                            restrictionValueList=["MICE-ICSMAPURE-UT"],
                            restrictionParam2="beta", 
                            restrictionValueList2=[1.0],
                            yAxisTicks=yaxis3)
+                           """
+if True:                           
   #MICE-ICSMA-UT variando gamma, fixo beta = 0.1
-  multiLinePlot(figName+"11.1-UT-", aliasDict, queueMeanL,variationParam="gamma",
+  multiLinePlot(str(figName)+"11.1-UT-", aliasDict, queueMeanL,variationParam="gamma",
                            ordenationParam="rho",
                            restrictionParam="algo",
                            restrictionValueList=["MICE-ICSMAPURE-UT"],
                            restrictionParam2="beta", 
                            restrictionValueList2=[0.1],
                            yAxisTicks=yaxis3)
+  """
   #MICE-ICSMA-UT variando gamma, fixo beta = 1.5
-  multiLinePlot(figName+"11.2-UT-", aliasDict, queueMeanL,variationParam="gamma",
+  multiLinePlot(str(figName)+"11.2-UT-", aliasDict, queueMeanL,variationParam="gamma",
                            ordenationParam="rho",
                            restrictionParam="algo",
                            restrictionValueList=["MICE-ICSMAPURE-UT"],
@@ -584,7 +623,7 @@ if False and figName == "Rfiles":
                            yAxisTicks=yaxis3)  
 
   #MICE-ICSMA-UT2 variando gamma, fixo beta = 1.0
-  multiLinePlot(figName+"12.0-UT2-", aliasDict, queueMeanL,variationParam="gamma",
+  multiLinePlot(str(figName)+"12.0-UT2-", aliasDict, queueMeanL,variationParam="gamma",
                            ordenationParam="rho",
                            restrictionParam="algo",
                            restrictionValueList=["MICE-ICSMAPURE-UT2"],
@@ -592,7 +631,7 @@ if False and figName == "Rfiles":
                            restrictionValueList2=[1.0],
                            yAxisTicks=yaxis3)
   #MICE-ICSMA-UT2 variando gamma, fixo beta = 0.1
-  multiLinePlot(figName+"12.1-UT2-", aliasDict, queueMeanL,variationParam="gamma",
+  multiLinePlot(str(figName)+"12.1-UT2-", aliasDict, queueMeanL,variationParam="gamma",
                            ordenationParam="rho",
                            restrictionParam="algo",
                            restrictionValueList=["MICE-ICSMAPURE-UT2"],
@@ -600,7 +639,7 @@ if False and figName == "Rfiles":
                            restrictionValueList2=[0.1],
                            yAxisTicks=yaxis3)
   #MICE-ICSMA-UT2 variando gamma, fixo beta = 1.5
-  multiLinePlot(figName+"12.2-UT2-", aliasDict, queueMeanL,variationParam="gamma",
+  multiLinePlot(str(figName)+"12.2-UT2-", aliasDict, queueMeanL,variationParam="gamma",
                            ordenationParam="rho",
                            restrictionParam="algo",
                            restrictionValueList=["MICE-ICSMAPURE-UT2"],
@@ -609,16 +648,16 @@ if False and figName == "Rfiles":
                            yAxisTicks=yaxis3) 
 
   #MICE-EsMa-UT variando beta,  gamma = 2.5
-  multiLinePlot(figName+"13-UT-", aliasDict, queueMeanL,variationParam="beta",
+  multiLinePlot(str(figName)+"13-UT-", aliasDict, queueMeanL,variationParam="beta",
                              ordenationParam="rho",
                              restrictionParam="algo",
                              restrictionValueList=["MICEe-TrueCFGDv2-UT"],
                              restrictionParam2="gamma",
                              restrictionValueList2=[2.5],
                              yAxisTicks=yaxis1)
-
+  """
   #MICE-EsMa-UT2 variando beta,  gamma = 2.5
-  multiLinePlot(figName+"14-UT2-", aliasDict, queueMeanL,variationParam="beta",
+  multiLinePlot(str(figName)+"14-UT2-", aliasDict, queueMeanL,variationParam="beta",
                              ordenationParam="rho",
                              restrictionParam="algo",
                              restrictionValueList=["MICEe-TrueCFGDv2-UT2"],
@@ -627,7 +666,7 @@ if False and figName == "Rfiles":
                              yAxisTicks=yaxis1)  
 
   #MICE-EsMa variando beta,  gamma = 2.5
-  multiLinePlot(figName+"15-", aliasDict, queueMeanL,variationParam="beta",
+  multiLinePlot(str(figName)+"15-", aliasDict, queueMeanL,variationParam="beta",
                              ordenationParam="rho",
                              restrictionParam="algo",
                              restrictionValueList=["MICEe-TrueCFGDv2"],
@@ -635,7 +674,7 @@ if False and figName == "Rfiles":
                              restrictionValueList2=[2.5],
                              yAxisTicks=yaxis7)
   #MICE-EsMa variando GAMMA,  BETA = 1.5
-  multiLinePlot(figName+"16-", aliasDict, queueMeanL,variationParam="gamma",
+  multiLinePlot(str(figName)+"16-", aliasDict, queueMeanL,variationParam="gamma",
                              ordenationParam="rho",
                              restrictionParam="algo",
                              restrictionValueList=["MICEe-TrueCFGDv2"],
@@ -644,7 +683,7 @@ if False and figName == "Rfiles":
                              yAxisTicks=yaxis7)  
 
   #MICE-EsMa-UT variando GAMMA,  BETA = 1.5
-  multiLinePlot(figName+"17-UT-", aliasDict, queueMeanL,variationParam="gamma",
+  multiLinePlot(str(figName)+"17-UT-", aliasDict, queueMeanL,variationParam="gamma",
                              ordenationParam="rho",
                              restrictionParam="algo",
                              restrictionValueList=["MICEe-TrueCFGDv2-UT"],
@@ -653,7 +692,7 @@ if False and figName == "Rfiles":
                              yAxisTicks=yaxis6)  
 
   #MICE-EsMa-UT2 variando GAMMA,  BETA = 1.5
-  multiLinePlot(figName+"18-UT2-", aliasDict, queueMeanL,variationParam="gamma",
+  multiLinePlot(str(figName)+"18-UT2-", aliasDict, queueMeanL,variationParam="gamma",
                              ordenationParam="rho",
                              restrictionParam="algo",
                              restrictionValueList=["MICEe-TrueCFGDv2-UT2"],
@@ -676,9 +715,9 @@ if False and figName == "Rfiles":
 
 
 
-if False and figName == "RFfiles":
+if True and "RFfiles" in figName:
   #comparação ICSMA e MICE-ICSMA
-  multiLinePlot(figName+"01-", aliasDict, queueMeanL,variationParam="algo",
+  multiLinePlot(str(figName)+"01-", aliasDict, queueMeanL,variationParam="algo",
                          ordenationParam="rho",
                          restrictionParam="",
                          restrictionValueList="Todos",
@@ -688,7 +727,7 @@ if False and figName == "RFfiles":
                          ordenationRestricionList=rho01,
                          yAxisTicks=yaxis1)
 
-  multiLinePlot(figName+"02-", aliasDict, queueMeanL,variationParam="algo",
+  multiLinePlot(str(figName)+"02-", aliasDict, queueMeanL,variationParam="algo",
                          ordenationParam="rho",
                          restrictionParam="",
                          restrictionValueList="Todos",
@@ -696,9 +735,11 @@ if False and figName == "RFfiles":
                          restrictionValueList2=[0,2.5], 
                          variationRestrictionList=["MICE-ICSMAPURE", "MICEe-TrueCFGDv4", "MICEe-TrueCFGDv2", "MICEe-CFv4", "MICEe-CFv2", "CFv2-NoQ"],
                          ordenationRestricionList=rho01,
-                         yAxisTicks=yaxis2)
-
-  multiLinePlot(figName+"03-", aliasDict, queueMeanL,variationParam="algo",
+                         yAxisTicks=yaxis2,
+                         legFont=11,
+                         legPos=(0.02,0.4))
+if False:
+  multiLinePlot(str(figName)+"03-", aliasDict, queueMeanL,variationParam="algo",
                          ordenationParam="rho",
                          restrictionParam="",
                          restrictionValueList="Todos",
@@ -709,7 +750,7 @@ if False and figName == "RFfiles":
                          yAxisTicks=yaxis2)
 
 
-  multiLinePlot(figName+"04-", aliasDict, queueMeanL,variationParam="algo",
+  multiLinePlot(str(figName)+"04-", aliasDict, queueMeanL,variationParam="algo",
                          ordenationParam="rho",
                          restrictionParam="",
                          restrictionValueList="Todos",
@@ -718,7 +759,7 @@ if False and figName == "RFfiles":
                          ordenationRestricionList=rho01,
                          yAxisTicks=yaxis2)
 
-  multiLinePlot(figName+"05-", aliasDict, queueMeanL,variationParam="algo",
+  multiLinePlot(str(figName)+"05-", aliasDict, queueMeanL,variationParam="algo",
                          ordenationParam="rho",
                          restrictionParam="",
                          restrictionValueList="Todos",
@@ -727,7 +768,7 @@ if False and figName == "RFfiles":
                          ordenationRestricionList=rho02,
                          yAxisTicks=yaxis2)
 
-  multiLinePlot(figName+"06-", aliasDict, queueMeanL,variationParam="rho",
+  multiLinePlot(str(figName)+"06-", aliasDict, queueMeanL,variationParam="rho",
                            ordenationParam="beta",
                            restrictionParam="algo",
                            restrictionValueList=["MICE-ICSMAPURE"],
@@ -736,8 +777,8 @@ if False and figName == "RFfiles":
                            variationRestrictionList=[0.9],
                            yAxisTicks=yaxis1) 
 
-if True and figName=="RDelayed":
-  multiLinePlot(figName+"01-", aliasDict, queueMeanL,variationParam="algo",
+if True and "RDelayed" in figName:
+  multiLinePlot(str(figName)+"01-", aliasDict, queueMeanL,variationParam="algo",
                          ordenationParam="delayT",
                          restrictionParam="algo",
                          restrictionValueList=["MICE-ICSMAPURE","ICSMA"],
