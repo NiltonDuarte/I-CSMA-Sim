@@ -365,11 +365,11 @@ def multiLinePlot(figname, aliasLegDict, data, variationParam, ordenationParam, 
         #if d.gamma in [0,2.5]: print "===========", round(d.mean[0],3), "beta=",d.beta, "rho=",d.rho, "gamma=",d.gamma
         #print "============================================"
         if getattr(d,restrictionParam,"") in restrictionValueList and getattr(d,restrictionParam2,"") in restrictionValueList2:
-          #if d.gamma in [0,2.5]: print "==================", round(d.mean[0],3), "beta=",d.beta, "rho=",d.rho, "gamma=",d.gamma
+          #if d.gamma in [0,2.5]: print "==================", round(d.mean[0],3), "beta=",d.beta, "rho=",d.rho, "gamma=",d.gamma, "len=",len(d.queueML)
           varParamVal = getattr(d, varParam)
           oParamVal = getattr(d, oParam)
         
-          print "===========", round(d.mean[0],3), "beta=",d.beta, "rho=",d.rho, "gamma=",d.gamma, "algo=", d.algo
+          print "===========", round(d.mean[0],3), "beta=",d.beta, "rho=",d.rho, "gamma=",d.gamma, "algo=", d.algo, "len=",len(d.queueML)
           if not varParamVal in dataD.keys():
             dataD[varParamVal] = dataInfo([(oParamVal, d.mean[0])], varParamVal, [(oParamVal, d.queueML)])
           else:
@@ -387,9 +387,10 @@ def multiLinePlot(figname, aliasLegDict, data, variationParam, ordenationParam, 
     #print "1",i,dataDVal   
     ordes=set(map(lambda pair: pair[0], dataDVal.valuePairs))
     #print "ordes=",ordes
-    newpairs = [(orde,[pair[1] for pair in dataDVal.valuePairs if pair[0]==orde],[origData[1] for origData in dataDVal.originalData if origData[0]==orde][0]) for orde in ordes]
-    #print "newpairs=",newpairs
-    #print "newpairs",newpairs
+    newpairs = [(orde,[pair[1] for pair in dataDVal.valuePairs if pair[0]==orde],[num for sub in [origData[1] for origData in dataDVal.originalData if origData[0]==orde] for num in sub]) for orde in ordes]
+    #mnp = [npair for npair in newpairs if npair[0]==0.9]
+    #print "len=",len(mnp[0][2])
+    #print newpairs
     meanvaluePairs = []
     for pairs in newpairs:
       #print "---- pair -----"
@@ -398,6 +399,7 @@ def multiLinePlot(figname, aliasLegDict, data, variationParam, ordenationParam, 
       mean = sum(pairs[1])/len(pairs[1])
       #print pairs[2]
       print "n={} mean={} ord={} var={}".format(len(pairs[2]), round(np.mean(pairs[2]),2), pairs[0], i)
+      if len(pairs[2]) > 150: print "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
       erroy = st.t.interval(0.90, len(pairs[2])-1, loc=np.mean(pairs[2]), scale=st.sem(pairs[2]))
       err = abs(erroy[0]-mean)
       pair = (pairs[0],mean, err)
@@ -495,7 +497,7 @@ aliasDict = {"MICE-ICSMAPURE":"MICE-ICSMA",
 #  print "------" 
 
 if True and "Rfiles" in figName:
-  if False:
+  if True:
   #ICSMA variando beta
     multiLinePlot(str(figName)+"01-", aliasDict, queueMeanL,variationParam="beta",
                              ordenationParam="rho",
@@ -603,7 +605,7 @@ if True and "Rfiles" in figName:
                            restrictionValueList2=[1.0],
                            yAxisTicks=yaxis3)
                            """
-if True:                           
+                           
   #MICE-ICSMA-UT variando gamma, fixo beta = 0.1
   multiLinePlot(str(figName)+"11.1-UT-", aliasDict, queueMeanL,variationParam="gamma",
                            ordenationParam="rho",
@@ -719,8 +721,8 @@ if True and "RFfiles" in figName:
   #comparação ICSMA e MICE-ICSMA
   multiLinePlot(str(figName)+"01-", aliasDict, queueMeanL,variationParam="algo",
                          ordenationParam="rho",
-                         restrictionParam="",
-                         restrictionValueList="Todos",
+                         restrictionParam="beta",
+                         restrictionValueList=[0.0, 0.1, 1.5],
                          restrictionParam2="gamma", 
                          restrictionValueList2=[0,2.5], 
                          variationRestrictionList=["MICE-ICSMAPURE", "ICSMA"],
@@ -729,8 +731,8 @@ if True and "RFfiles" in figName:
 
   multiLinePlot(str(figName)+"02-", aliasDict, queueMeanL,variationParam="algo",
                          ordenationParam="rho",
-                         restrictionParam="",
-                         restrictionValueList="Todos",
+                         restrictionParam="beta",
+                         restrictionValueList=[0.0, 0.1, 1.5],
                          restrictionParam2="gamma", 
                          restrictionValueList2=[0,2.5], 
                          variationRestrictionList=["MICE-ICSMAPURE", "MICEe-TrueCFGDv4", "MICEe-TrueCFGDv2", "MICEe-CFv4", "MICEe-CFv2", "CFv2-NoQ"],
@@ -741,8 +743,8 @@ if True and "RFfiles" in figName:
 if False:
   multiLinePlot(str(figName)+"03-", aliasDict, queueMeanL,variationParam="algo",
                          ordenationParam="rho",
-                         restrictionParam="",
-                         restrictionValueList="Todos",
+                         restrictionParam="beta",
+                         restrictionValueList=[0.0, 0.1, 1.5],
                          restrictionParam2="gamma", 
                          restrictionValueList2=[0,2.5], 
                          variationRestrictionList=["MICE-ICSMAPURE", "MICEe-TrueCFGDv4", "MICEe-TrueCFGDv2", "MICEe-CFv4", "MICEe-CFv2",  "CFv2-NoQ"],
@@ -752,8 +754,8 @@ if False:
 
   multiLinePlot(str(figName)+"04-", aliasDict, queueMeanL,variationParam="algo",
                          ordenationParam="rho",
-                         restrictionParam="",
-                         restrictionValueList="Todos",
+                         restrictionParam="beta",
+                         restrictionValueList=[0.0, 0.1, 1.5],
                          restrictionParam2="gamma", 
                          restrictionValueList2=[0,2.5], 
                          ordenationRestricionList=rho01,
@@ -761,8 +763,8 @@ if False:
 
   multiLinePlot(str(figName)+"05-", aliasDict, queueMeanL,variationParam="algo",
                          ordenationParam="rho",
-                         restrictionParam="",
-                         restrictionValueList="Todos",
+                         restrictionParam="beta",
+                         restrictionValueList=[0.0, 0.1, 1.5],
                          restrictionParam2="gamma", 
                          restrictionValueList2=[0,2.5], 
                          ordenationRestricionList=rho02,

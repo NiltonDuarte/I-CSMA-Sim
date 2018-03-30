@@ -16,7 +16,7 @@ saveResultsFilePath = "../resultados/"
 maxSchedPath = "./randomGraphs/maximalScheds/"
 maxSchedFileName = "MaximalScheds_"
 fileNames = ["DevGraph16AllRandWR", "DevGraph16NPV","DevGraph16NPV_MD3_"] #
-fileNamesIdx = (20,30)#(10,20)#(0,10)#(10,20)
+fileNamesIdx = (30,40)#(20,30)#(10,20)#(0,10)#(10,20)
 
 windowP1 = 20
 windowP2 = 8
